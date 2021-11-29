@@ -1,8 +1,3 @@
-This template is intended for students of the Advanced Graphics course of Utrecht University.
-
-
-
-
 This renderer was created for assignment 1 of the Advanced Graphics course of Utrecht University.
 
 **Please refer to "_ getting started.pdf" for instructions.**
