@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace Tmpl8
 {
@@ -18,6 +18,7 @@ public:
 	void KeyDown( int key ) { /* implement if you want to handle keys */ }
 	// data members
 	int2 mousePos;
+	Scene scene;
 };
 
 } // namespace Tmpl8
