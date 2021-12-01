@@ -9,6 +9,12 @@ TheApp* CreateApp() { return new MyApp(); }
 #include <color.h>
 using namespace RaytracingRenderer;
 
+color MyApp::rayColor(Ray ray) {
+	auto t = 0.5 * (ray.direction().y() + 1.);
+	color pixel_color = (1. - t) * color(1., 1., 1.) + t * color(0.5, 0.7, 1.);
+	return pixel_color;
+}
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -30,8 +36,8 @@ void MyApp::Tick( float deltaTime )
 	Camera camera = scene.camera;
 	Sphere sphere = scene.sphere;
 
-	vec3 xDir = camera.screenP1 - camera.screenP0;
-	vec3 yDir = camera.screenP2 - camera.screenP0;
+	vec3 x_dir = camera.screen_p1 - camera.screen_p0;
+	vec3 y_dir = camera.screen_p2 - camera.screen_p0;
 
 	// Loop over every pixel in the screen.
 	for (int x = 0; x < SCRWIDTH; x++) for (int y = 0; y < SCRHEIGHT; y++) {
@@ -42,23 +48,33 @@ void MyApp::Tick( float deltaTime )
 		double u = x / (SCRWIDTH - 1.);
 		double v = y / (SCRHEIGHT - 1.);
 
-		vec3 screenPoint = camera.screenP0 + u * xDir + v * yDir;
+		point3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
 		
 		/* Ray direction (normalized):
 				  𝑃 𝑢,𝑣 −𝐸
 			𝐷 = _____________
 				∥𝑃 𝑢,𝑣 −𝐸 ∥   */
-		vec3 rayDir = screenPoint - camera.camPos;
+		vec3 ray_dir = screen_point - camera.origin;
+		ray_dir = ray_dir / ray_dir.length();
 
-		// Normalize by dividing by the magnitude.
-	    // Magnitude from https://stackoverflow.com/questions/48306941/efficient-magnitude-calculation-of-3d-vector
-		rayDir = rayDir / rayDir.length();
+		Ray ray = Ray(camera.origin, ray_dir);
+
+		// TODO: Replace with collision check for the ray.
+		bool collision = false;
+		uint c;
+
+		// If no collision was found for this ray, draw a nice BG color.
+		if (collision == false) {
+			// Create a nice background color.
+			color pixel_color = rayColor(ray);
+			c = translate_color(pixel_color);
+		}
+		// If a collision was found, get the color of the object.
+		else {
+			// TODO: get object color at position.
+
+		}
 		
-		// Create a nice background color.
-		auto t = 0.5 * (rayDir.y() + 1.);
-		color pixel_color = (1. - t)* color(1., 1., 1.) + t * color(0.5, 0.7, 1.);
-		uint c = translate_color(pixel_color);
-
 		screen->Plot(x, y, c);
 
 	}

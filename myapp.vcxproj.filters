@@ -17,10 +17,16 @@
     <ClCompile Include="object3d.cpp">
       <Filter>src\3d-objects</Filter>
     </ClCompile>
-    <ClCompile Include="transform.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="vec3.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="ray.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>src\3d-objects</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
       <Filter>src\utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,13 +53,19 @@
     <ClInclude Include="object3d.h">
       <Filter>src\3d-objects</Filter>
     </ClInclude>
-    <ClInclude Include="transform.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="vec3.h">
       <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>src\3d-objects</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
       <Filter>src\utility</Filter>
     </ClInclude>
   </ItemGroup>
