@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "scene.h"
 namespace Tmpl8
 {
 
@@ -18,7 +18,8 @@ public:
 	void KeyDown( int key ) { /* implement if you want to handle keys */ }
 	// data members
 	int2 mousePos;
-	Scene scene;
+	RaytracingRenderer::Scene scene;
+	MyApp() {};
 };
 
 } // namespace Tmpl8

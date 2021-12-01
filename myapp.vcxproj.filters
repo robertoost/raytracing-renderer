@@ -8,8 +8,20 @@
     <ClCompile Include="camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="sphere.cpp">
+    <ClCompile Include="scene.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="object3d.cpp">
+      <Filter>src\3d-objects</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vec3.cpp">
+      <Filter>src\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -26,8 +38,23 @@
     <ClInclude Include="camera.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="sphere.h">
+    <ClInclude Include="scene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="object3d.h">
+      <Filter>src\3d-objects</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>src\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +77,15 @@
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{f334f95b-c34f-4587-8bc3-b92a4f6a6627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects">
+      <UniqueIdentifier>{8b1ee50b-cb86-4fcf-ac93-d7690d232be3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects\primitives">
+      <UniqueIdentifier>{95d0b961-1267-45c7-b176-2a21c90a9731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utility">
+      <UniqueIdentifier>{b9672ba4-f4f5-457c-8413-8338b6aca410}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

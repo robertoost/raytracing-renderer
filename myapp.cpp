@@ -5,8 +5,9 @@ TheApp* CreateApp() { return new MyApp(); }
 
 
 #include "scene.h"
-#include "camera.h"
-#include "sphere.h"
+#include <vec3.h>
+#include <color.h>
+using namespace RaytracingRenderer;
 
 // -----------------------------------------------------------
 // Initialize the application
@@ -24,13 +25,13 @@ void MyApp::Tick( float deltaTime )
 	// clear the screen to black
 	screen->Clear( 0 );
 	// print something to the console window
-	printf( "hello world!\n" );
+	//printf( "hello world!\n" );
 
 	Camera camera = scene.camera;
 	Sphere sphere = scene.sphere;
 
-	float3 xDir = camera.screenP1 - camera.screenP0;
-	float3 yDir = camera.screenP2 - camera.screenP0;
+	vec3 xDir = camera.screenP1 - camera.screenP0;
+	vec3 yDir = camera.screenP2 - camera.screenP0;
 
 	// Loop over every pixel in the screen.
 	for (int x = 0; x < SCRWIDTH; x++) for (int y = 0; y < SCRHEIGHT; y++) {
@@ -38,20 +39,28 @@ void MyApp::Tick( float deltaTime )
 		// 	Point on the screen:
 		// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
 	    // 𝑢, 𝑣 ∈[0, 1]
-		float u = x / SCRWIDTH;
-		float v = y / SCRHEIGHT;
+		double u = x / (SCRWIDTH - 1.);
+		double v = y / (SCRHEIGHT - 1.);
 
-		float3 screenPoint = camera.screenP0 + u * xDir + v * yDir;
+		vec3 screenPoint = camera.screenP0 + u * xDir + v * yDir;
 		
 		/* Ray direction (normalized):
 				  𝑃 𝑢,𝑣 −𝐸
 			𝐷 = _____________
 				∥𝑃 𝑢,𝑣 −𝐸 ∥   */
-		float3 rayDir = screenPoint - camera.camPos;
+		vec3 rayDir = screenPoint - camera.camPos;
 
 		// Normalize by dividing by the magnitude.
 	    // Magnitude from https://stackoverflow.com/questions/48306941/efficient-magnitude-calculation-of-3d-vector
-		rayDir = rayDir / sqrt(pow(rayDir.x, 2) + pow(rayDir.y, 2) + pow(rayDir.z, 2));
+		rayDir = rayDir / rayDir.length();
+		
+		// Create a nice background color.
+		auto t = 0.5 * (rayDir.y() + 1.);
+		color pixel_color = (1. - t)* color(1., 1., 1.) + t * color(0.5, 0.7, 1.);
+		uint c = translate_color(pixel_color);
+
+		screen->Plot(x, y, c);
+
 	}
 
 	
