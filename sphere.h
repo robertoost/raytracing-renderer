@@ -1,16 +1,25 @@
 #pragma once
+#include "vec3.h"
+namespace RaytracingRenderer {
 
-// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
-// TODO: Material.
-class Sphere
-{
-public:
-	float3 position = float3(0, 0, 0);
-	float radius = 1.f;
+	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
+	// TODO: Material.
+	class Sphere
+	{
+	public:
+		vec3 position;
+		float radius;
 
-	Sphere(float3 position) {
-		this->position = position;
-		cout << "Initializing Sphere!";
-	}
-};
+		Sphere(vec3 position, float radius) {
+			this->position = position;
+			this->radius = radius;
+			cout << "Initializing Sphere!";
+		}
+
+		Sphere() {
+			position = vec3(0, 0, 0);
+			radius = 1.f;
+		}
+	};
+}
 
