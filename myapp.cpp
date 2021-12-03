@@ -3,9 +3,9 @@
 
 TheApp* CreateApp() { return new MyApp(); }
 
-
 #include "scene.h"
-#include <color.h>
+#include "color.h"
+
 using namespace RaytracingRenderer;
 
 float3 MyApp::rayColor(Ray ray) {
@@ -54,8 +54,7 @@ void MyApp::Tick( float deltaTime )
 
 		Ray ray = Ray(camera.origin, ray_dir);
 
-		// TODO: Replace with collision check for the ray.
-		bool collision = false;
+		bool collision = sphere.intersect(ray);
 		uint c;
 
 		// If no collision was found for this ray, draw a nice BG color.
@@ -67,11 +66,11 @@ void MyApp::Tick( float deltaTime )
 		// If a collision was found, get the color of the object.
 		else {
 			// TODO: get object color at position.
-
+			float3 pixel_color = sphere.material.col;
+			c = translate_color(pixel_color);
 		}
 		
 		screen->Plot(x, y, c);
-
 	}
 
 	

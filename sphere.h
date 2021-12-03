@@ -4,21 +4,40 @@ namespace RaytracingRenderer {
 
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
 	// TODO: Material.
-	class Sphere : Object3D
+	class Sphere : public Object3D
 	{
 	public:
-		float radius;
+		float r2;
 
 		Sphere(float3 position, float radius) : Object3D(position) {
-			this->radius = radius;
+			this->r2 = radius * radius;
 			cout << "Initializing Sphere!";
 		}
 
 		Sphere() : Object3D() {
-			radius = 1.f;
+			r2 = 1.f;
 		}
 
-		bool doesRayIntersect(Ray ray) { return true; }
+		bool intersect(Ray ray) {
+			float3 C = transform.position - ray.orig;
+			float t = dot(C, ray.dir);
+			float3 Q = C - t * ray.dir;
+			float p2 = dot(Q, Q);
+
+			// Ray is outside radius of sphere.
+			if (p2 > r2) {
+				return false;
+			}
+
+			t -= sqrt(r2 - p2);
+
+			// Ray intersects with sphere.
+			if ((t < ray.t) && (t > 0)) {
+				ray.t = t;
+				return true;
+			}
+			return false;
+		}
 	};
 }
 

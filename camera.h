@@ -47,8 +47,7 @@ namespace RaytracingRenderer {
 			screen_p0 = screen_center - horizontal + vertical;
 			screen_p1 = screen_center + horizontal + vertical;
 			screen_p2 = screen_center - horizontal - vertical;
-
-		};
+		}
 
 		// TODO: Let the constuctor have an initial rotation.
 		// Camera(whatever you use to change position and rotation) {

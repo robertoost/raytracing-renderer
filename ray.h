@@ -5,7 +5,7 @@ namespace RaytracingRenderer {
 	class Ray
 	{
     public:
-        Ray() {}
+        Ray(): orig(float3(0,0,0)), dir(float3(0,0,1)) {}
         Ray(const float3& origin, const float3& direction)
             : orig(origin), dir(direction)
         {}
@@ -17,6 +17,7 @@ namespace RaytracingRenderer {
     public:
         float3 orig;
         float3 dir;
+        float t = INFINITY;
 	};
 }
 
