@@ -11,18 +11,26 @@ namespace RaytracingRenderer {
 		float3 screen_p1;
 		float3 screen_p2;
 		// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1) and up direction : U = (0, 1, 0)
+		float3 cam_pos = float3(0, 0, 0);
 		float3 view_target = float3(0, 0, 1);
-		float3 cam_dir = normalize(origin - view_target);
+		float3 cam_dir = normalize(cam_pos - view_target);
 		float3 up_dir = float3(0, 1, 0);
-		//Camera's pitch + yaw
-		float3 cameraX = normalize(up_dir * cam_dir);
+		//Camera's position matrix
+		float3 cameraX = float3(normalize(up_dir * cam_dir));
 		float3 cameraY = cam_dir * cameraX;
+		mat4 transformMatrix = mat4().LookAt(cam_pos, view_target, up_dir);
+		//Camera's pitch + yawn
+		float yaw = -90.f;
+		float pitch = 0.f;
+		float lastX, lastY;
+
+		bool firstMouse = true;
 
 		// If the origin point was moved, this function can update the viewport accordingly.
 		void updateViewport() {
 			
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
-			float3 screen_center = origin + screen_dist * view_target;
+			float3 screen_center = cam_pos + screen_dist * view_target;
 
 			// Make sure the viewport size lines up with the screen resolution.
 			float aspect_ratio = (float)SCRWIDTH / (float)SCRHEIGHT;
@@ -35,8 +43,6 @@ namespace RaytracingRenderer {
 
 			// TODO: rotate the horizontal and vertical directions, along with the screen center.
 			// 		 this will ensure the screen corners are in the right positions.
-
-			mat4 transformMatrix = mat4().LookAt(origin, cam_dir, cameraY);
 
 			transformMatrix.TransformPoint(horizontal);
 			transformMatrix.TransformPoint(vertical);
@@ -53,6 +59,73 @@ namespace RaytracingRenderer {
 		// 	origin = position;
 		// 	rotation = rotation; or something like that...
 		// }
+
+		void keyHandler(int key)
+		{
+			const float cameraSpeed = 0.05f;
+			//Camera camera = scene.camera;
+			switch (key)
+			{
+			case 87:
+				cout << "BUTTON PUSHED ";
+				origin += cameraSpeed * cam_dir;
+				break;
+			case 83:
+				origin -= cameraSpeed * cam_dir;
+				break;
+			case 65:
+				origin -= float3(normalize(cam_dir * cameraY) * cameraSpeed);
+				break;
+			case 68:
+				origin += float3(normalize(cam_dir * cameraY) * cameraSpeed);
+				break;
+			}
+			updateViewport();
+		}
+
+		void mouseHandler(int x, int y)
+		{
+			if (firstMouse) 
+			{
+				lastX = x;
+				lastY = y;
+				firstMouse = false;
+			}
+
+			float xoffset = x - lastX;
+			float yoffset = y - lastY;
+			lastX = x; 
+			lastY = y;
+
+			float sensitivity = 0.1f;
+			xoffset *= sensitivity;
+			yoffset *= sensitivity;
+
+			yaw += xoffset;
+			pitch += yoffset;
+
+			cam_dir = normalize(getDirection(yaw, pitch));
+
+			updateViewport();
+		}
+
+		float3 getDirection(float yaw, float pitch)
+		{
+			if (pitch > 89.0f)
+				pitch = 89.0f;
+			if (pitch < -89.0f)
+				pitch = -89.0f;
+
+			yaw *= (PI / 180);
+			pitch *= (PI / 180);
+
+			float3 direction;
+			direction.x = cos((yaw)) * cos((pitch));
+			direction.y = sin((pitch));
+			direction.z = sin((yaw)) * cos((pitch));
+
+			return direction;
+		}
 
 		Camera(float3 position, float screen_distance) {
 			origin = position;

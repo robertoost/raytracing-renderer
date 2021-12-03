@@ -14,13 +14,13 @@ public:
 	float3 rayColor(RaytracingRenderer::Ray ray);
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
-	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }
-	void MouseDown( int button ) { /* implement if you want to detect mouse button presses */ }
-	void MouseMove( int x, int y ) { mousePos.x = x, mousePos.y = y; }
-	void KeyUp( int key ) { /* implement if you want to handle keys */ }
-	void KeyDown( int key ) { /* implement if you want to handle keys */ }
+	void MouseUp(int button);
+	void MouseDown(int button);
+	void MouseMove(int x, int y);
+	void KeyUp(int key);
+	void KeyDown(int key);
 	// data members
-	int2 mousePos;
+	//int2 mousePos = (0, 0);
 	RaytracingRenderer::Scene scene;
 	MyApp() {};
 };

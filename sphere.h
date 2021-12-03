@@ -11,14 +11,14 @@ namespace RaytracingRenderer {
 
 		Sphere(float3 position, float radius) : Object3D(position) {
 			this->r2 = radius * radius;
-			cout << "Initializing Sphere!";
+			cout << "Initializing Sphere! ";
 		}
 
 		Sphere() : Object3D() {
 			r2 = 1.f;
 		}
 
-		bool intersect(Ray ray) {
+		bool intersect(Ray ray) const {
 			float3 C = transform.position - ray.orig;
 			float t = dot(C, ray.dir);
 			float3 Q = C - t * ray.dir;

@@ -84,13 +84,24 @@ void MyApp::Tick( float deltaTime )
 	//screen->Plot( SCRWIDTH - 2, SCRHEIGHT - 2, 0xffffff );
 }
 
-
 // TODO: Control camera with keyboard. (and mouse?)
-//void MyApp::KeyUp(int key)
-//{
-//	/* implement if you want to handle keys */
-//}
-//void MyApp::KeyDown(int key)
-//{
-//	/* implement if you want to handle keys */
-//}
+void MyApp::KeyUp(int key)
+{
+
+}
+void MyApp::KeyDown(int key)
+{
+	scene.camera.keyHandler(key);
+}
+void MyApp::MouseMove(int x, int y) 
+{
+	scene.camera.mouseHandler(x, y);
+}
+void MyApp::MouseUp(int button)
+{
+
+}
+void MyApp::MouseDown(int button)
+{
+
+}

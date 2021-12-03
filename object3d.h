@@ -10,10 +10,10 @@ namespace RaytracingRenderer {
 		Transform transform;
 		Material material;
 
-		Object3D(float3 position) : transform(position) {}
+		Object3D(float3 position) : transform(position)  {}
 		Object3D() : transform() {}
 
-		virtual bool intersect(Ray ray) = 0;
+		virtual bool intersect(Ray ray) const = 0;
 	};
 
 };
