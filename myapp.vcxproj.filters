@@ -5,30 +5,6 @@
       <Filter>template</Filter>
     </ClCompile>
     <ClCompile Include="myapp.cpp" />
-    <ClCompile Include="camera.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="scene.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="sphere.cpp">
-      <Filter>src\3d-objects\primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="object3d.cpp">
-      <Filter>src\3d-objects</Filter>
-    </ClCompile>
-    <ClCompile Include="vec3.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="ray.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="material.cpp">
-      <Filter>src\3d-objects</Filter>
-    </ClCompile>
-    <ClCompile Include="transform.cpp">
-      <Filter>src\utility</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="template\common.h">
@@ -52,9 +28,6 @@
     </ClInclude>
     <ClInclude Include="object3d.h">
       <Filter>src\3d-objects</Filter>
-    </ClInclude>
-    <ClInclude Include="vec3.h">
-      <Filter>src\utility</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
       <Filter>src\utility</Filter>

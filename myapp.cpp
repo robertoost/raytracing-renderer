@@ -5,13 +5,12 @@ TheApp* CreateApp() { return new MyApp(); }
 
 
 #include "scene.h"
-#include <vec3.h>
 #include <color.h>
 using namespace RaytracingRenderer;
 
-color MyApp::rayColor(Ray ray) {
-	auto t = 0.5 * (ray.direction().y() + 1.);
-	color pixel_color = (1. - t) * color(1., 1., 1.) + t * color(0.5, 0.7, 1.);
+float3 MyApp::rayColor(Ray ray) {
+	auto t = 0.5f * (ray.dir.y + 1);
+	float3 pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
 	return pixel_color;
 }
 
@@ -36,8 +35,8 @@ void MyApp::Tick( float deltaTime )
 	Camera camera = scene.camera;
 	Sphere sphere = scene.sphere;
 
-	vec3 x_dir = camera.screen_p1 - camera.screen_p0;
-	vec3 y_dir = camera.screen_p2 - camera.screen_p0;
+	float3 x_dir = camera.screen_p1 - camera.screen_p0;
+	float3 y_dir = camera.screen_p2 - camera.screen_p0;
 
 	// Loop over every pixel in the screen.
 	for (int x = 0; x < SCRWIDTH; x++) for (int y = 0; y < SCRHEIGHT; y++) {
@@ -45,17 +44,13 @@ void MyApp::Tick( float deltaTime )
 		// 	Point on the screen:
 		// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
 	    // 𝑢, 𝑣 ∈[0, 1]
-		double u = x / (SCRWIDTH - 1.);
-		double v = y / (SCRHEIGHT - 1.);
+		float u = x / (SCRWIDTH - 1.);
+		float v = y / (SCRHEIGHT - 1.);
 
-		point3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+		float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
 		
-		/* Ray direction (normalized):
-				  𝑃 𝑢,𝑣 −𝐸
-			𝐷 = _____________
-				∥𝑃 𝑢,𝑣 −𝐸 ∥   */
-		vec3 ray_dir = screen_point - camera.origin;
-		ray_dir = ray_dir / ray_dir.length();
+		// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+		float3 ray_dir = normalize(screen_point - camera.origin);
 
 		Ray ray = Ray(camera.origin, ray_dir);
 
@@ -66,7 +61,7 @@ void MyApp::Tick( float deltaTime )
 		// If no collision was found for this ray, draw a nice BG color.
 		if (collision == false) {
 			// Create a nice background color.
-			color pixel_color = rayColor(ray);
+			float3 pixel_color = rayColor(ray);
 			c = translate_color(pixel_color);
 		}
 		// If a collision was found, get the color of the object.

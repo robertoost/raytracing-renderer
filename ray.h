@@ -1,5 +1,4 @@
 #pragma once
-#include <vec3.h>
 
 namespace RaytracingRenderer {
 
@@ -7,20 +6,17 @@ namespace RaytracingRenderer {
 	{
     public:
         Ray() {}
-        Ray(const point3& origin, const vec3& direction)
+        Ray(const float3& origin, const float3& direction)
             : orig(origin), dir(direction)
         {}
 
-        point3 origin() const { return orig; }
-        vec3 direction() const { return dir; }
-
-        point3 at(double t) const {
+        float3 at(float t) const {
             return orig + t * dir;
         }
 
-    protected:
-        point3 orig;
-        vec3 dir;
+    public:
+        float3 orig;
+        float3 dir;
 	};
 }
 

@@ -11,7 +11,7 @@ public:
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
-	RaytracingRenderer::color rayColor(RaytracingRenderer::Ray ray);
+	float3 rayColor(RaytracingRenderer::Ray ray);
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }

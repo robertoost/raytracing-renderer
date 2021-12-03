@@ -9,6 +9,6 @@ namespace RaytracingRenderer {
 	public:
 		Camera camera;
 		Sphere sphere;
-		Scene(): sphere(vec3(0,0,10), 4.f) {};
+		Scene(): sphere(float3(0,0,10), 4.f) {};
 	};
 }

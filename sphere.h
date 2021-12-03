@@ -1,5 +1,4 @@
 #pragma once
-#include "vec3.h"
 #include "object3d.h"
 namespace RaytracingRenderer {
 
@@ -10,7 +9,7 @@ namespace RaytracingRenderer {
 	public:
 		float radius;
 
-		Sphere(point3 position, float radius) : Object3D(position) {
+		Sphere(float3 position, float radius) : Object3D(position) {
 			this->radius = radius;
 			cout << "Initializing Sphere!";
 		}

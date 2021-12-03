@@ -121,21 +121,13 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
-    <ClCompile Include="camera.cpp" />
-    <ClCompile Include="material.cpp" />
     <ClCompile Include="myapp.cpp" />
-    <ClCompile Include="object3d.cpp" />
-    <ClCompile Include="ray.cpp" />
-    <ClCompile Include="scene.cpp" />
-    <ClCompile Include="sphere.cpp" />
     <ClCompile Include="template\template.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">precomp.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">precomp.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="transform.cpp" />
-    <ClCompile Include="vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
@@ -150,7 +142,6 @@
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\precomp.h" />
     <ClInclude Include="transform.h" />
-    <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cl\kernels.cl" />
