@@ -13,6 +13,7 @@ namespace RaytracingRenderer {
 
 		// If the origin point was moved, this function can update the viewport accordingly.
 		void updateViewport() {
+
 			// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1)
 			float3 view_dir = float3(0, 0, 1);
 
@@ -21,8 +22,8 @@ namespace RaytracingRenderer {
 			float3 screen_center = origin + screen_dist * view_dir;
 
 			// Make sure the viewport size lines up with the screen resolution.
-			float aspect_ratio = SCRHEIGHT / SCRWIDTH;
-			float viewport_height = 2.0;
+			float aspect_ratio = (float)SCRWIDTH / (float)SCRHEIGHT;
+			float viewport_height = 2.f;
 			float viewport_width = aspect_ratio * viewport_height;
 
 			// Divide by 2 to traverse half the width/height away from the center.
@@ -36,8 +37,7 @@ namespace RaytracingRenderer {
 			screen_p0 = screen_center - horizontal + vertical;
 			screen_p1 = screen_center + horizontal + vertical;
 			screen_p2 = screen_center - horizontal - vertical;
-
-		};
+		}
 
 		// TODO: Let the constuctor have an initial rotation.
 		// Camera(whatever you use to change position and rotation) {
