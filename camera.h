@@ -22,7 +22,7 @@ namespace RaytracingRenderer {
 		void updateViewport() {
 			
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
-			float3 screen_center = origin + screen_dist * view_dir;
+			float3 screen_center = origin + screen_dist * view_target;
 
 			// Make sure the viewport size lines up with the screen resolution.
 			float aspect_ratio = (float)SCRWIDTH / (float)SCRHEIGHT;
