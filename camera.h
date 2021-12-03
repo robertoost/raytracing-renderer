@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "transform.h";
-#include "precomp.h";
 namespace RaytracingRenderer {
 
 	class Camera
@@ -11,20 +10,24 @@ namespace RaytracingRenderer {
 		float3 screen_p0;
 		float3 screen_p1;
 		float3 screen_p2;
+		// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1) and up direction : U = (0, 1, 0)
+		float3 view_target = float3(0, 0, 1);
+		float3 cam_dir = normalize(origin - view_target);
+		float3 up_dir = float3(0, 1, 0);
+		//Camera's pitch + yaw
+		float3 cameraX = normalize(up_dir * cam_dir);
+		float3 cameraY = cam_dir * cameraX;
 
 		// If the origin point was moved, this function can update the viewport accordingly.
 		void updateViewport() {
-			// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1)
-			float3 view_dir = float3(0, 0, 1);
-			float3 up_dir = float3(0, 1, 0);
-
+			
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
 			float screen_dist = 1.f;
-			float3 screen_center = origin + screen_dist * view_dir;
+			float3 screen_center = origin + screen_dist * cam_dir;
 
 			// Make sure the viewport size lines up with the screen resolution.
-			float aspect_ratio = SCRHEIGHT / SCRWIDTH;
-			float viewport_height = 2.0;
+			float aspect_ratio = (float)SCRWIDTH / (float)SCRHEIGHT;
+			float viewport_height = 2.f;
 			float viewport_width = aspect_ratio * viewport_height;
 
 			// Divide by 2 to traverse half the width/height away from the center.
@@ -34,7 +37,7 @@ namespace RaytracingRenderer {
 			// TODO: rotate the horizontal and vertical directions, along with the screen center.
 			// 		 this will ensure the screen corners are in the right positions.
 
-			mat4 transformMatrix = mat4().LookAt(origin, view_dir, up_dir);
+			mat4 transformMatrix = mat4().LookAt(origin, cam_dir, cameraY);
 
 			transformMatrix.TransformPoint(horizontal);
 			transformMatrix.TransformPoint(vertical);
