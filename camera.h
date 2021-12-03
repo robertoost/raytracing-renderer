@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "transform.h";
+#include "precomp.h";
 namespace RaytracingRenderer {
 
 	class Camera
@@ -16,6 +17,7 @@ namespace RaytracingRenderer {
 
 			// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1)
 			float3 view_dir = float3(0, 0, 1);
+			float3 up_dir = float3(0, 1, 0);
 
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
 			float screen_dist = 1.f;
@@ -32,6 +34,12 @@ namespace RaytracingRenderer {
 
 			// TODO: rotate the horizontal and vertical directions, along with the screen center.
 			// 		 this will ensure the screen corners are in the right positions.
+
+			mat4 transformMatrix = mat4().LookAt(origin, view_dir, up_dir);
+
+			transformMatrix.TransformPoint(horizontal);
+			transformMatrix.TransformPoint(vertical);
+			transformMatrix.TransformPoint(screen_center);
 
 			// Screen corners : 𝑃0 = 𝐶 + −1, −1, 0, 𝑃1 = 𝐶 + 1, −1, 0, 𝑃2 = 𝐶 + (−1, 1, 0)
 			screen_p0 = screen_center - horizontal + vertical;
