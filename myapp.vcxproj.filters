@@ -29,17 +29,17 @@
     <ClInclude Include="object3d.h">
       <Filter>src\3d-objects</Filter>
     </ClInclude>
-    <ClInclude Include="color.h">
-      <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ray.h">
-      <Filter>src\utility</Filter>
-    </ClInclude>
     <ClInclude Include="material.h">
       <Filter>src\3d-objects</Filter>
     </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="transform.h">
-      <Filter>src\utility</Filter>
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,9 +68,6 @@
     </Filter>
     <Filter Include="src\3d-objects\primitives">
       <UniqueIdentifier>{95d0b961-1267-45c7-b176-2a21c90a9731}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\utility">
-      <UniqueIdentifier>{b9672ba4-f4f5-457c-8413-8338b6aca410}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
