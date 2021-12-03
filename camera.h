@@ -1,12 +1,11 @@
 ﻿#pragma once
 #include "transform.h";
-#include "precomp.h";
 namespace RaytracingRenderer {
 
 	class Camera
 	{
 	public:
-		float3 origin = float3(0, 0, 0);
+		float3 origin;
 		float screen_dist = 1.;
 		float3 screen_p0;
 		float3 screen_p1;
@@ -20,7 +19,6 @@ namespace RaytracingRenderer {
 			float3 up_dir = float3(0, 1, 0);
 
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
-			float screen_dist = 1.f;
 			float3 screen_center = origin + screen_dist * view_dir;
 
 			// Make sure the viewport size lines up with the screen resolution.
@@ -53,11 +51,12 @@ namespace RaytracingRenderer {
 		// 	rotation = rotation; or something like that...
 		// }
 
-		Camera(float3 position) {
+		Camera(float3 position, float screen_distance) {
 			origin = position;
+			screen_dist = screen_distance;
 			updateViewport();
 		}
 
-		Camera() : Camera(float3(0, 0, 0)) {};
+		Camera() : Camera(float3(0, 0, 0), 1.f) {};
 	};
 }
