@@ -34,6 +34,7 @@ void MyApp::Tick( float deltaTime )
 
 	Camera camera = scene.camera;
 	Sphere sphere = scene.sphere;
+	Plane plane = scene.plane;
 
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
@@ -49,8 +50,8 @@ void MyApp::Tick( float deltaTime )
 		// 	Point on the screen:
 		// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
 	    // 𝑢, 𝑣 ∈[0, 1]
-		float u = x / (SCRWIDTH - 1.);
-		float v = y / (SCRHEIGHT - 1.);
+		float u = x / (SCRWIDTH - 1.f);
+		float v = y / (SCRHEIGHT - 1.f);
 
 		float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
 		
@@ -59,7 +60,9 @@ void MyApp::Tick( float deltaTime )
 
 		Ray ray = Ray(camera.origin, ray_dir);
 
-		bool collision = sphere.intersect(ray);
+		hit_record rec = hit_record();
+
+		bool collision = sphere.intersect(ray, 0.0001f, FLT_MAX, rec);
 		uint c;
 
 		// If no collision was found for this ray, draw a nice BG color.

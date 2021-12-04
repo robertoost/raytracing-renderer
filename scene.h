@@ -1,6 +1,7 @@
 #pragma once
 #include "camera.h"
 #include "sphere.h"
+#include "plane.h"
 
 namespace RaytracingRenderer {
 
@@ -9,6 +10,8 @@ namespace RaytracingRenderer {
 	public:
 		Camera camera;
 		Sphere sphere;
-		Scene(): sphere(float3(0,0,4), 1.f) {};
+		Plane plane;
+
+		Scene(): sphere(float3(0,0,4), 1.f, Material()), plane(float3(0,-1,0), float3(0,1,0), Material()) {};
 	};
 }
