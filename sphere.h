@@ -1,25 +1,26 @@
 #pragma once
 #include "object3d.h"
+#include "hittable.h"
+
 namespace RaytracingRenderer {
 
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
 	// TODO: Material.
-	class Sphere : public Object3D
+	class Sphere : public virtual Object3D, public virtual Hittable
 	{
 	public:
 		float r2;
 
-		Sphere(float3 position, float radius) : Object3D(position) {
+		Sphere(float3 position, float radius, Material material): Object3D(position, material) {
 			this->r2 = radius * radius;
-			cout << "Initializing Sphere!";
 		}
 
 		Sphere() : Object3D() {
 			r2 = 1.f;
 		}
 
-		bool intersect(Ray ray) {
-			float3 C = transform.position - ray.orig;
+		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
+			float3 C = position - ray.orig;
 			float t = dot(C, ray.dir);
 			float3 Q = C - t * ray.dir;
 			float p2 = dot(Q, Q);
@@ -33,7 +34,7 @@ namespace RaytracingRenderer {
 
 			// Ray intersects with sphere.
 			if ((t < ray.t) && (t > 0)) {
-				ray.t = t;
+				//ray->*t = t;
 				return true;
 			}
 			return false;
