@@ -6,11 +6,11 @@ namespace RaytracingRenderer {
 	{
 	public:
 		float3 position;
-		Material material;
+		shared_ptr<Material> material;
 
 		Object3D(float3 position, Material material) {
 			this->position = position;
-			this->material = material;
+			this->material = make_shared<Material>(material);
 		}
 		Object3D() : position(float3(0,0,0)), material() {}
 	};
