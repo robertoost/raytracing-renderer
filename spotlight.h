@@ -1,7 +1,6 @@
 #pragma once
 #pragma once
 #include "light.h"
-#include "camera.h"
 
 namespace RaytracingRenderer {
 	class Spotlight : public Light
