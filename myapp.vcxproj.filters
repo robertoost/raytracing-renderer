@@ -38,7 +38,10 @@
     <ClInclude Include="color.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="transform.h">
+    <ClInclude Include="plane.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="hittable.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
