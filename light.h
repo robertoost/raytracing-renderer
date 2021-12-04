@@ -7,10 +7,10 @@ namespace RaytracingRenderer {
 
 	public:
 
-		float3 direction;
+		float intesity;
 
-		Light(float3 direction) {
-			this->direction = direction;
+		Light(float intensity) {
+			this->intensity = intensity;
 		}
 
 		Light() {}
