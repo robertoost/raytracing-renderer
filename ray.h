@@ -20,4 +20,3 @@ namespace RaytracingRenderer {
         float t = INFINITY;
 	};
 }
-
