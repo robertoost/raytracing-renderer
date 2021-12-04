@@ -12,6 +12,8 @@ namespace RaytracingRenderer {
 		Sphere sphere;
 		Plane plane;
 
-		Scene(): sphere(float3(0,0,4), 1.f, Material()), plane(float3(0,-1,0), float3(0,1,0), Material()) {};
+		//list<Hittable> objects;
+
+		Scene(): sphere(float3(0,0,4), 1.f, Material()), plane(float3(0,-1,0), float3(0,1,0), Material(float3(0,0,1))) {};
 	};
 }
