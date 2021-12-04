@@ -54,27 +54,20 @@ namespace RaytracingRenderer {
 			screen_p2 = screen_center - horizontal - vertical;
 		}
 
-		// TODO: Let the constuctor have an initial rotation.
-		// Camera(whatever you use to change position and rotation) {
-		// 	origin = position;
-		// 	rotation = rotation; or something like that...
-		// }
-
 		void keyHandler(int key)
 		{
 			const float cameraSpeed = 0.5f;
-			//Camera camera = scene.camera;
 			switch (key)
 			{
 			case 87:
-				cout << "BUTTON PUSHED ";
+				//cout << "BUTTON PUSHED ";
 				origin += cameraSpeed * cam_dir;
 				break;
 			case 83:
 				origin -= cameraSpeed * cam_dir;
 				break;
 			case 65:
-				cout << origin.x << ", " << origin.y << ", " << origin.z;
+				//cout << origin.x << ", " << origin.y << ", " << origin.z;
 				origin -= normalize(cross(cam_dir, cameraY)) * cameraSpeed;
 				break;
 			case 68:

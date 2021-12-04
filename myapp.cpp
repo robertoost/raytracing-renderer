@@ -37,6 +37,11 @@ void MyApp::Tick( float deltaTime )
 
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
+	
+	if (key_held_down)
+	{
+		scene.camera.keyHandler(held_key);
+	}
 
 	// Loop over every pixel in the screen.
 	for (int x = 0; x < SCRWIDTH; x++) for (int y = 0; y < SCRHEIGHT; y++) {
@@ -84,14 +89,14 @@ void MyApp::Tick( float deltaTime )
 	//screen->Plot( SCRWIDTH - 2, SCRHEIGHT - 2, 0xffffff );
 }
 
-// TODO: Control camera with keyboard. (and mouse?)
 void MyApp::KeyUp(int key)
 {
-
+	key_held_down = false;
 }
 void MyApp::KeyDown(int key)
 {
-	scene.camera.keyHandler(key);
+	key_held_down = true;
+	held_key = key;
 }
 void MyApp::MouseMove(int x, int y) 
 {
