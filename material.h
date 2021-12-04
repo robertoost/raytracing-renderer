@@ -23,7 +23,9 @@ namespace RaytracingRenderer {
 			this->col = col;
 		}
 
-		Material(float3 col) {}
+		Material(float3 col) {
+			this->col = col;
+		}
 
 		~Material() {}
 
