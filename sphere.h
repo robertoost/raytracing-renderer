@@ -10,12 +10,15 @@ namespace RaytracingRenderer {
 	{
 	public:
 		float r2;
+		float radius;
 
 		Sphere(float3 position, float radius, Material material): Object3D(position, material) {
+			this->radius = radius;
 			this->r2 = radius * radius;
 		}
 
 		Sphere() : Object3D() {
+			radius = 1.f;
 			r2 = 1.f;
 		}
 
@@ -33,11 +36,17 @@ namespace RaytracingRenderer {
 			t -= sqrt(r2 - p2);
 
 			// Ray intersects with sphere.
-			if ((t < ray.t) && (t > 0)) {
+			if (((t > t_min) && (t < t_max)) == false) {
 				//ray->*t = t;
-				return true;
+				return false;
 			}
-			return false;
+
+			rec.t = t;
+			rec.p = ray.at(t);
+			rec.normal = (rec.p - position) / radius;
+			rec.mat_ptr = material;
+
+			return true;
 		}
 	};
 }
