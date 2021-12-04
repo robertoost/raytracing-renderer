@@ -16,11 +16,11 @@ namespace RaytracingRenderer {
 		float3 cam_dir = normalize(cam_pos - view_target);
 		float3 up_dir = float3(0, 1, 0);
 		//Camera's position matrix
-		float3 cameraX = float3(normalize(up_dir * cam_dir));
-		float3 cameraY = cam_dir * cameraX;
+		float3 cameraX = normalize(cross(up_dir, cam_dir));
+		float3 cameraY = cross(cam_dir, cameraX);
 		mat4 transformMatrix = mat4().LookAt(cam_pos, view_target, up_dir);
 		//Camera's pitch + yawn
-		float yaw = -90.f;
+		float yaw = 90.f;
 		float pitch = 0.f;
 		float lastX, lastY;
 
@@ -62,7 +62,7 @@ namespace RaytracingRenderer {
 
 		void keyHandler(int key)
 		{
-			const float cameraSpeed = 0.05f;
+			const float cameraSpeed = 0.5f;
 			//Camera camera = scene.camera;
 			switch (key)
 			{
@@ -74,10 +74,11 @@ namespace RaytracingRenderer {
 				origin -= cameraSpeed * cam_dir;
 				break;
 			case 65:
-				origin -= float3(normalize(cam_dir * cameraY) * cameraSpeed);
+				cout << origin.x << ", " << origin.y << ", " << origin.z;
+				origin -= normalize(cross(cam_dir, cameraY)) * cameraSpeed;
 				break;
 			case 68:
-				origin += float3(normalize(cam_dir * cameraY) * cameraSpeed);
+				origin += normalize(cross(cam_dir, cameraY)) * cameraSpeed;
 				break;
 			}
 			updateViewport();
@@ -101,10 +102,10 @@ namespace RaytracingRenderer {
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
 
-			yaw += xoffset;
-			pitch += yoffset;
+			yaw -= xoffset;
+			pitch -= yoffset;
 
-			cam_dir = normalize(getDirection(yaw, pitch));
+			view_target = normalize(getDirection(yaw, pitch));
 
 			updateViewport();
 		}
