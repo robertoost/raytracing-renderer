@@ -95,13 +95,22 @@ void MyApp::KeyDown(int key)
 }
 void MyApp::MouseMove(int x, int y) 
 {
-	scene.camera.mouseHandler(x, y);
+	if (mouse_held_down)
+	{
+		scene.camera.mouseHandler(x, y);
+	}
 }
 void MyApp::MouseUp(int button)
 {
-
+	if (button == 0)
+	{
+		mouse_held_down = false;
+	}
 }
 void MyApp::MouseDown(int button)
 {
-
+	if (button == 0) 
+	{
+		mouse_held_down = true;
+	}	
 }

@@ -21,6 +21,7 @@ public:
 	void KeyDown(int key);
 	// data members
 	//int2 mousePos = (0, 0);
+	bool mouse_held_down = false;
 	RaytracingRenderer::Scene scene;
 	MyApp() {};
 };
