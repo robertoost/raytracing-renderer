@@ -6,6 +6,7 @@ namespace RaytracingRenderer {
         float3 p;
         float3 normal;
         double t;
+        shared_ptr<Material> mat_ptr;
     };
 
     class Hittable {
