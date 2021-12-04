@@ -41,6 +41,9 @@
     <ClInclude Include="transform.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">
