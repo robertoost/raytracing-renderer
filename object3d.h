@@ -1,19 +1,18 @@
 #pragma once
-#include "transform.h"
 #include "material.h"
-#include <ray.h>
 
 namespace RaytracingRenderer {
 	class Object3D
 	{
 	public:
-		Transform transform;
+		float3 position;
 		Material material;
 
-		Object3D(float3 position) : transform(position) {}
-		Object3D() : transform() {}
-
-		virtual bool intersect(Ray ray) = 0;
+		Object3D(float3 position, Material material) {
+			this->position = position;
+			this->material = material;
+		}
+		Object3D() : position(float3(0,0,0)), material() {}
 	};
 
 };
