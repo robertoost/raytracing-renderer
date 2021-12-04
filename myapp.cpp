@@ -62,7 +62,9 @@ void MyApp::Tick( float deltaTime )
 
 		hit_record rec = hit_record();
 
-		bool collision = sphere.intersect(ray, 0.0001f, FLT_MAX, rec);
+		bool plane_hit = plane.intersect(ray, 0.0001f, FLT_MAX, rec);
+        bool sphere_hit = sphere.intersect(ray, 0.0001f, FLT_MAX, rec);
+		bool collision = plane_hit || sphere_hit;
 		uint c;
 
 		// If no collision was found for this ray, draw a nice BG color.
@@ -74,7 +76,7 @@ void MyApp::Tick( float deltaTime )
 		// If a collision was found, get the color of the object.
 		else {
 			// TODO: get object color at position.
-			float3 pixel_color = sphere.material.col;
+			float3 pixel_color = rec.mat_ptr->col;
 			c = translate_color(pixel_color);
 		}
 		
