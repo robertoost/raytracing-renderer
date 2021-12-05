@@ -14,6 +14,10 @@ namespace RaytracingRenderer {
 		float specularExponent;
 
 		Material() : materialType(DIFFUSE_AND_GLOSSY), ior(1.3), Kd(.8), Ks(.2), diffuseColor(.2, .2, .2), specularExponent(25) {}
+		Material(float3 diffiuseColor) 
+		{
+			this->diffuseColor = diffuseColor;
+		}
 
 	};
 }

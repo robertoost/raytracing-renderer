@@ -80,7 +80,7 @@ void MyApp::Tick( float deltaTime )
 		// If a collision was found, get the color of the object.
 		else {
 			// TODO: get object color at position.
-			float3 pixel_color = rec.mat_ptr->col;
+			float3 pixel_color = rec.mat_ptr->diffuseColor;
 			c = translate_color(pixel_color);
 		}
 		

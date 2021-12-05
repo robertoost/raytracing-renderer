@@ -1,5 +1,4 @@
 #pragma once
-#include "precomp.h"
 #include "object3d.h"
 #include "ray.h"
 #include "camera.h"
@@ -145,6 +144,7 @@ namespace RaytracingRenderer {
 		float2 uv;
 		uint32_t index = 0;
 		Object3D* hitObject = nullptr;
+		//TODO: REPLACE WITH RELEVANT TRACE FUNCTION??
 		if (trace(ray.orig, ray.dir, objects, tnear, index, uv, &hitObject)) {
 			float3 hitPoint = ray.orig + ray.dir * tnear;
 			float3 N; // normal 
@@ -198,6 +198,7 @@ namespace RaytracingRenderer {
 					Object3D* shadowHitObject = nullptr;
 					float tNearShadow = INFINITY;
 					// is the point in shadow, and is the nearest occluding object closer to the object than the light itself?
+					//TODO: REPLACE TRACE WITH RELEVANT INTERSECTION FUNCTION??
 					bool inShadow = trace(shadowPointOrig, lightDir, objects, tNearShadow, index, uv, &shadowHitObject) &&
 						tNearShadow * tNearShadow < lightDistance2;
 					lightAmt += (1 - inShadow) * lights[i]->intensity * LdotN;

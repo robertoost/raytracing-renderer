@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include "options.h"
+#include <options.h>
+
 namespace RaytracingRenderer {
 
 	class Camera

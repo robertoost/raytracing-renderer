@@ -53,6 +53,9 @@
     <ClInclude Include="directional.h">
       <Filter>src\light</Filter>
     </ClInclude>
+    <ClInclude Include="options.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">
