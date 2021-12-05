@@ -1,5 +1,4 @@
 #pragma once
-#include "precomp.h"
 #include "object3d.h"
 #include "ray.h"
 #include "camera.h"
