@@ -29,9 +29,6 @@
     <ClInclude Include="object3d.h">
       <Filter>src\3d-objects</Filter>
     </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>src\3d-objects</Filter>
-    </ClInclude>
     <ClInclude Include="ray.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -52,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="directional.h">
       <Filter>src\light</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_color_material.h">
+      <Filter>src\materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +86,9 @@
     </Filter>
     <Filter Include="src\light">
       <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\materials">
+      <UniqueIdentifier>{4f15d112-c6fb-463f-b21e-4167d2a70cbc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
