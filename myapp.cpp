@@ -20,6 +20,15 @@ float3 MyApp::rayColor(Ray ray) {
 void MyApp::Init()
 {
 	// anything that happens only once at application start goes here
+	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(2, 0, 4), 2, Material(float3(0, 1, 0))));
+	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, -1, 4), 1, Material(float3(1, 0, 0))));
+	shared_ptr<Plane> plane = make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), Material(float3(0, 0, 1))));
+	list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>();
+
+	objects.push_back(sphere1);
+	objects.push_back(plane);
+	objects.push_back(sphere2);
+	scene = Scene(objects);
 }
 
 // -----------------------------------------------------------
@@ -33,9 +42,6 @@ void MyApp::Tick( float deltaTime )
 	//printf( "hello world!\n" );
 
 	Camera camera = scene.camera;
-	Sphere sphere = scene.sphere;
-	Plane plane = scene.plane;
-
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
 	
@@ -59,12 +65,10 @@ void MyApp::Tick( float deltaTime )
 		float3 ray_dir = normalize(screen_point - camera.origin);
 
 		Ray ray = Ray(camera.origin, ray_dir);
-
 		hit_record rec = hit_record();
 
-		bool plane_hit = plane.intersect(ray, 0.0001f, FLT_MAX, rec);
-        bool sphere_hit = sphere.intersect(ray, 0.0001f, FLT_MAX, rec);
-		bool collision = plane_hit || sphere_hit;
+		const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+
 		uint c;
 
 		// If no collision was found for this ray, draw a nice BG color.
