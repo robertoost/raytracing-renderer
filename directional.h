@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "light.h"
 
 namespace RaytracingRenderer {
@@ -9,9 +8,6 @@ namespace RaytracingRenderer {
 	public:
 
 		float3 direction;
-
-		float cutoff;
-		float outer_cutoff;
 
 		DirectionalLight(float3 direction) {
 			this->direction = direction;

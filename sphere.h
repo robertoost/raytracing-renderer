@@ -48,6 +48,11 @@ namespace RaytracingRenderer {
 
 			return true;
 		}
+
+		void getSurfaceProperties(const float3& P, const float3& I, const uint32_t& index, const float3& uv, float3& N, float3& st) const
+		{
+			N = normalize(P - position);
+		}
 	};
 }
 

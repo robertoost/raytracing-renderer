@@ -11,6 +11,6 @@ namespace RaytracingRenderer {
 
     class Hittable {
     public:
-        virtual bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const = 0;
+        //virtual bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const = 0;
     };
 }
