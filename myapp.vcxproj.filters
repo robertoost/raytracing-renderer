@@ -45,7 +45,13 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="light.h">
-      <Filter>src</Filter>
+      <Filter>src\light</Filter>
+    </ClInclude>
+    <ClInclude Include="spotlight.h">
+      <Filter>src\light</Filter>
+    </ClInclude>
+    <ClInclude Include="directional.h">
+      <Filter>src\light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +80,9 @@
     </Filter>
     <Filter Include="src\3d-objects\primitives">
       <UniqueIdentifier>{95d0b961-1267-45c7-b176-2a21c90a9731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\light">
+      <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

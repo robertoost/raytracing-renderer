@@ -10,9 +10,6 @@ namespace RaytracingRenderer {
 
 		float3 direction;
 
-		float cutoff;
-		float outer_cutoff;
-
 		DirectionalLight(float3 direction) {
 			this->direction = direction;
 		}
@@ -25,7 +22,5 @@ namespace RaytracingRenderer {
 		{
 			direction = float3(0.f, 0.f, 1.f);
 		}
-
-
 	};
 };

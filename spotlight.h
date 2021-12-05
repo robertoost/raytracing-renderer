@@ -8,33 +8,28 @@ namespace RaytracingRenderer {
 
 	public:
 
-		float3 pos;
 		float3 direction;
 
 		float cutoff;
 		float outer_cutoff;
 
-		Spotlight(float3 pos,
-			float3 direction,
+		Spotlight(float3 direction,
 			float cutoff, float outer_cutoff) {
-			this->pos = pos;
 			this->direction = direction;
-			this->cutoff = cutoff;
-			this->outer_cutoff = outer_cutoff;
+			this->cutoff = cos(cutoff * (PI / 180));
+			this->outer_cutoff = cos(outer_cutoff * (PI / 180));
 		}
 
 		Spotlight() {}
 
 		~Spotlight() {}
 
-		Spotlight() : Light() 
+		Spotlight(float3 direction,
+			float cutoff, float outer_cutoff) : Light()
 		{
-			pos = float3(0.f, 0.f, 0.f); 
-			direction = float3(0.f, 0.f, 1.f); 
-			cutoff = cos(12.5f * (PI / 180)); 
-			outer_cutoff = cos(17.5f * (PI / 180));
+			direction = direction;
+			cutoff = cos(cutoff * (PI / 180));
+			outer_cutoff = cos(outer_cutoff * (PI / 180));
 		}
-
-
 	};
 };
