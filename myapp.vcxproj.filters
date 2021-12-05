@@ -55,6 +55,7 @@
     </ClInclude>
     <ClInclude Include="basic_color_material.h">
       <Filter>src\materials</Filter>
+    </ClInclude>
     <ClInclude Include="options.h">
       <Filter>src</Filter>
     </ClInclude>
