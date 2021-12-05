@@ -1,9 +1,11 @@
 ﻿#pragma once
+#include "options.h"
 namespace RaytracingRenderer {
 
 	class Camera
 	{
 	public:
+		Options options;
 		float3 origin;
 		float screen_dist = 1.;
 		float3 screen_p0;

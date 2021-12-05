@@ -1,6 +1,8 @@
 #pragma once
 #include "precomp.h"
 #include "object3d.h"
+#include "ray.h"
+#include "camera.h"
 
 namespace RaytracingRenderer {
 	class Light
@@ -93,11 +95,18 @@ namespace RaytracingRenderer {
 		// kt = 1 - kr;
 	}
 
+	/**
+	* Returns true if the ray intersects an object, false otherwise.
+	*
+	* @param values orig (ray origin), dir (ray direction), objects (vector of objects in scene)
+	* @return color at the intersection point
+	*/
 	bool trace(
-		const Ray& ray,
+		const float3& orig, const float3& dir,
 		const vector<unique_ptr<Object3D>>& objects,
-		float& tNear, uint32_t& index, float2 & uv, Object3D** hitObject)
+		float& tNear, uint32_t& index, float2& uv, Object3D** hitObject)
 	{
+		Ray ray = Ray(orig, dir);
 		*hitObject = nullptr;
 		for (uint32_t k = 0; k < objects.size(); ++k) {
 			float tNearK = INFINITY;
@@ -136,7 +145,7 @@ namespace RaytracingRenderer {
 		float2 uv;
 		uint32_t index = 0;
 		Object3D* hitObject = nullptr;
-		if (trace(ray, objects, tnear, index, uv, &hitObject)) {
+		if (trace(ray.orig, ray.dir, objects, tnear, index, uv, &hitObject)) {
 			float3 hitPoint = ray.orig + ray.dir * tnear;
 			float3 N; // normal 
 			float3 st; // st coordinates 
@@ -153,8 +162,9 @@ namespace RaytracingRenderer {
 				float3 refractionRayOrig = (dot(refractionDirection, N) < 0) ?
 					hitPoint - N * options.bias :
 					hitPoint + N * options.bias;
-				float3 reflectionColor = castRay(reflectionRayOrig, reflectionDirection, objects, lights, options, depth + 1, 1);
-				float3 refractionColor = castRay(refractionRayOrig, refractionDirection, objects, lights, options, depth + 1, 1);
+				Ray refl = Ray(reflectionRayOrig, reflectionDirection);
+				float3 reflectionColor = castRay(refl, objects, lights, options, depth + 1, 1);
+				float3 refractionColor = castRay(refl, objects, lights, options, depth + 1, 1);
 				float kr;
 				fresnel(ray.orig, N, hitObject->material->ior, kr);
 				hitColor = reflectionColor * kr + refractionColor * (1 - kr);
@@ -163,19 +173,20 @@ namespace RaytracingRenderer {
 			case REFLECTION:
 			{
 				float kr;
-				fresnel(dir, N, hitObject->material->ior, kr);
-				float3 reflectionDirection = reflectVector(dir, N);
+				fresnel(ray.orig, N, hitObject->material->ior, kr);
+				float3 reflectionDirection = reflectVector(ray.orig, N);
 				float3 reflectionRayOrig = (dot(reflectionDirection, N) < 0) ?
 					hitPoint + N * options.bias :
 					hitPoint - N * options.bias;
-				hitColor = castRay(reflectionRayOrig, reflectionDirection, objects, lights, options, depth + 1) * kr;
+				Ray refl = Ray(reflectionRayOrig, reflectionDirection);
+				hitColor = castRay(refl, objects, lights, options, depth + 1) * kr;
 				break;
 			}
 			default:
 			{
 				float3 lightAmt = float3(0, 0, 0);
 				float3 specularColor = float3(0, 0, 0);
-				float3 shadowPointOrig = (dot(dir, N) < 0) ?
+				float3 shadowPointOrig = (dot(ray.orig, N) < 0) ?
 					hitPoint + N * options.bias :
 					hitPoint - N * options.bias;
 				for (uint32_t i = 0; i < lights.size(); ++i) {
@@ -191,7 +202,7 @@ namespace RaytracingRenderer {
 						tNearShadow * tNearShadow < lightDistance2;
 					lightAmt += (1 - inShadow) * lights[i]->intensity * LdotN;
 					float3 reflectionDirection = reflect(-lightDir, N);
-					specularColor += powf(max(0.f, -dot(reflectionDirection, dir)), hitObject->material->specularExponent) * lights[i]->intensity;
+					specularColor += powf(max(0.f, -dot(reflectionDirection, ray.orig)), hitObject->material->specularExponent) * lights[i]->intensity;
 				}
 				hitColor = lightAmt * hitObject->material->diffuseColor * hitObject->material->Kd + specularColor * hitObject->material->Ks;
 				break;
