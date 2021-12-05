@@ -13,6 +13,10 @@ namespace RaytracingRenderer {
 			this->material = make_shared<Material>(material);
 		}
 		Object3D() : position(float3(0,0,0)), material() {}
+
+		virtual bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const = 0;
+		virtual void getSurfaceProperties(const float3&, const float3&, const uint32_t&, const float2&, float3&, float2&) const = 0;
+
 	};
 
 };

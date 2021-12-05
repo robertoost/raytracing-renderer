@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "light.h"
 
 namespace RaytracingRenderer {
@@ -22,5 +21,7 @@ namespace RaytracingRenderer {
 		{
 			direction = float3(0.f, 0.f, 1.f);
 		}
+
+
 	};
 };
