@@ -1,5 +1,4 @@
 #pragma once
-#include "material.h"
 
 namespace RaytracingRenderer {
 	class Object3D
@@ -8,12 +7,11 @@ namespace RaytracingRenderer {
 		float3 position;
 		shared_ptr<Material> material;
 
-		Object3D(float3 position, Material material) {
+		Object3D(float3 position, shared_ptr<Material> material) {
 			this->position = position;
-			this->material = make_shared<Material>(material);
+			this->material = material;
 		}
-		Object3D() : position(float3(0,0,0)), material() {}
-
+		Object3D() : Object3D(float3(), make_shared<UnlitMaterial>()) {}
 	};
 
 };
