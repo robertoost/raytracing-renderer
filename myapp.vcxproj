@@ -130,11 +130,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ambient_light.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="checkerboard_material.h" />
     <ClInclude Include="cl\tools.cl" />
     <ClInclude Include="color.h" />
-    <ClInclude Include="directional.h" />
-    <ClInclude Include="basic_color_material.h" />
+    <ClInclude Include="normal_material.h" />
+    <ClInclude Include="unlit_material.h" />
     <ClInclude Include="hittable.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="material.h" />
@@ -145,7 +147,6 @@
     <ClInclude Include="ray.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="sphere.h" />
-    <ClInclude Include="spotlight.h" />
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\precomp.h" />
   </ItemGroup>

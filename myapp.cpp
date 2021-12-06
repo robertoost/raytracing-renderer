@@ -3,15 +3,44 @@
 
 TheApp* CreateApp() { return new MyApp(); }
 
-#include "scene.h"
-#include "color.h"
-
 using namespace RaytracingRenderer;
 
-float3 MyApp::rayColor(Ray ray) {
-	auto t = 0.5f * (ray.dir.y + 1);
-	float3 pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
+float3 MyApp::Trace(Ray ray) {
+
+	// Trace a ray and record the hit.
+	hit_record rec = hit_record();
+	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+
+	float3 pixel_color = float3(0, 0, 0);
+
+	// If no collision was found for this ray, draw a nice BG color.
+	if (collision == false) {
+		// Create a nice background color.
+		auto t = 0.5f * (ray.dir.y + 1);
+		pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
+	}
+	// If a collision was found, get the color of the object.
+	else {
+		Ray scatter_ray;
+
+		// Mirror material, scatters rays.
+		if (rec.mat_ptr->scatter(ray, rec, pixel_color, scatter_ray)) {
+			// TODO: REFLECT OR SOMETHING
+		}
+		// Diffuse materials don't need extra rays.
+		else {
+			pixel_color *= DirectIllumination(rec.p, rec.normal);
+		}
+	}
 	return pixel_color;
+}
+
+float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
+	float3 pixel_lighting = float3(0, 0, 0);
+	for (shared_ptr<Light> light : scene.lights) {
+		pixel_lighting += light->illuminate(position, normal);
+	}
+	return pixel_lighting;
 }
 
 // -----------------------------------------------------------
@@ -19,16 +48,23 @@ float3 MyApp::rayColor(Ray ray) {
 // -----------------------------------------------------------
 void MyApp::Init()
 {
-	// anything that happens only once at application start goes here
-	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(2, 0, 4), 2, Material(float3(0, 1, 0))));
-	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, -1, 4), 1, Material(float3(1, 0, 0))));
-	shared_ptr<Plane> plane = make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), Material(float3(0, 0, 1))));
-	list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>();
+	// Instantiate material pointers.
+	shared_ptr<NormalMaterial> sphere1_mat = make_shared<NormalMaterial>(NormalMaterial());
+	shared_ptr<UnlitMaterial> sphere2_mat = make_shared<UnlitMaterial>(UnlitMaterial(float3(0.2, 0.1, 1)));
+	shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(0.4f,0.2f,1.f), float3(0.4f, 1.f,0.7f)));
 
-	objects.push_back(sphere1);
-	objects.push_back(plane);
-	objects.push_back(sphere2);
-	scene = Scene(objects);
+	// Instantiate object pointers.
+	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(2, 1, 4), 2, sphere1_mat));
+	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, -1, 4), 1, sphere2_mat));
+	shared_ptr<Plane> plane = make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), plane_mat));
+
+	// Put all scene objects in a list
+	list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({sphere1, sphere2, plane});
+
+	shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1));
+	list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ ambient_light });
+
+	scene = Scene(objects, lights);
 }
 
 // -----------------------------------------------------------
@@ -38,8 +74,6 @@ void MyApp::Tick( float deltaTime )
 {
 	// clear the screen to black
 	screen->Clear( 0 );
-	// print something to the console window
-	//printf( "hello world!\n" );
 
 	Camera camera = scene.camera;
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
@@ -65,25 +99,11 @@ void MyApp::Tick( float deltaTime )
 		float3 ray_dir = normalize(screen_point - camera.origin);
 
 		Ray ray = Ray(camera.origin, ray_dir);
-		hit_record rec = hit_record();
 
-		const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+		float3 pixel_color = Trace(ray);
 
-		uint c;
+		uint c = translate_color(pixel_color);
 
-		// If no collision was found for this ray, draw a nice BG color.
-		if (collision == false) {
-			// Create a nice background color.
-			float3 pixel_color = rayColor(ray);
-			c = translate_color(pixel_color);
-		}
-		// If a collision was found, get the color of the object.
-		else {
-			// TODO: get object color at position.
-			float3 pixel_color = rec.mat_ptr->diffuseColor;
-			c = translate_color(pixel_color);
-		}
-		
 		screen->Plot(x, y, c);
 	}
 

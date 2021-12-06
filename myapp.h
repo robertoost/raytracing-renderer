@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include "scene.h"
-#include "ray.h"
 
 namespace Tmpl8
 {
@@ -11,7 +9,8 @@ public:
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
-	float3 rayColor(RaytracingRenderer::Ray ray);
+	float3 Trace(RaytracingRenderer::Ray ray);
+	float3 DirectIllumination(float3 &position, float3 &normal);
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp(int button);
