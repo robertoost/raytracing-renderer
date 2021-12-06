@@ -1,10 +1,11 @@
 #pragma once
+
 namespace RaytracingRenderer {
 
 	class Camera
 	{
 	public:
-		RaytracingRenderer::Options options;
+		Options options;
 		float3 origin;
 		float screen_dist = 1.;
 		float3 screen_p0;
