@@ -1,7 +1,4 @@
 #pragma once
-#include "camera.h"
-#include "sphere.h"
-#include "plane.h"
 
 namespace RaytracingRenderer {
 
@@ -9,8 +6,9 @@ namespace RaytracingRenderer {
 	{
 	public:
 		Camera camera;
-
+		list<shared_ptr<Light>> lights;
 		list<shared_ptr<Hittable>> objects;
+
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			bool collision = false;
 			
@@ -27,11 +25,15 @@ namespace RaytracingRenderer {
 
 		Scene() {
 			objects = list<shared_ptr<Hittable>>();
-			objects.push_back(make_shared<Sphere>(Sphere(float3(0, 0, 4), 1.f, Material())));
-			objects.push_back(make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), Material(float3(0, 0, 1)))));
+			shared_ptr<UnlitMaterial> sphere_mat = make_shared<UnlitMaterial>();
+			shared_ptr<UnlitMaterial> plane_mat = make_shared<UnlitMaterial>(UnlitMaterial(float3(0, 0, 1)));
+
+			objects.push_back(make_shared<Sphere>(Sphere(float3(0, 0, 4), 1.f, sphere_mat)));
+			objects.push_back(make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), plane_mat)));
 		};
-		Scene(list<shared_ptr<Hittable>> objects) {
+		Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights) {
 			this->objects = objects;
+			this->lights = lights;
 		}
 	};
 }
