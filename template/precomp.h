@@ -1219,4 +1219,33 @@ public:
 	Surface* screen = 0;
 };
 
+// General raytracing.
+#include "ray.h"
+#include "hittable.h"
+
+// Materials
+#include "material.h"
+#include "unlit_material.h"
+#include "normal_material.h"
+#include "checkerboard_material.h"
+
+// 3D Objects.
+#include "object3d.h"
+#include "sphere.h"
+#include "plane.h"
+
+// Camera.
+#include "options.h"
+#include "camera.h"
+
+// Lighting.
+#include "light.h"
+#include "ambient_light.h"
+
+// Scene.
+#include "scene.h"
+
+// Color utility.
+#include "color.h"
+
 // EOF
