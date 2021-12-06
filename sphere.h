@@ -1,18 +1,16 @@
 #pragma once
-#include "object3d.h"
-#include "hittable.h"
 
 namespace RaytracingRenderer {
 
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
 	// TODO: Material.
-	class Sphere : public virtual Object3D, public virtual Hittable
+	class Sphere : public Object3D, public Hittable
 	{
 	public:
 		float r2;
 		float radius;
 
-		Sphere(float3 position, float radius, Material material): Object3D(position, material) {
+		Sphere(float3 position, float radius, shared_ptr<Material> material): Object3D(position, material) {
 			this->radius = radius;
 			this->r2 = radius * radius;
 		}
