@@ -1,7 +1,8 @@
 #pragma once
-#include "ray.h"
 
 namespace RaytracingRenderer {
+    class Material;
+
     struct hit_record {
         float3 p;
         float3 normal;
