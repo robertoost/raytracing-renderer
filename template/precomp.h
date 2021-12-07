@@ -1228,6 +1228,7 @@ public:
 #include "unlit_material.h"
 #include "normal_material.h"
 #include "checkerboard_material.h"
+#include "mirror_material.h"
 
 // 3D Objects.
 #include "object3d.h"
@@ -1241,6 +1242,7 @@ public:
 // Lighting.
 #include "light.h"
 #include "ambient_light.h"
+#include "point_light.h"
 
 // Scene.
 #include "scene.h"
