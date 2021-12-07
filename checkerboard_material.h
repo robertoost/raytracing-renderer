@@ -10,7 +10,7 @@ namespace RaytracingRenderer {
 		void color(
 			const Ray& r_in, const hit_record& rec, float3& attenuation
 		) const override {
-			if (int(floor(rec.p.x) + floor(rec.p.z) + floor(rec.p.y)) % 2 == 0) {
+			if (int(floor(rec.p.x) + floor(rec.p.z)) % 2 == 0) {
 				attenuation = odd_color;
 			}
 			else {
