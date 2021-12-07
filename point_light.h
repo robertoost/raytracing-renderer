@@ -9,9 +9,13 @@ namespace RaytracingRenderer {
 
         PointLight() : Light() {}
 
-        // Ambient light doesn't need to consider position and normal.
         float3 illuminate(float3& position, float3& normal, float3& light_dir) {
-            return float3(1,1,1) * dot(normal, light_dir) * intensity;
+            float cos_a = clamp(dot(normal, light_dir), 0.f, 1.f);
+
+            if (cos_a == 0) {
+                return float3(0, 0, 0);
+            }
+            return float3(1, 1, 1) * cos_a * intensity;
         }
     };
 }
