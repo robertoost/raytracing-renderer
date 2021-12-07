@@ -135,6 +135,7 @@
     <ClInclude Include="checkerboard_material.h" />
     <ClInclude Include="cl\tools.cl" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="glass_material.h" />
     <ClInclude Include="mirror_material.h" />
     <ClInclude Include="normal_material.h" />
     <ClInclude Include="point_light.h" />
