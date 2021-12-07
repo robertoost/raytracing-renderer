@@ -1229,6 +1229,7 @@ public:
 #include "normal_material.h"
 #include "checkerboard_material.h"
 #include "mirror_material.h"
+#include "glass_material.h"
 
 // 3D Objects.
 #include "object3d.h"
@@ -1238,13 +1239,14 @@ public:
 // Camera.
 #include "camera.h"
 
+// Scene.
+#include "scene.h"
+
 // Lighting.
 #include "light.h"
 #include "ambient_light.h"
 #include "point_light.h"
 
-// Scene.
-#include "scene.h"
 
 // Color utility.
 #include "color.h"
