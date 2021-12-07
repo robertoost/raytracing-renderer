@@ -39,10 +39,12 @@ namespace RaytracingRenderer {
 				return false;
 			}
 
+			float3 outward_normal = (rec.p - position) / radius;
+
 			rec.t = t;
 			rec.p = ray.at(t);
-			rec.normal = (rec.p - position) / radius;
 			rec.mat_ptr = material;
+			rec.set_face_normal(ray, outward_normal);
 
 			return true;
 		}
