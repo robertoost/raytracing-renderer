@@ -68,7 +68,7 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 		hit_record rec = hit_record();
 
 		// Get collision.
-		bool collision = scene.intersect(shadow_ray, 0, distance_to_light, rec);
+		bool collision = scene.intersect(shadow_ray, 0.0001, distance_to_light, rec);
 
 		if (collision == true) {
 			continue;
@@ -97,8 +97,8 @@ void MyApp::Init()
 	// Put all scene objects in a list
 	list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({sphere1, sphere2, plane});
 
-	shared_ptr<PointLight> ambient_light = make_shared<PointLight>(PointLight(float3(-2, 10, 0), 1));
-	list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ ambient_light });
+	shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(-2, 10, 0), 1));
+	list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ point_light });
 
 	scene = Scene(objects, lights);
 	camera = Camera();
