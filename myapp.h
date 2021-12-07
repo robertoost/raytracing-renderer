@@ -8,13 +8,14 @@ namespace Tmpl8
 class MyApp : public TheApp
 {
 public:
+	int max_bounces = 10;
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
+	float3 BackgroundColor(Ray& ray, float3& pixel_color);
 	float3 Trace(Ray &ray);
-	float3 Trace(float3 &position, Ray& ray);
+	float3 Trace(Ray& ray, int bounce_count);
 	float3 DirectIllumination(float3 &position, float3 &normal);
-	bool NearestIntersection(Ray &ray, hit_record &rec);
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp(int button);

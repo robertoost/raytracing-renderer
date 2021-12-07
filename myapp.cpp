@@ -1,14 +1,15 @@
-#include "precomp.h"
+﻿#include "precomp.h"
 #include "myapp.h"
 
 TheApp* CreateApp() { return new MyApp(); }
 
 using namespace RaytracingRenderer;
 
-bool MyApp::NearestIntersection(Ray& ray, hit_record& rec) {
-	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
-
-	return true;
+float3 MyApp::BackgroundColor(Ray& ray, float3& pixel_color) {
+	// Create a nice background color.
+	auto t = 0.5f * (ray.dir.y + 1);
+	pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
+	return pixel_color;
 }
 
 float3 MyApp::Trace(Ray &ray) {
@@ -21,16 +22,12 @@ float3 MyApp::Trace(Ray &ray) {
 
 	// If no collision was found for this ray, draw a nice BG color.
 	if (collision == false) {
-
-		// Create a nice background color.
-		auto t = 0.5f * (ray.dir.y + 1);
-		pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
-
+		return BackgroundColor(ray, pixel_color);
 	}
 	// If a collision was found, get the color of the object.
 	else {
 		rec.mat_ptr->color(ray, rec, pixel_color);
-		// Mirror material, scatters rays.
+
 		MAT_TYPE mat_type = rec.mat_ptr->type();
 
 		if (rec.mat_ptr->type() == DIFFUSE) {
@@ -38,10 +35,10 @@ float3 MyApp::Trace(Ray &ray) {
 			pixel_color *= DirectIllumination(rec.p, rec.normal);
 		}
 		else if (rec.mat_ptr->type() == MIRROR) {
-			// MIRROR
-			// TODO: REFLECT OR SOMETHING
+			// Mirror material, scatters rays.
 			float3 reflect_dir = reflect(rec.p, rec.normal);
 			Ray reflect_ray = Ray(ray.dir, reflect_dir);
+			pixel_color *= Trace(reflect_ray, 1);
 		}
 		else if (rec.mat_ptr->type() == GLASS) {
 			// TODO: GLASS?????
@@ -50,8 +47,25 @@ float3 MyApp::Trace(Ray &ray) {
 	return pixel_color;
 }
 
-float3 MyApp::Trace(float3 &position, Ray& reflection) {
-	return float3(0, 0, 0);
+float3 MyApp::Trace(Ray& ray, int bounce_count) {
+
+	hit_record rec = hit_record();
+	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+	float3 pixel_color = float3(0,0,0);
+
+	if (collision == false) {
+		return pixel_color;
+	}
+
+	rec.mat_ptr->color(ray, rec, pixel_color);
+
+	if (bounce_count <= max_bounces && rec.mat_ptr->type() == MIRROR) {
+		float3 reflect_dir = reflect(rec.p, rec.normal);
+		Ray reflect_ray = Ray(ray.dir, reflect_dir);
+		pixel_color *= Trace(reflect_ray, bounce_count + 1);
+	}
+
+	return pixel_color;
 }
 
 float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
@@ -70,6 +84,7 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 		// Get collision.
 		bool collision = scene.intersect(shadow_ray, 0.0001, distance_to_light, rec);
 
+		// If the light is obscured, continue.
 		if (collision == true) {
 			continue;
 		}
@@ -154,16 +169,6 @@ void MyApp::Tick( float deltaTime )
 
 		screen->Plot(x, y, c);
 	}
-
-	
-	//// plot some colors
-	//for( int red = 0; red < 256; red++ ) for( int green = 0; green < 256; green++ )
-	//{
-	//	int x = red, y = green;
-	//	screen->Plot( x + 200, y + 100, (red << 16) + (green << 8) );
-	//}
-	//// plot a white pixel in the bottom right corner
-	//screen->Plot( SCRWIDTH - 2, SCRHEIGHT - 2, 0xffffff );
 }
 
 void MyApp::KeyUp(int key)
