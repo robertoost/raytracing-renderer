@@ -1,6 +1,7 @@
 #pragma once
 
 namespace RaytracingRenderer {
+	class Light;
 
 	class Scene: public Hittable
 	{
