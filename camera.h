@@ -9,7 +9,7 @@ namespace RaytracingRenderer {
 		float3 vertical;
 
 	public:
-		float screen_dist = 10.;
+		float screen_dist = 1.;
 		float3 screen_p0;
 		float3 screen_p1;
 		float3 screen_p2;
