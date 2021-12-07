@@ -160,7 +160,8 @@ void MyApp::Tick( float deltaTime )
 		
 		// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
 		float3 ray_dir = normalize(screen_point - camera.cameraPos);
-
+		ray_dir = camera.transformMatrix.TransformVector(ray_dir);
+		//ray_dir = camera.perspectiveMatrix.TransformVector(ray_dir);
 		Ray ray = Ray(camera.cameraPos, ray_dir);
 
 		float3 pixel_color = Trace(ray);
