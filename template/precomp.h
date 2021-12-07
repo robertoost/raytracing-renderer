@@ -1236,7 +1236,6 @@ public:
 #include "plane.h"
 
 // Camera.
-#include "options.h"
 #include "camera.h"
 
 // Lighting.

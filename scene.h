@@ -5,7 +5,7 @@ namespace RaytracingRenderer {
 	class Scene: public Hittable
 	{
 	public:
-		Camera camera;
+		//Camera camera;
 		list<shared_ptr<Light>> lights;
 		list<shared_ptr<Hittable>> objects;
 
@@ -24,6 +24,7 @@ namespace RaytracingRenderer {
 		};
 
 		Scene() {
+			//camera = Camera(float3(0, 0, 0), 90., ASPECT_RATIO);
 			objects = list<shared_ptr<Hittable>>();
 			shared_ptr<UnlitMaterial> sphere_mat = make_shared<UnlitMaterial>();
 			shared_ptr<UnlitMaterial> plane_mat = make_shared<UnlitMaterial>(UnlitMaterial(float3(0, 0, 1)));

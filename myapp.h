@@ -28,6 +28,7 @@ public:
 	bool key_held_down = false;
 	int held_key = 0;
 	RaytracingRenderer::Scene scene;
+	RaytracingRenderer::Camera camera;
 	MyApp() {};
 };
 

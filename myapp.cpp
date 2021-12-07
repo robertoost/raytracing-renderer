@@ -35,7 +35,7 @@ float3 MyApp::Trace(Ray &ray) {
 
 		if (rec.mat_ptr->type() == DIFFUSE) {
 			// Diffuse materials don't need extra rays.
-			pixel_color *= DirectIllumination(rec.p, rec.normal);
+			//pixel_color *= DirectIllumination(rec.p, rec.normal);
 		}
 		else if (rec.mat_ptr->type() == MIRROR) {
 			// MIRROR
@@ -101,6 +101,7 @@ void MyApp::Init()
 	list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ ambient_light });
 
 	scene = Scene(objects, lights);
+	camera = Camera();
 }
 
 // -----------------------------------------------------------
@@ -109,15 +110,14 @@ void MyApp::Init()
 void MyApp::Tick( float deltaTime )
 {
 	// clear the screen to black
-	screen->Clear( 0 );
+	//screen->Clear( 0 );
 
-	Camera camera = scene.camera;
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
 	
 	if (key_held_down)
 	{
-		scene.camera.keyHandler(held_key);
+		camera.keyHandler(held_key);
 	}
 
 	// Loop over every pixel in the screen.
@@ -132,9 +132,9 @@ void MyApp::Tick( float deltaTime )
 		float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
 		
 		// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-		float3 ray_dir = normalize(screen_point - camera.origin);
+		float3 ray_dir = normalize(screen_point - camera.cameraPos);
 
-		Ray ray = Ray(camera.origin, ray_dir);
+		Ray ray = Ray(camera.cameraPos, ray_dir);
 
 		float3 pixel_color = Trace(ray);
 
@@ -167,7 +167,7 @@ void MyApp::MouseMove(int x, int y)
 {
 	if (mouse_held_down)
 	{
-		scene.camera.mouseHandler(x, y);
+		camera.mouseHandler(x, y);
 	}
 }
 void MyApp::MouseUp(int button)
