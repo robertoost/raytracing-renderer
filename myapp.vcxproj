@@ -138,7 +138,7 @@
     <ClInclude Include="mirror_material.h" />
     <ClInclude Include="normal_material.h" />
     <ClInclude Include="point_light.h" />
-    <ClInclude Include="unlit_material.h" />
+    <ClInclude Include="diffuse_material.h" />
     <ClInclude Include="hittable.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="material.h" />

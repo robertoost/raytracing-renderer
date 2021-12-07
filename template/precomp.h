@@ -1225,7 +1225,7 @@ public:
 
 // Materials
 #include "material.h"
-#include "unlit_material.h"
+#include "diffuse_material.h"
 #include "normal_material.h"
 #include "checkerboard_material.h"
 #include "mirror_material.h"

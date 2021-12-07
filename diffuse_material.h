@@ -2,7 +2,7 @@
 
 namespace RaytracingRenderer {
 
-	class UnlitMaterial: public Material {
+	class DiffuseMaterial: public Material {
 	public:
 		float3 col;
 
@@ -12,9 +12,9 @@ namespace RaytracingRenderer {
 			attenuation = col;
 		}
 
-		UnlitMaterial() : UnlitMaterial(float3(1, 1, 1)) {}
+		DiffuseMaterial() : DiffuseMaterial(float3(1, 1, 1)) {}
 
-		UnlitMaterial(float3 col): Material(DIFFUSE) {
+		DiffuseMaterial(float3 col): Material(DIFFUSE) {
 			this->col = col;
 		}
 	};

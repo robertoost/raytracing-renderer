@@ -11,7 +11,7 @@ namespace RaytracingRenderer {
 			this->position = position;
 			this->material = material;
 		}
-		Object3D() : Object3D(float3(), make_shared<UnlitMaterial>()) {}
+		Object3D() : Object3D(float3(), make_shared<DiffuseMaterial>()) {}
 	};
 
 };
