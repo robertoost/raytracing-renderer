@@ -10,7 +10,7 @@ namespace RaytracingRenderer {
         AmbientLight() : Light() {}
 
         // Ambient light doesn't need to consider position and normal.
-        float3 illuminate(float3& position, float3& normal, float3& light_dir) {
+        float3 illuminate(float3& position, float3& normal, Scene& scene) {
             return float3(1,1,1) * intensity;
         }
     };

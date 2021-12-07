@@ -1,6 +1,7 @@
 #pragma once
 
 namespace RaytracingRenderer {
+
 	class Light
 	{
 
@@ -16,6 +17,6 @@ namespace RaytracingRenderer {
 		
 		Light() : Light(float3(0, 0, 0), 1.f) {}
 		
-		virtual float3 illuminate(float3& position, float3& normal, float3& light_dir) = 0;
+		virtual float3 illuminate(float3& position, float3& normal, Scene& scene) = 0;
 	};
 }
