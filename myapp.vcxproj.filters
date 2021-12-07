@@ -50,9 +50,6 @@
     <ClInclude Include="diffuse_material.h">
       <Filter>src\materials</Filter>
     </ClInclude>
-    <ClInclude Include="options.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="ambient_light.h">
       <Filter>src\light</Filter>
     </ClInclude>

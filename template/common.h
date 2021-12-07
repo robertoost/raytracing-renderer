@@ -1,6 +1,7 @@
 // default screen resolution
-#define SCRWIDTH	1280
-#define SCRHEIGHT	720
+#define SCRWIDTH	300
+#define SCRHEIGHT	300
+#define ASPECT_RATIO 16.0 / 9.0
 
 // IMPORTANT NOTE ON OPENCL COMPATIBILITY ON OLDER LAPTOPS:
 // Without a GPU, a laptop needs at least a 'Broadwell' Intel CPU (5th gen, 2015):
