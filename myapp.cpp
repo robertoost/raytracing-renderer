@@ -5,7 +5,13 @@ TheApp* CreateApp() { return new MyApp(); }
 
 using namespace RaytracingRenderer;
 
-float3 MyApp::Trace(Ray ray) {
+bool MyApp::NearestIntersection(Ray& ray, hit_record& rec) {
+	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+
+	return true;
+}
+
+float3 MyApp::Trace(Ray &ray) {
 
 	// Trace a ray and record the hit.
 	hit_record rec = hit_record();
@@ -15,30 +21,60 @@ float3 MyApp::Trace(Ray ray) {
 
 	// If no collision was found for this ray, draw a nice BG color.
 	if (collision == false) {
+
 		// Create a nice background color.
 		auto t = 0.5f * (ray.dir.y + 1);
 		pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
+
 	}
 	// If a collision was found, get the color of the object.
 	else {
-		Ray scatter_ray;
-
+		rec.mat_ptr->color(ray, rec, pixel_color);
 		// Mirror material, scatters rays.
-		if (rec.mat_ptr->scatter(ray, rec, pixel_color, scatter_ray)) {
-			// TODO: REFLECT OR SOMETHING
-		}
-		// Diffuse materials don't need extra rays.
-		else {
+		MAT_TYPE mat_type = rec.mat_ptr->type();
+
+		if (rec.mat_ptr->type() == DIFFUSE) {
+			// Diffuse materials don't need extra rays.
 			pixel_color *= DirectIllumination(rec.p, rec.normal);
+		}
+		else if (rec.mat_ptr->type() == MIRROR) {
+			// MIRROR
+			// TODO: REFLECT OR SOMETHING
+			float3 reflect_dir = reflect(rec.p, rec.normal);
+			Ray reflect_ray = Ray(ray.dir, reflect_dir);
+		}
+		else if (rec.mat_ptr->type() == GLASS) {
+			// TODO: GLASS?????
 		}
 	}
 	return pixel_color;
 }
 
+float3 MyApp::Trace(float3 &position, Ray& reflection) {
+	return float3(0, 0, 0);
+}
+
 float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 	float3 pixel_lighting = float3(0, 0, 0);
 	for (shared_ptr<Light> light : scene.lights) {
-		pixel_lighting += light->illuminate(position, normal);
+
+		// Get difference between light and position.
+		float3 diff = light->position - position;
+		float distance_to_light = length(diff);
+		float3 direction = normalize(diff);
+
+		// Prepare shadow raycast
+		Ray shadow_ray = Ray(position, direction);
+		hit_record rec = hit_record();
+
+		// Get collision.
+		bool collision = scene.intersect(shadow_ray, 0, distance_to_light, rec);
+
+		if (collision == true) {
+			continue;
+		}
+		
+		pixel_lighting += light->illuminate(position, normal, direction);
 	}
 	return pixel_lighting;
 }
@@ -55,13 +91,13 @@ void MyApp::Init()
 
 	// Instantiate object pointers.
 	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(2, 1, 4), 2, sphere1_mat));
-	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, -1, 4), 1, sphere2_mat));
+	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, 0, 4), 1, sphere2_mat));
 	shared_ptr<Plane> plane = make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), plane_mat));
 
 	// Put all scene objects in a list
 	list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({sphere1, sphere2, plane});
 
-	shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1));
+	shared_ptr<PointLight> ambient_light = make_shared<PointLight>(PointLight(float3(-2, 10, 0), 1));
 	list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ ambient_light });
 
 	scene = Scene(objects, lights);

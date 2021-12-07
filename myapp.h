@@ -1,4 +1,6 @@
 ﻿#pragma once
+using RaytracingRenderer::Ray;
+using RaytracingRenderer::hit_record;
 
 namespace Tmpl8
 {
@@ -9,8 +11,10 @@ public:
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
-	float3 Trace(RaytracingRenderer::Ray ray);
+	float3 Trace(Ray &ray);
+	float3 Trace(float3 &position, Ray& ray);
 	float3 DirectIllumination(float3 &position, float3 &normal);
+	bool NearestIntersection(Ray &ray, hit_record &rec);
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp(int button);
