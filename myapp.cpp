@@ -32,10 +32,11 @@ float3 MyApp::Trace(Ray &ray) {
 
 	float3 pixel_color = float3(0, 0, 0);
 
-	// If no collision was found for this ray, draw the background color.
+	// If there's no collision, return black.
 	if (collision == false) {
-		return BackgroundColor(ray, pixel_color);
+		return pixel_color;
 	}
+
 	// If a collision was found, get the color of the object.
 	else {
 
@@ -66,8 +67,8 @@ float3 MyApp::Trace(Ray &ray) {
 		}
 		else if (mat_type == GLASS) {
 			float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
-			Ray refract_ray = Ray(rec.p, refract_dir);
-			pixel_color *= TraceReflection(refract_ray, 1);
+			Ray refract_ray = Ray(rec.p, refract_dir, rec.mat_ptr);
+			pixel_color *= TraceRefraction(refract_ray, 1);
 		}
 	}
 	return pixel_color;
@@ -89,35 +90,37 @@ float3 MyApp::TraceReflection(Ray& ray, int bounce_count) {
 	// Initially set the pixel color using the material's color.
 	rec.mat_ptr->color(ray, rec, pixel_color);
 
-	if (bounce_count <= max_bounces) {
-		if (rec.mat_ptr->type() == SOLID) {
+	if (bounce_count > max_bounces) {
+		return pixel_color;
+	}
 
-			// Get the material's specularity and infer the diffuse value.
-			const float specular = rec.mat_ptr->specularity();
-			const float diffuse = 1 - specular;
+	if (rec.mat_ptr->type() == SOLID) {
+
+		// Get the material's specularity and infer the diffuse value.
+		const float specular = rec.mat_ptr->specularity();
+		const float diffuse = 1 - specular;
 			
-			// Sum both the specular and the diffuse color.
-			float3 spec_diff_color = float3(0, 0, 0);
+		// Sum both the specular and the diffuse color.
+		float3 spec_diff_color = float3(0, 0, 0);
 
-			// Diffuse color value. On the first bounce, add direct illumination.
-			if (diffuse > 0 && bounce_count <= max_reflection_shadows) {
-				spec_diff_color += diffuse * DirectIllumination(rec.p, rec.normal);
-			}
-			// If no direct illumination is added, just add the material color.
-			else if (diffuse > 0) {
-				spec_diff_color += diffuse * float3(1, 1, 1);
-			}
-
-			// Specular color value. Trace new ray and increase bounce count to prevent crashing when mirrors face eachother. 
-			if (specular > 0) {
-				float3 reflect_dir = reflect(ray.dir, rec.normal);
-				Ray reflect_ray = Ray(rec.p, reflect_dir);
-				spec_diff_color += specular * TraceReflection(reflect_ray, bounce_count + 1);
-			}
-
-			pixel_color *= spec_diff_color;
+		// Diffuse color value. On the first bounce, add direct illumination.
+		if (diffuse > 0 && bounce_count <= max_reflection_shadows) {
+			spec_diff_color += diffuse * DirectIllumination(rec.p, rec.normal);
+		}
+		// If no direct illumination is added, just add the material color.
+		else if (diffuse > 0) {
+			spec_diff_color += diffuse * float3(1, 1, 1);
 		}
 
+		// Specular color value. Trace new ray and increase bounce count to prevent crashing when mirrors face eachother. 
+		if (specular > 0) {
+			float3 reflect_dir = reflect(ray.dir, rec.normal);
+			Ray reflect_ray = Ray(rec.p, reflect_dir);
+			spec_diff_color += specular * TraceReflection(reflect_ray, bounce_count + 1);
+		}
+
+		pixel_color *= spec_diff_color;
+		
 		// TODO: Reflect glass.
 		//else if (rec.mat_ptr->type() == GLASS) {
 		//	float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
@@ -133,10 +136,14 @@ float3 MyApp::TraceRefraction(Ray& ray, int bounce_count) {
 
 	// negative bias to allow for self intersection?
 	hit_record rec = hit_record();
-	const bool collision = scene.intersect(ray, -0.0001, FLT_MAX, rec);
+	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
 	float3 pixel_color = float3(0,0,0);
 
 	rec.mat_ptr->color(ray, rec, pixel_color);
+
+	if (bounce_count > max_bounces) {
+		return pixel_color;
+	}
 
 	if (rec.mat_ptr->type() == GLASS) {
 		float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
@@ -144,7 +151,7 @@ float3 MyApp::TraceRefraction(Ray& ray, int bounce_count) {
 		pixel_color *= TraceRefraction(refract_ray, 1);
 	}
 	else if (rec.mat_ptr->type() == SOLID) {
-		// TODO: Do something.
+		// TODO: Do something. For now, just pass and return the pixel color...
 	}
 
 	return pixel_color;
