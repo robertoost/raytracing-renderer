@@ -15,54 +15,44 @@ namespace RaytracingRenderer {
 		float3 screen_p2;
 		// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1) and up direction : U = (0, 1, 0)
 		float3 cameraPos = float3(0, 0, 0);
-		float3 cameraFront = float3(0, 0, 1);
+		float3 cameraLook = float3(0, 0, 1);
+		float3 cameraFront = cameraPos + cameraLook;
 		float3 up = float3(0, 1, 0);
 
 		//Camera's view matrix
 		float3 cameraDirection = normalize(cameraPos - cameraFront);
 		float3 cameraRight = normalize(cross(cameraDirection, up));
-		float3 cameraUp = cross(cameraRight, cameraFront);
-		mat4 transformMatrix = mat4().LookAt(cameraPos, cameraFront, up).Inverted();
+		float3 cameraUp = -cross(cameraRight, cameraFront);
 
-		//Camera projection matrix
-		// FOV in radians, ASP_RAT, N, F
-		mat4 perspectiveMatrix = perspective(45., 12. / 4., 1., 100.);
-		//Camera's pitch + yawn
+		//Camera's pitch + yaw
 		float yaw = 90.f;
 		float pitch = 0.f;
 		float lastX, lastY;
 
 		bool firstMouse = true;
 
-		Camera(float3 cameraPos, float vfov, float asp_ratio)
+		//Constructor with custom camera position
+		Camera(float3 cameraPos)
 		{
 			this->cameraPos = cameraPos;
-			auto theta = vfov * (PI / 180);
-			auto h = tan(theta / 2);
-			auto viewport_height = 2.0 * h;
-			auto viewport_width = asp_ratio * viewport_height;
-
-			auto focal_length = 1.;
-
-			horizontal = float3(viewport_width, 0, 0) / 2;
-			vertical = float3(0, viewport_height, 0) / 2;
+			updateCameraVectors();
 			updateViewport();
 		}
-
+		//Default constructor
 		Camera()
 		{
-			this->cameraPos = float3(0, 0, 0);
-
-			auto focal_length = 1.;
+			this->cameraPos = float3(0.f, 0.f, 0.f);
+			updateCameraVectors();
 			updateViewport();
 		}
 
+		//Update camera view matrix with new values (used after view is moved)
 		void updateCameraVectors()
 		{
+			cameraFront = cameraPos + cameraLook;
 			cameraDirection = normalize(cameraPos - cameraFront);
-			cameraRight = normalize(cross(cameraDirection, cameraUp));
-			cameraUp = cross(cameraRight, cameraFront);
-			transformMatrix = mat4().LookAt(cameraPos, cameraFront, up).Inverted();
+			cameraRight = normalize(cross(cameraDirection, up));
+			cameraUp = -cross(cameraRight, cameraFront);
 		}
 
 
@@ -79,27 +69,17 @@ namespace RaytracingRenderer {
 			float viewport_width = aspect_ratio * viewport_height;
 
 			// Divide by 2 to traverse half the width/height away from the center.
-			float3 horizontal = float3(viewport_width, 0, 0) / 2;
-			float3 vertical = float3(0, viewport_height, 0) / 2;
+			//Recalculate horz/vert with new camera axis
+			float3 horizontal = cameraRight * viewport_width / 2;
+			float3 vertical = cameraUp * viewport_height / 2;
 
-
-			// rotate the horizontal and vertical directions, along with the screen center.
-			// 		 this will ensure the screen corners are in the right positions.
-
-			transformMatrix.TransformPoint(horizontal);
-			transformMatrix.TransformPoint(vertical);
-			transformMatrix.TransformPoint(screen_center);
-			
-			/*perspectiveMatrix.TransformPoint(horizontal);
-			perspectiveMatrix.TransformPoint(vertical);
-			perspectiveMatrix.TransformPoint(screen_center);*/
-
-			// Screen corners : 𝑃0 = 𝐶 + −1, −1, 0, 𝑃1 = 𝐶 + 1, −1, 0, 𝑃2 = 𝐶 + (−1, 1, 0)
+			// Screen corners : 𝑃0 = 𝐶 + (−1, −1, 0), 𝑃1 = 𝐶 + (1, −1, 0), 𝑃2 = 𝐶 + (−1, 1, 0)
 			screen_p0 = screen_center - horizontal + vertical;
 			screen_p1 = screen_center + horizontal + vertical;
 			screen_p2 = screen_center - horizontal - vertical;
 		}
 
+		//Update camera position on WASD keypress, modulated by cameraSpeed variable
 		void keyHandler(int key)
 		{
 			const float cameraSpeed = 0.5f;
@@ -123,6 +103,7 @@ namespace RaytracingRenderer {
 			updateViewport();
 		}
 
+		//Update camera view angle on mouse movement + mouse button one pressed
 		void mouseHandler(int x, int y)
 		{
 			if (firstMouse)
@@ -142,21 +123,24 @@ namespace RaytracingRenderer {
 			yoffset *= sensitivity;
 
 			yaw += xoffset;
-			pitch += yoffset;
+			pitch -= yoffset;
 
-			cameraFront = normalize(getDirection(yaw, pitch));
+			//Lock camera's Y-axis to -45 - 45 degrees to prevent full rolling
+			if (pitch > 45.0f)
+				pitch = 45.0f;
+			if (pitch < -45.0f)
+				pitch = -45.0f;
 
+			//Update camera view angle
+			cameraLook = normalize(getDirection(yaw, pitch));
+			
 			updateCameraVectors();
 			updateViewport();
 		}
 
+		//Calculates new camera look vector
 		float3 getDirection(float yaw, float pitch)
-		{
-			/*if (pitch > 89.0f)
-				pitch = 89.0f;
-			if (pitch < -89.0f)
-				pitch = -89.0f;*/
-
+		{			
 			yaw *= (PI / 180);
 			pitch *= (PI / 180);
 
@@ -165,21 +149,8 @@ namespace RaytracingRenderer {
 			direction.y = sin((pitch));
 			direction.z = sin((yaw)) * cos((pitch));
 
+
 			return direction;
 		}
-		mat4 perspective(float fov, float aspect, float n, float f) {
-			float D2R = PI / 180.0;
-			float yScale = 1.0 / tan(D2R * fov / 2);
-			float xScale = yScale / aspect;
-			float nearmfar = (n - f);
-			mat4 mat = {
-				xScale, 0, 0, 0,
-				0, yScale, 0, 0,
-				0, 0, ((f + n) / nearmfar), -1,
-				0, 0, (2 * f * n / nearmfar), 0
-			};
-			return mat;
-		}
-
 	};
 }

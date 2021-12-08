@@ -217,12 +217,15 @@ void MyApp::Tick( float deltaTime )
 
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
+
+	float x_width = length(x_dir);
+	float y_height = length(y_dir);
 	
 	if (key_held_down)
 	{
 		camera.keyHandler(held_key);
 	}
-
+	
 	// Loop over every pixel in the screen.
 	for (int x = 0; x < SCRWIDTH; x++) for (int y = 0; y < SCRHEIGHT; y++) {
 
@@ -236,8 +239,7 @@ void MyApp::Tick( float deltaTime )
 		
 		// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
 		float3 ray_dir = normalize(screen_point - camera.cameraPos);
-		ray_dir = camera.transformMatrix.TransformVector(ray_dir);
-		//ray_dir = camera.perspectiveMatrix.TransformVector(ray_dir);
+
 		Ray ray = Ray(camera.cameraPos, ray_dir);
 
 		float3 pixel_color = Trace(ray);
@@ -269,6 +271,7 @@ void MyApp::MouseUp(int button)
 	if (button == 0)
 	{
 		mouse_held_down = false;
+		camera.firstMouse = true;
 	}
 }
 void MyApp::MouseDown(int button)
@@ -276,5 +279,6 @@ void MyApp::MouseDown(int button)
 	if (button == 0) 
 	{
 		mouse_held_down = true;
+		
 	}	
 }
