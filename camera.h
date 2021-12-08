@@ -18,11 +18,15 @@ namespace RaytracingRenderer {
 		float3 cameraFront = float3(0, 0, 1);
 		float3 up = float3(0, 1, 0);
 
-		//Camera's position matrix
+		//Camera's view matrix
 		float3 cameraDirection = normalize(cameraPos - cameraFront);
 		float3 cameraRight = normalize(cross(cameraDirection, up));
 		float3 cameraUp = cross(cameraRight, cameraFront);
-		mat4 transformMatrix = mat4().LookAt(cameraPos, cameraDirection, cameraUp);
+		mat4 transformMatrix = mat4().LookAt(cameraPos, cameraFront, up).Inverted();
+
+		//Camera projection matrix
+		// FOV in radians, ASP_RAT, N, F
+		mat4 perspectiveMatrix = perspective(45., 12. / 4., 1., 100.);
 		//Camera's pitch + yawn
 		float yaw = 90.f;
 		float pitch = 0.f;
@@ -58,7 +62,7 @@ namespace RaytracingRenderer {
 			cameraDirection = normalize(cameraPos - cameraFront);
 			cameraRight = normalize(cross(cameraDirection, cameraUp));
 			cameraUp = cross(cameraRight, cameraFront);
-			transformMatrix = mat4().LookAt(cameraPos, cameraDirection, cameraUp);
+			transformMatrix = mat4().LookAt(cameraPos, cameraFront, up).Inverted();
 		}
 
 
@@ -85,6 +89,10 @@ namespace RaytracingRenderer {
 			transformMatrix.TransformPoint(horizontal);
 			transformMatrix.TransformPoint(vertical);
 			transformMatrix.TransformPoint(screen_center);
+			
+			/*perspectiveMatrix.TransformPoint(horizontal);
+			perspectiveMatrix.TransformPoint(vertical);
+			perspectiveMatrix.TransformPoint(screen_center);*/
 
 			// Screen corners : 𝑃0 = 𝐶 + −1, −1, 0, 𝑃1 = 𝐶 + 1, −1, 0, 𝑃2 = 𝐶 + (−1, 1, 0)
 			screen_p0 = screen_center - horizontal + vertical;
@@ -125,7 +133,7 @@ namespace RaytracingRenderer {
 			}
 
 			float xoffset = x - lastX;
-			float yoffset = y - lastY;
+			float yoffset = lastY - y;
 			lastX = x;
 			lastY = y;
 
@@ -133,8 +141,8 @@ namespace RaytracingRenderer {
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
 
-			yaw -= xoffset;
-			pitch -= yoffset;
+			yaw += xoffset;
+			pitch += yoffset;
 
 			cameraFront = normalize(getDirection(yaw, pitch));
 
@@ -159,7 +167,19 @@ namespace RaytracingRenderer {
 
 			return direction;
 		}
-
+		mat4 perspective(float fov, float aspect, float n, float f) {
+			float D2R = PI / 180.0;
+			float yScale = 1.0 / tan(D2R * fov / 2);
+			float xScale = yScale / aspect;
+			float nearmfar = (n - f);
+			mat4 mat = {
+				xScale, 0, 0, 0,
+				0, yScale, 0, 0,
+				0, 0, ((f + n) / nearmfar), -1,
+				0, 0, (2 * f * n / nearmfar), 0
+			};
+			return mat;
+		}
 
 	};
 }
