@@ -1,4 +1,4 @@
-#include "precomp.h"
+﻿#include "precomp.h"
 #include "myapp.h"
 
 TheApp* CreateApp() { return new MyApp(); }
@@ -32,7 +32,7 @@ float3 MyApp::Trace(Ray &ray) {
 
 	float3 pixel_color = float3(0, 0, 0);
 
-	// If no collision was found for this ray, draw a nice BG color.
+	// If no collision was found for this ray, draw the background color.
 	if (collision == false) {
 		return BackgroundColor(ray, pixel_color);
 	}
@@ -43,54 +43,108 @@ float3 MyApp::Trace(Ray &ray) {
 
 		MAT_TYPE mat_type = rec.mat_ptr->type();
 
-		if (mat_type == DIFFUSE) {
+		if (mat_type == SOLID) {
+			const float specular = rec.mat_ptr->specularity();
+			const float diffuse = 1 - specular;
 
-			// Diffuse materials don't need extra rays.
-			pixel_color *= DirectIllumination(rec.p, rec.normal);
-		}
-		else if (mat_type == MIRROR) {
+			float3 spec_diff_color = float3(0, 0, 0);
+			
+			if (diffuse > 0) {
+				
+				// Diffuse materials don't need extra rays.
+				spec_diff_color += diffuse * DirectIllumination(rec.p, rec.normal);
+			}
 
-			// Mirror material, scatters rays.
-			float3 reflect_dir = reflect(ray.dir, rec.normal);
-			Ray reflect_ray = Ray(rec.p, reflect_dir);
-			pixel_color *= Trace(reflect_ray, 1);
+			if (specular > 0) {
+				// Mirror material, reflects rays.
+				float3 reflect_dir = reflect(ray.dir, rec.normal);
+				Ray reflect_ray = Ray(rec.p, reflect_dir);
+				spec_diff_color += specular * TraceReflection(reflect_ray, 1);
+			}
+
+			pixel_color *= spec_diff_color;
 		}
 		else if (mat_type == GLASS) {
 			float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
 			Ray refract_ray = Ray(rec.p, refract_dir);
-			pixel_color *= Trace(refract_ray, 1);
+			pixel_color *= TraceReflection(refract_ray, 1);
 		}
 	}
 	return pixel_color;
 }
 
-float3 MyApp::Trace(Ray& ray, int bounce_count) {
+float3 MyApp::TraceReflection(Ray& ray, int bounce_count) {
 
+	// Trace the given reflection ray and find the nearest intersection.
 	hit_record rec = hit_record();
 	const bool collision = scene.intersect(ray, 0.0001, FLT_MAX, rec);
+
 	float3 pixel_color = float3(0,0,0);
 
+	// If there's no collision, return black.
 	if (collision == false) {
 		return pixel_color;
 	}
 
+	// Initially set the pixel color using the material's color.
 	rec.mat_ptr->color(ray, rec, pixel_color);
 
-	if (bounce_count == 1 && rec.mat_ptr->type() == DIFFUSE) {
-		pixel_color *= DirectIllumination(rec.p, rec.normal);
+	if (bounce_count <= max_bounces) {
+		if (rec.mat_ptr->type() == SOLID) {
+
+			// Get the material's specularity and infer the diffuse value.
+			const float specular = rec.mat_ptr->specularity();
+			const float diffuse = 1 - specular;
+			
+			// Sum both the specular and the diffuse color.
+			float3 spec_diff_color = float3(0, 0, 0);
+
+			// Diffuse color value. On the first bounce, add direct illumination.
+			if (diffuse > 0 && bounce_count <= max_reflection_shadows) {
+				spec_diff_color += diffuse * DirectIllumination(rec.p, rec.normal);
+			}
+			// If no direct illumination is added, just add the material color.
+			else if (diffuse > 0) {
+				spec_diff_color += diffuse * float3(1, 1, 1);
+			}
+
+			// Specular color value. Trace new ray and increase bounce count to prevent crashing when mirrors face eachother. 
+			if (specular > 0) {
+				float3 reflect_dir = reflect(ray.dir, rec.normal);
+				Ray reflect_ray = Ray(rec.p, reflect_dir);
+				spec_diff_color += specular * TraceReflection(reflect_ray, bounce_count + 1);
+			}
+
+			pixel_color *= spec_diff_color;
+		}
+
+		// TODO: Reflect glass.
+		//else if (rec.mat_ptr->type() == GLASS) {
+		//	float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
+		//	Ray refract_ray = Ray(rec.p, refract_dir);
+		//	pixel_color *= Trace(refract_ray, bounce_count + 1);
+		//}
 	}
 
-	if (bounce_count <= max_bounces) {
-		if (rec.mat_ptr->type() == MIRROR) {
-			float3 reflect_dir = reflect(ray.dir, rec.normal);
-			Ray reflect_ray = Ray(rec.p, reflect_dir);
-			pixel_color *= Trace(reflect_ray, bounce_count + 1);
-		}
-		else if (rec.mat_ptr->type() == GLASS) {
-			float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
-			Ray refract_ray = Ray(rec.p, refract_dir);
-			pixel_color *= Trace(refract_ray, bounce_count + 1);
-		}
+	return pixel_color;
+}
+
+float3 MyApp::TraceRefraction(Ray& ray, int bounce_count) {
+
+	// negative bias to allow for self intersection?
+	hit_record rec = hit_record();
+	const bool collision = scene.intersect(ray, -0.0001, FLT_MAX, rec);
+	float3 pixel_color = float3(0,0,0);
+
+	rec.mat_ptr->color(ray, rec, pixel_color);
+
+	if (rec.mat_ptr->type() == GLASS) {
+		float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
+		Ray refract_ray = Ray(rec.p, refract_dir);
+		pixel_color *= TraceRefraction(refract_ray, 1);
+	}
+	else if (rec.mat_ptr->type() == SOLID) {
+		// TODO: Do something.
 	}
 
 	return pixel_color;
