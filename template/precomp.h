@@ -1228,7 +1228,7 @@ public:
 #include "diffuse_material.h"
 #include "normal_material.h"
 #include "checkerboard_material.h"
-#include "mirror_material.h"
+#include "specular_material.h"
 #include "glass_material.h"
 
 // 3D Objects.
