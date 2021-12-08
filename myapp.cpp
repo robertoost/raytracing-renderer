@@ -1,4 +1,4 @@
-﻿#include "precomp.h"
+#include "precomp.h"
 #include "myapp.h"
 
 TheApp* CreateApp() { return new MyApp(); }
@@ -120,7 +120,7 @@ void MyApp::Init()
 	// Special materials
 	shared_ptr<NormalMaterial> normal_mat = make_shared<NormalMaterial>(NormalMaterial());
 	shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(0.4f,0.2f,1.f), float3(0.4f, 1.f,0.7f)));
-	shared_ptr<MirrorMaterial> mirror_mat = make_shared<MirrorMaterial>(MirrorMaterial());
+	shared_ptr<SpecularMaterial> mirror_mat = make_shared<SpecularMaterial>(SpecularMaterial());
 	shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial());
 
 	// Instantiate object pointers.

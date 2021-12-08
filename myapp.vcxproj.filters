@@ -59,7 +59,7 @@
     <ClInclude Include="checkerboard_material.h">
       <Filter>src\materials</Filter>
     </ClInclude>
-    <ClInclude Include="mirror_material.h">
+    <ClInclude Include="specular_material.h">
       <Filter>src\materials</Filter>
     </ClInclude>
     <ClInclude Include="point_light.h">

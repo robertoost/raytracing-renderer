@@ -11,6 +11,6 @@ namespace RaytracingRenderer {
 			attenuation = 0.5 * float3(rec.normal.x + 1, rec.normal.y + 1, rec.normal.z + 1);
 		}
 
-		NormalMaterial(): Material(DIFFUSE) {}
+		NormalMaterial(): Material(SOLID) {}
 	};
 }
