@@ -9,7 +9,8 @@ namespace RaytracingRenderer {
 		float3 vertical;
 
 	public:
-		float screen_dist = 1.;
+		float aspect_ratio = (float)SCRWIDTH / (float)SCRHEIGHT;
+		float fov = 1; //values between 0.0-1.15. 0.45, 0.60, and 1 are standard
 		float3 screen_p0;
 		float3 screen_p1;
 		float3 screen_p2;
@@ -32,9 +33,11 @@ namespace RaytracingRenderer {
 		bool firstMouse = true;
 
 		//Constructor with custom camera position
-		Camera(float3 cameraPos)
+		Camera(float3 cameraPos, float fov, float aspect_ratio)
 		{
 			this->cameraPos = cameraPos;
+			this->fov = fov;
+			this->aspect_ratio = aspect_ratio;
 			updateCameraVectors();
 			updateViewport();
 		}
@@ -55,16 +58,21 @@ namespace RaytracingRenderer {
 			cameraUp = -cross(cameraRight, cameraFront);
 		}
 
-
+		void updateFOV(float fov) {
+			this->fov = fov;
+		}
+		void updateAspectRatio(float aspect_ratio) {
+			this->aspect_ratio = aspect_ratio;
+		}
 		// If the cameraPos point was moved, this function can update the viewport accordingly.
 		void updateViewport()
 		{
+			updateCameraVectors();
 
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
-			float3 screen_center = cameraPos + screen_dist * cameraFront;
+			float3 screen_center = cameraPos + fov * cameraFront;
 
 			// Make sure the viewport size lines up with the screen resolution.
-			float aspect_ratio = (float)SCRWIDTH / (float)SCRHEIGHT;
 			float viewport_height = 2.f;
 			float viewport_width = aspect_ratio * viewport_height;
 
@@ -134,7 +142,6 @@ namespace RaytracingRenderer {
 			//Update camera view angle
 			cameraLook = normalize(getDirection(yaw, pitch));
 			
-			updateCameraVectors();
 			updateViewport();
 		}
 

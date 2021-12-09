@@ -14,7 +14,7 @@ namespace RaytracingRenderer {
         {
             this->mat_ptr = nullptr;
         }
-        Ray(const float3& origin, const float3& direction, shared_ptr<Material> mat_ptr)
+        Ray(const float3& origin, const float3& direction, shared_ptr<RaytracingRenderer::Material> mat_ptr)
             : orig(origin), dir(direction)
         {
             this->mat_ptr = mat_ptr;
