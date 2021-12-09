@@ -16,12 +16,12 @@ namespace RaytracingRenderer {
 		float3 screen_p2;
 		// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1) and up direction : U = (0, 1, 0)
 		float3 cameraPos = float3(0, 0, 0);
-		float3 cameraLook = float3(0, 0, 1);
+		float3 cameraLook = float3(0, 0, -1);
 		float3 up = float3(0, 1, 0);
 
 		//Camera's view matrix
-		float3 cameraRight = normalize(cross(cameraLook, up));
-		float3 cameraUp = cross(cameraRight, cameraLook);
+		float3 cameraRight = normalize(cross(up, cameraLook));
+		float3 cameraUp = cross(cameraLook, cameraRight);
 
 		//Camera's pitch + yaw
 		float yaw = 90.f;
@@ -48,8 +48,10 @@ namespace RaytracingRenderer {
 		//Update camera view matrix with new values (used after view is moved)
 		void updateCameraVectors()
 		{
-			cameraRight = normalize(cross(cameraLook, up));
-			cameraUp = cross(cameraRight, cameraLook);
+			//Update camera view angle
+			cameraLook = normalize(getDirection(yaw, pitch));
+			cameraRight = normalize(cross(up, cameraLook));
+			cameraUp = cross(cameraLook, cameraRight);
 			//cout << cameraPos << " " << cameraFront << " " << cameraDirection << " " << cameraRight << " ";
 		}
 
@@ -127,7 +129,7 @@ namespace RaytracingRenderer {
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
 
-			yaw -= xoffset;
+			yaw += xoffset;
 			pitch -= yoffset;
 
 			//Lock camera's Y-axis to -45 - 45 degrees to prevent full rolling
@@ -135,9 +137,6 @@ namespace RaytracingRenderer {
 				pitch = 45.0f;
 			if (pitch < -45.0f)
 				pitch = -45.0f;
-
-			//Update camera view angle
-			cameraLook = normalize(getDirection(yaw, pitch));
 			
 			updateViewport();
 		}
