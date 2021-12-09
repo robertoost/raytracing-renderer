@@ -3,7 +3,6 @@
 namespace RaytracingRenderer {
 	struct hit_record;
 	enum MAT_TYPE { SOLID, GLASS };
-// diffuse = 1 - specularity
 	class Material
 	{
 	public:
@@ -13,6 +12,10 @@ namespace RaytracingRenderer {
 
 		virtual float specularity() const {
 			return 0.f;
+		}
+
+		virtual float ior() const {
+			return 1.f; // ior of Air.
 		}
 
 		MAT_TYPE type() { return _mat_type; }

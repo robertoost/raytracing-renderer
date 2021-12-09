@@ -9,16 +9,19 @@ class MyApp : public TheApp
 {
 public:
 	int max_bounces = 10;
-	int max_reflection_shadows = 1;
+	int max_reflection_shadows = 4;
 
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
 	float3 BackgroundColor(Ray& ray, float3& pixel_color);
 	float3 Trace(Ray &ray);
-	float3 TraceReflection(Ray& ray, int bounce_count);
-	float3 TraceRefraction(Ray& ray, int bounce_count);
+	float3 TraceSolid(Ray& ray, hit_record& rec, uint bounce_count);
+	float3 TraceGlass(Ray& ray, hit_record& rec, uint bounce_count);
 	float3 DirectIllumination(float3 &position, float3 &normal);
+	float3 TraceReflection(Ray& ray, uint bounce_count);
+	float3 TraceRefraction(Ray& ray, uint bounce_count);
+
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp(int button);
