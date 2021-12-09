@@ -21,9 +21,8 @@ namespace RaytracingRenderer {
 		float3 up = float3(0, 1, 0);
 
 		//Camera's view matrix
-		float3 cameraDirection = normalize(cameraPos - cameraFront);
-		float3 cameraRight = normalize(cross(cameraDirection, up));
-		float3 cameraUp = -cross(cameraRight, cameraFront);
+		float3 cameraRight = normalize(cross(cameraLook, up));
+		float3 cameraUp = cross(cameraRight, cameraFront);
 
 		//Camera's pitch + yaw
 		float yaw = 90.f;
@@ -38,24 +37,21 @@ namespace RaytracingRenderer {
 			this->cameraPos = cameraPos;
 			this->fov = fov;
 			this->aspect_ratio = aspect_ratio;
-			updateCameraVectors();
 			updateViewport();
 		}
 		//Default constructor
 		Camera()
 		{
 			this->cameraPos = float3(0.f, 0.f, 0.f);
-			updateCameraVectors();
 			updateViewport();
 		}
 
 		//Update camera view matrix with new values (used after view is moved)
 		void updateCameraVectors()
 		{
-			cameraFront = cameraPos + cameraLook;
-			cameraDirection = normalize(cameraPos - cameraFront);
-			cameraRight = normalize(cross(cameraDirection, up));
-			cameraUp = -cross(cameraRight, cameraFront);
+			cameraRight = normalize(cross(cameraLook, up));
+			cameraUp = cross(cameraRight, cameraLook);
+			//cout << cameraPos << " " << cameraFront << " " << cameraDirection << " " << cameraRight << " ";
 		}
 
 		void updateFOV(float fov) {
@@ -70,7 +66,7 @@ namespace RaytracingRenderer {
 			updateCameraVectors();
 
 			// Screen center : 𝐶 = 𝐸 + 𝑑𝑉, with screen distance 𝑑. Change FOV by altering 𝑑;
-			float3 screen_center = cameraPos + fov * cameraFront;
+			float3 screen_center = cameraPos + fov * cameraLook;
 
 			// Make sure the viewport size lines up with the screen resolution.
 			float viewport_height = 2.f;
@@ -80,6 +76,8 @@ namespace RaytracingRenderer {
 			//Recalculate horz/vert with new camera axis
 			float3 horizontal = cameraRight * viewport_width / 2;
 			float3 vertical = cameraUp * viewport_height / 2;
+
+			//cout << "Horizontal: " << horizontal << " Vertical: " << vertical << " ";
 
 			// Screen corners : 𝑃0 = 𝐶 + (−1, −1, 0), 𝑃1 = 𝐶 + (1, −1, 0), 𝑃2 = 𝐶 + (−1, 1, 0)
 			screen_p0 = screen_center - horizontal + vertical;
@@ -95,10 +93,10 @@ namespace RaytracingRenderer {
 			{
 			case 87: //W
 				//cout << "BUTTON PUSHED ";
-				cameraPos += cameraFront * cameraSpeed;
+				cameraPos += cameraLook * cameraSpeed;
 				break;
 			case 83: //S
-				cameraPos -= cameraFront * cameraSpeed;
+				cameraPos -= cameraLook * cameraSpeed;
 				break;
 			case 65: //A
 				//cout << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z;
