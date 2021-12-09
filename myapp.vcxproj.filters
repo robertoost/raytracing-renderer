@@ -68,6 +68,9 @@
     <ClInclude Include="glass_material.h">
       <Filter>src\materials</Filter>
     </ClInclude>
+    <ClInclude Include="directional_light.h">
+      <Filter>src\light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">

@@ -1246,7 +1246,7 @@ public:
 #include "light.h"
 #include "ambient_light.h"
 #include "point_light.h"
-
+#include "directional_light.h"
 
 // Color utility.
 #include "color.h"
