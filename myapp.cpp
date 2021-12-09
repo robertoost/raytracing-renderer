@@ -12,16 +12,18 @@ float3 MyApp::BackgroundColor(Ray& ray, float3& pixel_color) {
 	return pixel_color;
 }
 
-inline float3 refract(const float3& I, const float3& N, const float& ior)
+inline float3 refract(const float3& incident, const float3& normal,
+	float n1, float n2)
 {
-	float cosi = clamp(-1.f, 1.f, dot(I, N));
-	float etai = 1, etat = ior;
-	float3 n = N;
-	if (cosi < 0) { cosi = -cosi; }
-	else { std::swap(etai, etat); n = -1 * N; }
-	float eta = etai / etat;
-	float k = 1 - eta * eta * (1 - cosi * cosi);
-	return k < 0 ? float3(0, 0, 0) : eta * I + (eta * cosi - sqrtf(k)) * n;
+	const float n = n1 / n2;
+	const float cosI = dot(normal, incident);
+	const float sinT2 = n * n * (1.0f - cosI * cosI);
+	if (sinT2 > 1.0)
+	{
+		// Refraction doesn't happen. TODO: Do something else.
+		return float3(0, 0, 0);
+	}
+	return n * incident - (n + sqrt(1.0f - sinT2)) * normal;
 }
 
 float3 MyApp::Trace(Ray &ray) {
@@ -66,7 +68,7 @@ float3 MyApp::Trace(Ray &ray) {
 			pixel_color *= spec_diff_color;
 		}
 		else if (mat_type == GLASS) {
-			float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
+			float3 refract_dir = refract(ray.dir, rec.normal, 1, 1.4902f);
 			Ray refract_ray = Ray(rec.p, refract_dir, rec.mat_ptr);
 			pixel_color *= TraceRefraction(refract_ray, 1);
 		}
@@ -146,12 +148,45 @@ float3 MyApp::TraceRefraction(Ray& ray, int bounce_count) {
 	}
 
 	if (rec.mat_ptr->type() == GLASS) {
-		float3 refract_dir = refract(ray.dir, rec.normal, 1.4902f);
-		Ray refract_ray = Ray(rec.p, refract_dir);
-		pixel_color *= TraceRefraction(refract_ray, 1);
+		
+		float prev_ior = 0;
+
+		if (ray.mat_ptr.get() != nullptr && ray.mat_ptr->type() == GLASS) {
+			prev_ior = 1.4902f;
+		} else {
+			prev_ior = 1.f;
+		}
+		
+		float3 refract_dir = refract(ray.dir, rec.normal, prev_ior, 1.4902f);
+		Ray refract_ray = Ray(rec.p, refract_dir, rec.mat_ptr);
+		pixel_color *= TraceRefraction(refract_ray, bounce_count + 1);
 	}
 	else if (rec.mat_ptr->type() == SOLID) {
-		// TODO: Do something. For now, just pass and return the pixel color...
+
+		// Get the material's specularity and infer the diffuse value.
+		const float specular = rec.mat_ptr->specularity();
+		const float diffuse = 1 - specular;
+
+		// Sum both the specular and the diffuse color.
+		float3 spec_diff_color = float3(0, 0, 0);
+
+		// Diffuse color value. On the first bounce, add direct illumination.
+		if (diffuse > 0 && bounce_count < 4) {
+			spec_diff_color += diffuse * DirectIllumination(rec.p, rec.normal);
+		}
+		// If no direct illumination is added, just add the material color.
+		else if (diffuse > 0) {
+			spec_diff_color += diffuse * float3(1, 1, 1);
+		}
+
+		// Specular color value. Trace new ray and increase bounce count to prevent crashing when mirrors face eachother. 
+		if (specular > 0) {
+			float3 reflect_dir = reflect(ray.dir, rec.normal);
+			Ray reflect_ray = Ray(rec.p, reflect_dir);
+			spec_diff_color += specular * TraceReflection(reflect_ray, bounce_count + 1);
+		}
+
+		pixel_color *= spec_diff_color;
 	}
 
 	return pixel_color;
@@ -185,8 +220,8 @@ void MyApp::Init()
 	shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial());
 
 	// Instantiate object pointers.
-	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(2, -1, 5), 2, glass_mat));
-	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, -1, 5), 2, mirror_mat));
+	shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(2, -1, 5), 1, glass_mat));
+	shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, -1, 5), 1, mirror_mat));
 	shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -3, 0), float3(0, 1, 0), plane_mat));
 	shared_ptr<Plane> left_wall = make_shared<Plane>(Plane(float3(-6, 0, 0), float3(1, 0, 0), pink_mat));
 	shared_ptr<Plane> back_wall = make_shared<Plane>(Plane(float3(0, 0, 8), float3(0, 0, -1), off_white_mat));

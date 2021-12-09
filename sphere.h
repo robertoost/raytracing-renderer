@@ -3,7 +3,6 @@
 namespace RaytracingRenderer {
 
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
-	// TODO: Material.
 	class Sphere : public Object3D, public Hittable
 	{
 	public:
@@ -41,11 +40,10 @@ namespace RaytracingRenderer {
 
 			// Ray intersects with sphere.
 			if (((t > t_min) && (t < t_max)) == false) {
-				//ray->*t = t;
 				return false;
 			}
 
-
+			// Set the values of the recorded intersection.
 			rec.t = t;
 			rec.p = ray.at(t);
 			rec.mat_ptr = material;
@@ -58,29 +56,23 @@ namespace RaytracingRenderer {
 
 		float intersectInside(const Ray& ray, float t_min, float t_max, hit_record& rec) const {
 			float3 oc = ray.orig - position;
+			
+			// Get the parameters of the quadratic formula 
 			float a = dot(ray.dir, ray.dir);
 			float b = 2.f * dot(oc, ray.dir);
 			float c = dot(oc,oc) - radius*radius;
-			float discriminant = b*b - 4.f*a*c;
+
+			// t is the discriminant of the ray sphere intersection's quadratic formula, 
+			// which we can use to find whether the ray intersects.
+			float t = b*b - 4.f*a*c;
 
 			// If t < 0, the ray misses.
 			// If t == 0, the ray touches at one point but does not intersect (tangent)
 			// If t > 0, the ray intersects at two points.
-			if(discriminant < 0.f) {
+			if(t < 0.f) {
 				return -1.f;
 			}
-			else {
-				float numerator = -b - sqrt(discriminant);
-				if (numerator > 0.f) {
-					return numerator / (2.f * a);
-				}
-
-				numerator = -b + sqrt(discriminant);
-				if (numerator > 0.f ) {
-					return numerator / (2.f * a);
-				}
-			}
-			return -1.f;
+			else return ((-b - sqrt(t)) / (2.f * a));
 		}
 
 		void getSurfaceProperties(const float3& P, const float3& I, const uint32_t& index, const float3& uv, float3& N, float3& st) const
