@@ -17,12 +17,11 @@ namespace RaytracingRenderer {
 		// Camera position: 𝐸 =(0,0,0) and view direction : 𝑉 = (0, 0, 1) and up direction : U = (0, 1, 0)
 		float3 cameraPos = float3(0, 0, 0);
 		float3 cameraLook = float3(0, 0, 1);
-		float3 cameraFront = cameraPos + cameraLook;
 		float3 up = float3(0, 1, 0);
 
 		//Camera's view matrix
 		float3 cameraRight = normalize(cross(cameraLook, up));
-		float3 cameraUp = cross(cameraRight, cameraFront);
+		float3 cameraUp = cross(cameraRight, cameraLook);
 
 		//Camera's pitch + yaw
 		float yaw = 90.f;
@@ -128,7 +127,7 @@ namespace RaytracingRenderer {
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
 
-			yaw += xoffset;
+			yaw -= xoffset;
 			pitch -= yoffset;
 
 			//Lock camera's Y-axis to -45 - 45 degrees to prevent full rolling
