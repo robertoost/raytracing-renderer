@@ -95,6 +95,24 @@ float3 MyApp::Trace(Ray &ray) {
 	return pixel_color;
 }
 
+uint antiAliasing(float3 pixel_color, int samples_per_color)
+{
+	auto r = pixel_color.x;
+	auto g = pixel_color.y;
+	auto b = pixel_color.z;
+
+	auto scale = 1.0 / samples_per_color;
+	r *= scale;
+	g *= scale;
+	b *= scale;
+
+	const uchar ir = (uint)(256 * clamp(r, 0.0, 0.999));
+	const uchar ig = (uint)(256 * clamp(g, 0.0, 0.999));
+	const uchar ib = (uint)(256 * clamp(b, 0.0, 0.999));
+
+	return (ir << 16) + (ig << 8) + ib;
+}
+
 float3 MyApp::TraceReflection(Ray& ray, uint bounce_count) {
 
 	// Trace the given reflection ray and find the nearest intersection.
@@ -209,6 +227,10 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 	return pixel_lighting;
 }
 
+double random_double() {
+	return rand() / (RAND_MAX + 1.0);
+}
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -258,6 +280,9 @@ void MyApp::Tick( float deltaTime )
 	// clear the screen to black
 	//screen->Clear( 0 );
 
+	//EDIT THIS TO CHANGE ANTI-ALIASING STRENGTH. 100 is beautiful but slow. 0 is none. 
+	int samples_per_pixel = 10;
+
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
 
@@ -270,27 +295,44 @@ void MyApp::Tick( float deltaTime )
 	}
 	
 	// Loop over every pixel in the screen.
-	for (int x = 0; x < SCRWIDTH; x++) for (int y = 0; y < SCRHEIGHT; y++) {
+	for (int y = SCRHEIGHT - 1; y >= 0; --y) {
+		//cout<< "\rScanlines remaining : " << y << ' ' << std::flush;
+		for (int x = 0; x < SCRWIDTH; ++x) {
+			// 	Point on the screen:
+			// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
+			// 𝑢, 𝑣 ∈[0, 1]
+			float3 pixel_color = float3(0, 0, 0);
 
-		// 	Point on the screen:
-		// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
-	    // 𝑢, 𝑣 ∈[0, 1]
-		float u = x / (SCRWIDTH - 1.f);
-		float v = y / (SCRHEIGHT - 1.f);
 
-		float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
-		
-		// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-		float3 ray_dir = normalize(screen_point - camera.cameraPos);
+			//ANTI ALIASING
+			for (int s = 0; s < samples_per_pixel; ++s) {
+				float u = (x + random_double()) / (SCRWIDTH - 1.f);
+				float v = (y + random_double()) / (SCRHEIGHT - 1.f);
+				float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
 
-		Ray ray = Ray(camera.cameraPos, ray_dir);
+				// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+				float3 ray_dir = normalize(screen_point - camera.cameraPos);
+				Ray ray = Ray(camera.cameraPos, ray_dir);
 
-		float3 pixel_color = Trace(ray);
+				pixel_color += Trace(ray);
+			}
+			uint c = antiAliasing(pixel_color, samples_per_pixel);
 
-		uint c = translate_color(pixel_color);
 
-		screen->Plot(x, y, c);
+			//NO ANTI ALIASING
+			//float u = (x) / (SCRWIDTH - 1.f);
+			//float v = (y) / (SCRHEIGHT - 1.f);
+			//float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+			//// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+			//float3 ray_dir = normalize(screen_point - camera.cameraPos);
+			//Ray ray = Ray(camera.cameraPos, ray_dir);
+			//pixel_color += Trace(ray);
+			//uint c = translate_color(pixel_color);
+
+			screen->Plot(x, y, c);
+		}
 	}
+	cout << "done";
 }
 
 void MyApp::KeyUp(int key)
