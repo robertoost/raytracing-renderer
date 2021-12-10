@@ -207,7 +207,18 @@ float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 
 		float3 refract_dir = refract(ray.dir, rec.normal, prev_ior, next_ior);
 		Ray refract_ray = Ray(rec.p, refract_dir, rec.mat_ptr);
-		glass_pixel_color += transmission * TraceRefraction(refract_ray, bounce_count + 1);
+
+
+		float3 transmission_color = transmission * TraceRefraction(refract_ray, bounce_count + 1);
+
+		if (ray.mat_ptr.get() != nullptr && ray.mat_ptr->type() == GLASS && rec.mat_ptr->type() == GLASS && rec.front_face == false) {
+			float distance = length(rec.p - ray.orig);
+			transmission_color.x *= exp(-1.f * distance);
+			transmission_color.y *= exp(-0.f * distance);
+			transmission_color.z *= exp(-0.f * distance);
+		}
+
+		glass_pixel_color += transmission_color;
 	}
 
 	if (reflection > 0) {
