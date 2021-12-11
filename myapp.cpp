@@ -151,6 +151,10 @@ float3 MyApp::TraceRefraction(Ray& ray, uint bounce_count) {
 	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
 	float3 pixel_color = float3(0,0,0);
 
+	if (collision == false) {
+		return pixel_color;
+	}
+
 	rec.mat_ptr->color(ray, rec, pixel_color);
 
 	if (bounce_count > max_bounces) {
