@@ -122,6 +122,7 @@
   <!-- END Custom section -->
   <ItemGroup>
     <ClCompile Include="myapp.cpp" />
+    <ClCompile Include="scene_manager.cpp" />
     <ClCompile Include="template\template.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">precomp.h</PrecompiledHeaderFile>
@@ -138,6 +139,7 @@
     <ClInclude Include="directional_light.h" />
     <ClInclude Include="glass_material.h" />
     <ClInclude Include="polygonmesh.h" />
+    <ClInclude Include="scene_manager.h" />
     <ClInclude Include="specular_material.h" />
     <ClInclude Include="normal_material.h" />
     <ClInclude Include="point_light.h" />
