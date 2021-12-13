@@ -12,7 +12,7 @@ namespace RaytracingRenderer {
 		}
 
 		float specularity() const override {
-			return 0.5f;
+			return 1.f;
 		}
 
 		SpecularMaterial() : Material(SOLID) {}
