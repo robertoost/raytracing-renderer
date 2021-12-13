@@ -44,20 +44,42 @@ public:
 	}
 
 	static Scene GlassTest() {
-		//shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
+
 		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
 		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial());
 
 		shared_ptr<Sphere> sphere = make_shared<Sphere>(Sphere(float3(0, 0, 5), 2.f, glass_mat));
 		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -2.5, 0), float3(0, 1, 0), plane_mat));
 
-		shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
-		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(0.1f));
+		//shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));
 
-		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ point_light, ambient_light });
+		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ /*point_light,*/ ambient_light });
 		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere, floor });
 
 		Scene scene = Scene(objects, lights);
+		return scene;
+	}
+
+	static Scene BeersLaw() {
+		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial());
+		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
+
+		shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(-4, -0.5, 5), 0.5f, glass_mat));
+		shared_ptr<Sphere> sphere2 = make_shared<Sphere>(Sphere(float3(-2, 0, 5), 1.f, glass_mat));
+		shared_ptr<Sphere> sphere3 = make_shared<Sphere>(Sphere(float3(2, 1, 5), 2.f, glass_mat));
+		shared_ptr<Sphere> sphere4 = make_shared<Sphere>(Sphere(float3(10, 3, 5), 4.f, glass_mat));
+
+		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), plane_mat));
+
+		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere1, sphere2, sphere3, sphere4, floor });
+
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));
+		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ /*point_light,*/ ambient_light });
+		Scene scene = Scene(objects, lights);
+
 		return scene;
 	}
 };
