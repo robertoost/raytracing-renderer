@@ -23,6 +23,6 @@ namespace RaytracingRenderer {
 
 	private:
 		// Default ior of glass.
-		float _ior = 1.5f;
+		float _ior = 1.52f;
 	};
 }
