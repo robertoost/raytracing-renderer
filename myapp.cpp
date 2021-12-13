@@ -5,13 +5,6 @@ TheApp* CreateApp() { return new MyApp(); }
 
 using namespace RaytracingRenderer;
 
-float3 MyApp::BackgroundColor(Ray& ray, float3& pixel_color) {
-	// Create a nice background color.
-	auto t = 0.5f * (ray.dir.y + 1);
-	pixel_color = (1 - t) * float3(1, 1, 1) + t * float3(0.5f, 0.7f, 1);
-	return pixel_color;
-}
-
 inline float3 refract(const float3& dir, const float3& normal,
 	float prev_ior, float next_ior)
 {
@@ -29,23 +22,28 @@ inline float3 refract(const float3& dir, const float3& normal,
 inline void fresnel(const float3& dir, const float3& normal, const float& prev_ior, const float& next_ior, float& reflection, float& transmission)
 {
 	float cos_i = dot(dir, normal);
+	float etai = prev_ior, etat = next_ior;
+	if (cos_i > 0) {
+		std::swap(etai, etat);
+	}
 
 	// Snell's law
-	float sin_t = prev_ior / next_ior * sqrtf(max(0.f, 1.f - cos_i * cos_i));
+	float sin_t = etai / etat * sqrtf(max(0.f, 1.f - cos_i * cos_i));
 
 	// Total internal reflection
 	if (sin_t >= 1) {
 		reflection = 1;
 	}
+	
 	// Calculate ratio of refraction/reflection
 	else {
 		float cos_t = sqrtf(max(0.f, 1.f - sin_t * sin_t));
 		cos_i = fabsf(cos_i);
 
-		float ni = next_ior * cos_i;
-		float nt = next_ior * cos_t;
-		float pi = prev_ior * cos_i;
-		float pt = prev_ior * cos_t;
+		float ni = etat * cos_i;
+		float nt = etat * cos_t;
+		float pi = etai * cos_i;
+		float pt = etai * cos_t;
 
 		float Rs = powf((ni - pt) / (ni + pt), 2.f);
 		float Rp = powf((pi - nt) / (pi + nt), 2.f);
@@ -53,6 +51,7 @@ inline void fresnel(const float3& dir, const float3& normal, const float& prev_i
 		reflection = (Rs * Rs + Rp * Rp) / 2.f;
 	}
 	transmission = 1 - reflection;
+	//reflection *= 10;
 }
 
 inline void get_ior(Ray& ray, hit_record& rec, float& prev_ior, float& ior) {
@@ -74,12 +73,12 @@ float3 MyApp::Trace(Ray &ray) {
 	// Trace a ray and record the hit.
 	hit_record rec = hit_record();
 	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
-
+	
 	float3 pixel_color = float3(0, 0, 0);
 
 	// If there's no collision, return black.
 	if (collision == false) {
-		return pixel_color;
+		return float3(0.65f, 0.85f, 1.f);
 	}
 
 	// If a collision was found, get the color of the object.
@@ -103,13 +102,12 @@ float3 MyApp::TraceReflection(Ray& ray, uint bounce_count) {
 
 	// Trace the given reflection ray and find the nearest intersection.
 	hit_record rec = hit_record();
-	const bool collision = scene.intersect(ray, 0.0001, FLT_MAX, rec);
-
+	const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
 	float3 pixel_color = float3(0,0,0);
 
 	// If there's no collision, return black.
 	if (collision == false) {
-		return pixel_color;
+		return float3(0.65f, 0.85f, 1.f);
 	}
 
 	// Initially set the pixel color using the material's color.
@@ -124,6 +122,7 @@ float3 MyApp::TraceReflection(Ray& ray, uint bounce_count) {
 	}
 	// Reflect glass.
 	if (rec.mat_ptr->type() == GLASS) {
+		//cout << "INTERNAL REFLECTION";
 		pixel_color *= TraceGlass(ray, rec, bounce_count);
 	}
 
@@ -138,7 +137,7 @@ float3 MyApp::TraceRefraction(Ray& ray, uint bounce_count) {
 	float3 pixel_color = float3(0,0,0);
 
 	if (collision == false) {
-		return pixel_color;
+		return float3(0.65f, 0.85f, 1.f);
 	}
 
 	rec.mat_ptr->color(ray, rec, pixel_color);
@@ -148,6 +147,7 @@ float3 MyApp::TraceRefraction(Ray& ray, uint bounce_count) {
 	}
 
 	if (rec.mat_ptr->type() == GLASS) {
+		//cout << "GLASS HIT GLASS";
 		pixel_color *= TraceGlass(ray, rec, bounce_count);
 	}
 	else if (rec.mat_ptr->type() == SOLID) {
@@ -178,7 +178,7 @@ float3 MyApp::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
 	// Specular color value. Trace new ray and increase bounce count to prevent crashing when mirrors face eachother. 
 	if (specular > 0) {
 		float3 reflect_dir = reflect(ray.dir, rec.normal);
-		Ray reflect_ray = Ray(rec.p, reflect_dir);
+		Ray reflect_ray = Ray(rec.p, reflect_dir, ray.mat_ptr);
 		spec_diff_color += specular * TraceReflection(reflect_ray, bounce_count + 1);
 	}
 
@@ -198,14 +198,13 @@ float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 		float3 refract_dir = refract(ray.dir, rec.normal, prev_ior, next_ior);
 		Ray refract_ray = Ray(rec.p, refract_dir, rec.mat_ptr);
 
-
 		float3 transmission_color = transmission * TraceRefraction(refract_ray, bounce_count + 1);
 
-		if (ray.mat_ptr.get() != nullptr && ray.mat_ptr->type() == GLASS && rec.mat_ptr->type() == GLASS && rec.front_face == false) {
+		if (rec.front_face == false) {
 			float distance = length(rec.p - ray.orig);
-			transmission_color.x *= exp(-1.f * distance);
-			transmission_color.y *= exp(-0.f * distance);
-			transmission_color.z *= exp(-0.f * distance);
+			transmission_color.x *= exp(-0.f * distance);
+			transmission_color.y *= exp(-0.5f * distance);
+			transmission_color.z *= exp(-0.5f * distance);
 		}
 
 		glass_pixel_color += transmission_color;
@@ -213,7 +212,7 @@ float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 
 	if (reflection > 0) {
 		float3 reflect_dir = reflect(ray.dir, rec.normal);
-		Ray reflect_ray = Ray(rec.p, reflect_dir);
+		Ray reflect_ray = Ray(rec.p, reflect_dir, ray.mat_ptr);
 		glass_pixel_color += reflection * TraceReflection(reflect_ray, bounce_count + 1);
 	}
 
@@ -233,7 +232,7 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 // -----------------------------------------------------------
 void MyApp::Init()
 {
-	scene = SceneManager::ReflectionRoom();
+	scene = SceneManager::BeersLaw();
 	camera = Camera();
 }
 
@@ -243,7 +242,7 @@ void MyApp::Init()
 void MyApp::Tick( float deltaTime )
 {
 	// clear the screen to black
-	//screen->Clear( 0 );
+	screen->Clear( 0 );
 
 
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
@@ -256,7 +255,16 @@ void MyApp::Tick( float deltaTime )
 	{
 		camera.keyHandler(held_key);
 	}
-	
+
+	// TEST A SINGLE RAY
+	//float3 screen_point = float3(0, 0.1f, 1.f);
+	//// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+	//float3 ray_dir = normalize(screen_point - camera.cameraPos);
+
+	//Ray ray = Ray(camera.cameraPos, ray_dir);
+	//
+	//Trace(ray);
+
 	// Loop over every pixel in the screen.
 	for (int y = SCRHEIGHT - 1; y >= 0; --y) {
 		for (int x = 0; x < SCRWIDTH; ++x) {
@@ -276,7 +284,7 @@ void MyApp::Tick( float deltaTime )
 				float offset_y = antialiasing == true ? random_float() : 0.f;
 
 				float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
-				float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);		
+				float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
 
 				float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
 
@@ -297,7 +305,7 @@ void MyApp::Tick( float deltaTime )
 			screen->Plot(x, y, c);
 		}
 	}
-	// cout << "done";
+	 cout << "done";
 }
 
 void MyApp::KeyUp(int key)
