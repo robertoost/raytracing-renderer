@@ -24,7 +24,7 @@ public:
 	float3 DirectIllumination(float3 &position, float3 &normal);
 	float3 TraceReflection(Ray& ray, uint bounce_count);
 	float3 TraceRefraction(Ray& ray, uint bounce_count);
-
+	
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp(int button);

@@ -1,5 +1,6 @@
 ﻿#include "precomp.h"
 #include "myapp.h"
+#include <future>
 
 TheApp* CreateApp() { return new MyApp(); }
 
@@ -228,6 +229,17 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 	return pixel_lighting;
 }
 
+struct Blockjob
+{
+	int rowStart;
+	int rowEnd;
+	int colSize;
+	int spp;
+	vector<int> indices;
+	vector<float3> colors;
+};
+
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -263,49 +275,153 @@ void MyApp::Tick( float deltaTime )
 	//float3 ray_dir = normalize(screen_point - camera.cameraPos);
 
 	//Ray ray = Ray(camera.cameraPos, ray_dir);
-	//
-	//Trace(ray);
 
-	// Loop over every pixel in the screen.
-	for (int y = SCRHEIGHT - 1; y >= 0; --y) {
-		for (int x = 0; x < SCRWIDTH; ++x) {
+	//Trace(ray)
 
-			// 	Point on the screen:
-			// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
-			// 𝑢, 𝑣 ∈[0, 1]
-			float3 pixel_color = float3(0, 0, 0);
 
-			// Loop count with or without antialiasing.
-			int n = antialiasing == true ? samples_per_pixel : 1;
+	// Loop over every pixel in the screen
 
-			//ANTI ALIASING
-			for (int s = 0; s < n; ++s) {
-				// Antialiasing
-				float offset_x = antialiasing == true ? random_float() : 0.f;
-				float offset_y = antialiasing == true ? random_float() : 0.f;
+	const int nThreads = thread::hardware_concurrency();
+	int rowsPerThread = SCRWIDTH / nThreads;
+	int leftOver = SCRWIDTH % nThreads;
 
-				float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
-				float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
+	mutex mutex;
+	std::condition_variable cvResults;
+	vector<Blockjob> imageBlocks;
+	atomic<int> completedThreads = { 0 };
+	vector<thread> threads;
 
-				float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+	float3* image = new float3[SCRWIDTH * SCRHEIGHT];
 
-				// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-				float3 ray_dir = normalize(screen_point - camera.cameraPos);
-				Ray ray = Ray(camera.cameraPos, ray_dir);
+	Blockjob job;
 
-				pixel_color += Trace(ray);
-			}
+	for (int i = 0; i < nThreads; ++i)
+	{
+		job.rowStart = i * rowsPerThread;
+		job.rowEnd = job.rowStart + rowsPerThread;
+		if (i == nThreads - 1)
+			job.rowEnd = job.rowStart + rowsPerThread + leftOver;
+		job.colSize = SCRHEIGHT;
+		job.spp = antialiasing == true ? samples_per_pixel : 1;
 
-			// Final antialiasing division.
-			if (antialiasing == true) {
-				pixel_color /= samples_per_pixel;
-			}
+		thread t([=, &job, &imageBlocks, &mutex, &cvResults, &completedThreads]()
+			{
+				for (int x = job.rowStart; x < job.rowEnd; ++x)
+				{
+					for (int y = 0; y < job.colSize; ++y)
+					{
+						float3 pixel_color = float3(0, 0, 0);
+						for (int s = 0; s < job.spp; ++s)
+						{
+							float offset_x = antialiasing == true ? random_float() : 0.f;
+							float offset_y = antialiasing == true ? random_float() : 0.f;
 
-			uint c = translate_color(pixel_color);
+							float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
+							float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
 
-			screen->Plot(x, y, c);
+							float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+
+							// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+							float3 ray_dir = normalize(screen_point - camera.cameraPos);
+							Ray ray = Ray(camera.cameraPos, ray_dir);
+
+							pixel_color += Trace(ray);
+						}
+
+						// Final antialiasing division.
+						if (antialiasing == true) {
+							pixel_color /= samples_per_pixel;
+						}
+						const unsigned int index = y * job.colSize + i;
+						job.indices.push_back(index);
+						job.colors.push_back(pixel_color);
+					}
+				}
+				lock_guard<std::mutex> lock(mutex);
+				imageBlocks.push_back(job);
+				completedThreads++;
+				cvResults.notify_one();
+			});
+		threads.push_back(std::move(t));
+	}
+
+	{
+		unique_lock<std::mutex> lock(mutex);
+		cvResults.wait(lock, [&] {
+			return completedThreads == nThreads;
+			});
+	}
+
+	for (thread& t : threads)
+	{
+		t.join();
+	}
+
+	for (Blockjob job : imageBlocks)
+	{
+		int index = job.rowStart;
+		int colorIndex = 0;
+		for (float3 pc : job.colors)
+		{
+			int colIndex = job.indices[colorIndex];
+			image[colIndex] = pc;
+			++colorIndex;
 		}
 	}
+
+	for (unsigned int i = 0; i < SCRWIDTH * SCRHEIGHT; ++i)
+	{
+
+		for (int y = SCRHEIGHT - 1; y >= 0; --y) {
+			for (int x = 0; x < SCRWIDTH; ++x) {
+
+				uint c = translate_color(image[i]);
+
+				screen->Plot(x, y, c);
+			}
+		}
+
+	}
+
+
+	//for (int y = SCRHEIGHT - 1; y >= 0; --y) {
+	//	for (int x = 0; x < SCRWIDTH; ++x) {
+	//		float3 pixel_color = float3(0, 0, 0);
+	//		// 	Point on the screen:
+	//		// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
+	//		// 𝑢, 𝑣 ∈[0, 1]
+
+	//		// Loop count with or without antialiasing.
+	//		int n = antialiasing == true ? samples_per_pixel : 1;
+
+	//		//ANTI ALIASING
+	//		for (int s = 0; s < n; ++s) {
+	//			// Antialiasing
+	//			float offset_x = antialiasing == true ? random_float() : 0.f;
+	//			float offset_y = antialiasing == true ? random_float() : 0.f;
+
+	//			float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
+	//			float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
+
+	//			float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+
+	//			// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+	//			float3 ray_dir = normalize(screen_point - camera.cameraPos);
+	//			Ray ray = Ray(camera.cameraPos, ray_dir);
+
+	//			pixel_color += Trace(ray);
+	//		}
+
+	//		// Final antialiasing division.
+	//		if (antialiasing == true) {
+	//			pixel_color /= samples_per_pixel;
+	//		}
+
+	//		uint c = translate_color(pixel_color);
+
+	//		screen->Plot(x, y, c);
+	//	}
+	//}
 	 cout << "done";
 }
 
@@ -338,6 +454,5 @@ void MyApp::MouseDown(int button)
 	if (button == 0) 
 	{
 		mouse_held_down = true;
-		
 	}	
 }
