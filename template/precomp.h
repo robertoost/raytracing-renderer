@@ -1252,4 +1252,6 @@ public:
 // Color utility.
 #include "color.h"
 
+#include "scene_manager.h"
+
 // EOF

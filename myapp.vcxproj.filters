@@ -74,6 +74,9 @@
     <ClInclude Include="polygonmesh.h">
       <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
+    <ClInclude Include="scene_manager.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">

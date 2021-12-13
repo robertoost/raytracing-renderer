@@ -14,6 +14,10 @@ namespace RaytracingRenderer {
 			return 0.f;
 		}
 
+		virtual float3 absorption() const {
+			return float3(0.f, 0.f, 0.f);
+		}
+
 		virtual float ior() const {
 			return 1.f; // ior of Air.
 		}

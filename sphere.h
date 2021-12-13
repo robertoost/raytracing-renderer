@@ -22,7 +22,11 @@ namespace RaytracingRenderer {
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			// If the ray is glass, check if this trace is happening inside the sphere.
 			float t = 0;
-			if (ray.mat_ptr.get() != nullptr && ray.mat_ptr->type() == GLASS) {
+			float3 diff2 = (ray.orig - position);
+			diff2 = diff2 * diff2;
+			float diff = fabsf(diff2.x + diff2.y + diff2.z) - 0.0001f;
+
+			if (diff < r2) {
 				t = intersectInside(ray, t_min, t_max, rec);
 			} else {
 				float3 C = position - ray.orig;
@@ -72,7 +76,7 @@ namespace RaytracingRenderer {
 			if(t < 0.f) {
 				return -1.f;
 			}
-			else return ((-b - sqrt(t)) / (2.f * a));
+			else return ((-b + sqrt(t)) / (2.f * a));
 		}
 
 		void getSurfaceProperties(const float3& P, const float3& I, const uint32_t& index, const float3& uv, float3& N, float3& st) const

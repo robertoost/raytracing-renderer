@@ -16,7 +16,7 @@ namespace RaytracingRenderer {
 
             // Assuming vectors are all normalized
             float denom = dot(normal, ray.dir);
-            if (abs(denom) > 0.0001 == false) {
+            if (abs(denom) > 0.0001f == false) {
                 return false;
             }
 
