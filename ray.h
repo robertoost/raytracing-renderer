@@ -6,19 +6,9 @@ namespace RaytracingRenderer {
 	class Ray
 	{
     public:
-        Ray(): orig(float3(0,0,0)), dir(float3(0,0,1)) {
-            this->mat_ptr = nullptr;
-        }
+        Ray(): orig(float3(0,0,0)), dir(float3(0,0,1)) {}
         Ray(const float3& origin, const float3& direction)
-            : orig(origin), dir(direction)
-        {
-            this->mat_ptr = nullptr;
-        }
-        Ray(const float3& origin, const float3& direction, shared_ptr<RaytracingRenderer::Material> mat_ptr)
-            : orig(origin), dir(direction)
-        {
-            this->mat_ptr = mat_ptr;
-        }
+            : orig(origin), dir(direction) {}
 
         float3 at(float t) const {
             return orig + t * dir;
@@ -27,6 +17,5 @@ namespace RaytracingRenderer {
         float3 orig;
         float3 dir;
         float t = INFINITY;
-        shared_ptr<Material> mat_ptr;
 	};
 }

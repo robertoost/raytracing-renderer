@@ -59,8 +59,8 @@ inline void get_ior(Ray& ray, hit_record& rec, float& prev_ior, float& ior) {
 	prev_ior = 1.f;
 
 	// We're inside the material, going out.
-	if (ray.mat_ptr.get() != nullptr && ray.mat_ptr->type() == GLASS && rec.front_face == false) {
-		prev_ior = ray.mat_ptr->ior();
+	if (rec.front_face == false) {
+		prev_ior = rec.mat_ptr->ior();
 	}
 }
 
@@ -178,7 +178,7 @@ float3 MyApp::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
 	// Specular color value. Trace new ray and increase bounce count to prevent crashing when mirrors face eachother. 
 	if (specular > 0) {
 		float3 reflect_dir = reflect(ray.dir, rec.normal);
-		Ray reflect_ray = Ray(rec.p, reflect_dir, ray.mat_ptr);
+		Ray reflect_ray = Ray(rec.p, reflect_dir);
 		spec_diff_color += specular * TraceReflection(reflect_ray, bounce_count + 1);
 	}
 
@@ -196,7 +196,7 @@ float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 	if (transmission > 0) {
 
 		float3 refract_dir = refract(ray.dir, rec.normal, prev_ior, next_ior);
-		Ray refract_ray = Ray(rec.p, refract_dir, rec.mat_ptr);
+		Ray refract_ray = Ray(rec.p, refract_dir);
 
 		float3 transmission_color = transmission * TraceRefraction(refract_ray, bounce_count + 1);
 
@@ -213,7 +213,7 @@ float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 
 	if (reflection > 0) {
 		float3 reflect_dir = reflect(ray.dir, rec.normal);
-		Ray reflect_ray = Ray(rec.p, reflect_dir, ray.mat_ptr);
+		Ray reflect_ray = Ray(rec.p, reflect_dir);
 		glass_pixel_color += reflection * TraceReflection(reflect_ray, bounce_count + 1);
 	}
 
@@ -233,7 +233,7 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 // -----------------------------------------------------------
 void MyApp::Init()
 {
-	scene = SceneManager::DirectionalLightTest();
+	scene = SceneManager::BeersLaw();
 	camera = Camera();
 }
 
