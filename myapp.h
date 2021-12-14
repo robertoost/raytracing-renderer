@@ -32,6 +32,7 @@ public:
 	int max_bounces = 10;
 	int max_reflection_shadows = 4;
 	bool antialiasing = true;
+	bool multithreading = true;
 	//EDIT THIS TO CHANGE ANTI-ALIASING STRENGTH. 100 is beautiful but slow. 0 is none. 
 	int samples_per_pixel = 10;
 

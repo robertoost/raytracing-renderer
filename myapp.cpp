@@ -288,17 +288,13 @@ void MyApp::Tick( float deltaTime )
 	// clear the screen to black
 	screen->Clear( 0 );
 
-	imageBlocks.clear();
-	completedThreads = { 0 };
-	threads.clear();
-
 
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
 	float3 y_dir = camera.screen_p2 - camera.screen_p0;
 
 	float x_width = length(x_dir);
 	float y_height = length(y_dir);
-	
+
 	if (key_held_down)
 	{
 		camera.keyHandler(held_key);
@@ -317,106 +313,107 @@ void MyApp::Tick( float deltaTime )
 	// Loop over every pixel in the screen
 
 	//vector<float3> image(SCRWIDTH * SCRHEIGHT);
-	struct Images {
-		float2 coords;
-		float3 color;
-	};
-	vector<Images> image(SCRHEIGHT*SCRWIDTH);
 
-	for (int i = 0; i < nThreads; ++i)
-	{	
-		Blockjob job;
-		job.rowStart = i * rowsPerThread;
-		job.rowEnd = job.rowStart + rowsPerThread;
+	if (multithreading) //MULTI THREADING
+	{
+		imageBlocks.clear();
+		completedThreads = { 0 };
+		threads.clear();
+		struct Images {
+			float2 coords;
+			float3 color;
+		};
+		vector<Images> image(SCRHEIGHT * SCRWIDTH);
 
-		if (i == nThreads - 1)
-		{
-			job.rowEnd = job.rowStart + rowsPerThread + leftOver;
+		for (int i = 0; i < nThreads; ++i) {
+			Blockjob job;
+			job.rowStart = i * rowsPerThread;
+			job.rowEnd = job.rowStart + rowsPerThread;
+
+			if (i == nThreads - 1)
+			{
+				job.rowEnd = job.rowStart + rowsPerThread + leftOver;
+			}
+
+			job.colSize = SCRWIDTH;
+			job.spp = antialiasing == true ? samples_per_pixel : 1;
+
+			thread t([this, job]() {
+				CalculateColor(job);
+				});
+
+			threads.push_back(move(t));
 		}
 
-		job.colSize = SCRWIDTH;
-		job.spp = antialiasing == true ? samples_per_pixel : 1;
-
-		thread t([this, job]() {
-			CalculateColor(job);
-			});
-
-		threads.push_back(move(t));
-	}
-
-	{
-		unique_lock<std::mutex> lock(mute);
-		cvResults.wait(lock, [&] {
-			return completedThreads == nThreads;
-			});
-	}
-
-	for (thread &t : threads)
-	{
-		t.join();
-	}
-
-	for (Blockjob job : imageBlocks)
-	{
-		for (int i = 0; i < job.colors.size(); i++)
 		{
-			Images images;
-			images.color = job.colors[i];
-			images.coords = job.indices[i];
-			image.push_back(images);
+			unique_lock<std::mutex> lock(mute);
+			cvResults.wait(lock, [&] {
+				return completedThreads == nThreads;
+				});
+		}
+		for (thread& t : threads) {
+			t.join();
+		}
+		for (Blockjob job : imageBlocks) {
+			for (int i = 0; i < job.colors.size(); i++)
+			{
+				Images images;
+				images.color = job.colors[i];
+				images.coords = job.indices[i];
+				image.push_back(images);
+			}
+		}
+		for (int i = 0; i < image.size(); i++) {
+			uint c = translate_color(image[i].color);
+
+			screen->Plot(image[i].coords.x, image[i].coords.y, c);
+
 		}
 	}
-
-	//FIXME: FIX THISSSSSSS!!!! colors don't calculate right???
-	for (int i = 0; i < image.size(); i++) 
+	else //Without Multithreading
 	{
-		uint c = translate_color(image[i].color);
+		for (int y = SCRHEIGHT - 1; y >= 0; --y) {
+			for (int x = 0; x < SCRWIDTH; ++x) {
+				float3 pixel_color = float3(0, 0, 0);
+				// 	Point on the screen:
+				// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
+				// 𝑢, 𝑣 ∈[0, 1]
 
-		screen->Plot(image[i].coords.x, image[i].coords.y, c);
+				// Loop count with or without antialiasing.
+				int n = antialiasing == true ? samples_per_pixel : 1;
 
+				//ANTI ALIASING
+				for (int s = 0; s < n; ++s) {
+					// Antialiasing
+					float offset_x = antialiasing == true ? random_float() : 0.f;
+					float offset_y = antialiasing == true ? random_float() : 0.f;
+
+					float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
+					float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
+
+					float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+
+					// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+					float3 ray_dir = normalize(screen_point - camera.cameraPos);
+					Ray ray = Ray(camera.cameraPos, ray_dir);
+
+					pixel_color += Trace(ray);
+				}
+
+				// Final antialiasing division.
+				if (antialiasing == true) {
+					pixel_color /= samples_per_pixel;
+				}
+
+				uint c = translate_color(pixel_color);
+
+				screen->Plot(x, y, c);
+			}
+		}
 	}
-	cout << myTimer.elapsed() * 1000;
-
-	//Without Threading
-	//for (int y = SCRHEIGHT - 1; y >= 0; --y) {
-	//	for (int x = 0; x < SCRWIDTH; ++x) {
-	//		float3 pixel_color = float3(0, 0, 0);
-	//		// 	Point on the screen:
-	//		// 𝑃(𝑢, 𝑣) = 𝑃0 + 𝑢(𝑃1 −𝑃0) + 𝑣(𝑃2 −𝑃0)
-	//		// 𝑢, 𝑣 ∈[0, 1]
-
-	//		// Loop count with or without antialiasing.
-	//		int n = antialiasing == true ? samples_per_pixel : 1;
-
-	//		//ANTI ALIASING
-	//		for (int s = 0; s < n; ++s) {
-	//			// Antialiasing
-	//			float offset_x = antialiasing == true ? random_float() : 0.f;
-	//			float offset_y = antialiasing == true ? random_float() : 0.f;
-
-	//			float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
-	//			float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
-
-	//			float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
-
-	//			// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-	//			float3 ray_dir = normalize(screen_point - camera.cameraPos);
-	//			Ray ray = Ray(camera.cameraPos, ray_dir);
-
-	//			pixel_color += Trace(ray);
-	//		}
-
-	//		// Final antialiasing division.
-	//		if (antialiasing == true) {
-	//			pixel_color /= samples_per_pixel;
-	//		}
-
-	//		uint c = translate_color(pixel_color);
-
-	//		screen->Plot(x, y, c);
-	//	}
-	//}
-	 cout << "done";
+	
+	//cout << "done";
+	cout << myTimer.elapsed() * 1000 << " ";
 }
 
 void MyApp::KeyUp(int key)
