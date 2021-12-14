@@ -71,9 +71,6 @@
     <ClInclude Include="directional_light.h">
       <Filter>src\light</Filter>
     </ClInclude>
-    <ClInclude Include="polygonmesh.h">
-      <Filter>src\3d-objects\primitives</Filter>
-    </ClInclude>
     <ClInclude Include="scene_manager.h">
       <Filter>src</Filter>
     </ClInclude>
