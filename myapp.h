@@ -15,12 +15,13 @@ public:
 		int rowEnd;
 		int colSize;
 		int spp;
-		vector<int> indices;
+
+		vector<float2> indices;
 		vector<float3> colors;
 	};
 	const int nThreads = thread::hardware_concurrency();
-	int rowsPerThread = SCRWIDTH / nThreads;
-	int leftOver = SCRWIDTH % nThreads;
+	int rowsPerThread = SCRHEIGHT / nThreads;
+	int leftOver = SCRHEIGHT % nThreads;
 
 	mutex mute;
 	condition_variable cvResults;
@@ -30,7 +31,7 @@ public:
 
 	int max_bounces = 10;
 	int max_reflection_shadows = 4;
-	bool antialiasing = false;
+	bool antialiasing = true;
 	//EDIT THIS TO CHANGE ANTI-ALIASING STRENGTH. 100 is beautiful but slow. 0 is none. 
 	int samples_per_pixel = 10;
 

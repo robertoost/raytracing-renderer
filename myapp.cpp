@@ -1,6 +1,7 @@
 ﻿#include "precomp.h"
 #include "myapp.h"
 #include <future>
+#include <map>
 
 TheApp* CreateApp() { return new MyApp(); }
 
@@ -241,34 +242,31 @@ void MyApp::Init()
 
 void MyApp::CalculateColor(Blockjob job)
 {
-	for (int x = job.rowStart; x < job.rowEnd; ++x)
+	for (int j = job.rowStart; j < job.rowEnd; ++j) //height, row height
 	{
-		for (int y = 0; y < job.colSize; ++y)
+		for (int i = 0; i < job.colSize; ++i) //width, row length
 		{
 			float3 pixel_color = float3(0, 0, 0);
 			for (int s = 0; s < job.spp; ++s)
 			{
 				float offset_x = antialiasing == true ? random_float() : 0.f;
 				float offset_y = antialiasing == true ? random_float() : 0.f;
-
-				float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
-				float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
-
-				float3 screen_point = camera.screen_p0 + u * camera.screen_p1 - camera.screen_p0 + v * camera.screen_p2 - camera.screen_p0;
-
+				float u = (i + offset_x) / float(job.colSize);
+				float v = (j + offset_y) / float(SCRHEIGHT);
+				float3 screen_point = camera.screen_p0 + u * (camera.screen_p1 - camera.screen_p0) + v * (camera.screen_p2 - camera.screen_p0);
 				// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
 				float3 ray_dir = normalize(screen_point - camera.cameraPos);
 				Ray ray = Ray(camera.cameraPos, ray_dir);
-
 				pixel_color += Trace(ray);
 			}
 
 			// Final antialiasing division.
 			if (antialiasing == true) {
-				pixel_color /= samples_per_pixel;
+				pixel_color /= float(job.spp);
 			}
-			const unsigned int index = x * job.colSize + y;
-			job.indices.push_back(index);
+			//pixel_color = float3(sqrt(pixel_color.x), sqrt(pixel_color.y), sqrt(pixel_color.z));
+			const unsigned int index = j * job.colSize + i;
+			job.indices.push_back(float2(i, j));
 			job.colors.push_back(pixel_color);
 		}
 	}
@@ -285,6 +283,8 @@ void MyApp::CalculateColor(Blockjob job)
 // -----------------------------------------------------------
 void MyApp::Tick( float deltaTime )
 {
+	Timer myTimer;
+	myTimer.reset();
 	// clear the screen to black
 	screen->Clear( 0 );
 
@@ -316,7 +316,12 @@ void MyApp::Tick( float deltaTime )
 
 	// Loop over every pixel in the screen
 
-	vector<float3> image(SCRWIDTH * SCRHEIGHT);
+	//vector<float3> image(SCRWIDTH * SCRHEIGHT);
+	struct Images {
+		float2 coords;
+		float3 color;
+	};
+	vector<Images> image(SCRHEIGHT*SCRWIDTH);
 
 	for (int i = 0; i < nThreads; ++i)
 	{	
@@ -329,7 +334,7 @@ void MyApp::Tick( float deltaTime )
 			job.rowEnd = job.rowStart + rowsPerThread + leftOver;
 		}
 
-		job.colSize = SCRHEIGHT;
+		job.colSize = SCRWIDTH;
 		job.spp = antialiasing == true ? samples_per_pixel : 1;
 
 		thread t([this, job]() {
@@ -353,30 +358,26 @@ void MyApp::Tick( float deltaTime )
 
 	for (Blockjob job : imageBlocks)
 	{
-		int index = job.rowStart;
-		int colorIndex = 0;
-		for (float3 pc : job.colors)
+		for (int i = 0; i < job.colors.size(); i++)
 		{
-			int colIndex = job.indices[colorIndex];
-			image[colIndex] = pc;
-			++colorIndex;
+			Images images;
+			images.color = job.colors[i];
+			images.coords = job.indices[i];
+			image.push_back(images);
 		}
 	}
 
 	//FIXME: FIX THISSSSSSS!!!! colors don't calculate right???
-	for (int y = SCRHEIGHT - 1; y >= 0; --y) {
-		int m = 0;
-		for (int x = 0; x < SCRWIDTH; ++x) {
+	for (int i = 0; i < image.size(); i++) 
+	{
+		uint c = translate_color(image[i].color);
 
-			uint c = translate_color(image[m]);
+		screen->Plot(image[i].coords.x, image[i].coords.y, c);
 
-			screen->Plot(x, y, c);
-			m++;
-		}
 	}
+	cout << myTimer.elapsed() * 1000;
 
-
-
+	//Without Threading
 	//for (int y = SCRHEIGHT - 1; y >= 0; --y) {
 	//	for (int x = 0; x < SCRWIDTH; ++x) {
 	//		float3 pixel_color = float3(0, 0, 0);
