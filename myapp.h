@@ -1,6 +1,7 @@
 ﻿#pragma once
 using RaytracingRenderer::Ray;
 using RaytracingRenderer::hit_record;
+#include <mutex>
 
 namespace Tmpl8
 {
@@ -8,6 +9,25 @@ namespace Tmpl8
 class MyApp : public TheApp
 {
 public:
+	struct Blockjob
+	{
+		int rowStart;
+		int rowEnd;
+		int colSize;
+		int spp;
+		vector<int> indices;
+		vector<float3> colors;
+	};
+	const int nThreads = thread::hardware_concurrency();
+	int rowsPerThread = SCRWIDTH / nThreads;
+	int leftOver = SCRWIDTH % nThreads;
+
+	mutex mute;
+	condition_variable cvResults;
+	vector<Blockjob> imageBlocks;
+	atomic<int> completedThreads = { 0 };
+	vector<thread> threads;
+
 	int max_bounces = 10;
 	int max_reflection_shadows = 4;
 	bool antialiasing = false;
@@ -17,6 +37,7 @@ public:
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
+	void CalculateColor(Blockjob job);
 	float3 BackgroundColor(Ray& ray, float3& pixel_color);
 	float3 Trace(Ray &ray);
 	float3 TraceSolid(Ray& ray, hit_record& rec, uint bounce_count);
@@ -25,6 +46,7 @@ public:
 	float3 TraceReflection(Ray& ray, uint bounce_count);
 	float3 TraceRefraction(Ray& ray, uint bounce_count);
 	
+
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp(int button);

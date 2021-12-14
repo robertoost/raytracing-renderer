@@ -229,16 +229,6 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 	return pixel_lighting;
 }
 
-struct Blockjob
-{
-	int rowStart;
-	int rowEnd;
-	int colSize;
-	int spp;
-	vector<int> indices;
-	vector<float3> colors;
-};
-
 
 // -----------------------------------------------------------
 // Initialize the application
@@ -249,6 +239,47 @@ void MyApp::Init()
 	camera = Camera();
 }
 
+void MyApp::CalculateColor(Blockjob job)
+{
+	for (int x = job.rowStart; x < job.rowEnd; ++x)
+	{
+		for (int y = 0; y < job.colSize; ++y)
+		{
+			float3 pixel_color = float3(0, 0, 0);
+			for (int s = 0; s < job.spp; ++s)
+			{
+				float offset_x = antialiasing == true ? random_float() : 0.f;
+				float offset_y = antialiasing == true ? random_float() : 0.f;
+
+				float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
+				float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
+
+				float3 screen_point = camera.screen_p0 + u * camera.screen_p1 - camera.screen_p0 + v * camera.screen_p2 - camera.screen_p0;
+
+				// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
+				float3 ray_dir = normalize(screen_point - camera.cameraPos);
+				Ray ray = Ray(camera.cameraPos, ray_dir);
+
+				pixel_color += Trace(ray);
+			}
+
+			// Final antialiasing division.
+			if (antialiasing == true) {
+				pixel_color /= samples_per_pixel;
+			}
+			const unsigned int index = x * job.colSize + y;
+			job.indices.push_back(index);
+			job.colors.push_back(pixel_color);
+		}
+	}
+	{
+		lock_guard<std::mutex> lock(mute);
+		imageBlocks.push_back(job);
+		completedThreads++;
+		cvResults.notify_one();
+	}
+}
+
 // -----------------------------------------------------------
 // Main application tick function - Executed once per frame
 // -----------------------------------------------------------
@@ -256,6 +287,10 @@ void MyApp::Tick( float deltaTime )
 {
 	// clear the screen to black
 	screen->Clear( 0 );
+
+	imageBlocks.clear();
+	completedThreads = { 0 };
+	threads.clear();
 
 
 	float3 x_dir = camera.screen_p1 - camera.screen_p0;
@@ -281,78 +316,37 @@ void MyApp::Tick( float deltaTime )
 
 	// Loop over every pixel in the screen
 
-	const int nThreads = thread::hardware_concurrency();
-	int rowsPerThread = SCRWIDTH / nThreads;
-	int leftOver = SCRWIDTH % nThreads;
-
-	mutex mutex;
-	std::condition_variable cvResults;
-	vector<Blockjob> imageBlocks;
-	atomic<int> completedThreads = { 0 };
-	vector<thread> threads;
-
-	float3* image = new float3[SCRWIDTH * SCRHEIGHT];
-
-	Blockjob job;
+	vector<float3> image(SCRWIDTH * SCRHEIGHT);
 
 	for (int i = 0; i < nThreads; ++i)
-	{
+	{	
+		Blockjob job;
 		job.rowStart = i * rowsPerThread;
 		job.rowEnd = job.rowStart + rowsPerThread;
+
 		if (i == nThreads - 1)
+		{
 			job.rowEnd = job.rowStart + rowsPerThread + leftOver;
+		}
+
 		job.colSize = SCRHEIGHT;
 		job.spp = antialiasing == true ? samples_per_pixel : 1;
 
-		thread t([=, &job, &imageBlocks, &mutex, &cvResults, &completedThreads]()
-			{
-				for (int x = job.rowStart; x < job.rowEnd; ++x)
-				{
-					for (int y = 0; y < job.colSize; ++y)
-					{
-						float3 pixel_color = float3(0, 0, 0);
-						for (int s = 0; s < job.spp; ++s)
-						{
-							float offset_x = antialiasing == true ? random_float() : 0.f;
-							float offset_y = antialiasing == true ? random_float() : 0.f;
-
-							float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
-							float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
-
-							float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
-
-							// Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-							float3 ray_dir = normalize(screen_point - camera.cameraPos);
-							Ray ray = Ray(camera.cameraPos, ray_dir);
-
-							pixel_color += Trace(ray);
-						}
-
-						// Final antialiasing division.
-						if (antialiasing == true) {
-							pixel_color /= samples_per_pixel;
-						}
-						const unsigned int index = y * job.colSize + i;
-						job.indices.push_back(index);
-						job.colors.push_back(pixel_color);
-					}
-				}
-				lock_guard<std::mutex> lock(mutex);
-				imageBlocks.push_back(job);
-				completedThreads++;
-				cvResults.notify_one();
+		thread t([this, job]() {
+			CalculateColor(job);
 			});
-		threads.push_back(std::move(t));
+
+		threads.push_back(move(t));
 	}
 
 	{
-		unique_lock<std::mutex> lock(mutex);
+		unique_lock<std::mutex> lock(mute);
 		cvResults.wait(lock, [&] {
 			return completedThreads == nThreads;
 			});
 	}
 
-	for (thread& t : threads)
+	for (thread &t : threads)
 	{
 		t.join();
 	}
@@ -369,19 +363,18 @@ void MyApp::Tick( float deltaTime )
 		}
 	}
 
-	for (unsigned int i = 0; i < SCRWIDTH * SCRHEIGHT; ++i)
-	{
+	//FIXME: FIX THISSSSSSS!!!! colors don't calculate right???
+	for (int y = SCRHEIGHT - 1; y >= 0; --y) {
+		int m = 0;
+		for (int x = 0; x < SCRWIDTH; ++x) {
 
-		for (int y = SCRHEIGHT - 1; y >= 0; --y) {
-			for (int x = 0; x < SCRWIDTH; ++x) {
+			uint c = translate_color(image[m]);
 
-				uint c = translate_color(image[i]);
-
-				screen->Plot(x, y, c);
-			}
+			screen->Plot(x, y, c);
+			m++;
 		}
-
 	}
+
 
 
 	//for (int y = SCRHEIGHT - 1; y >= 0; --y) {
