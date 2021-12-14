@@ -5,7 +5,7 @@ TheApp* CreateApp() { return new MyApp(); }
 
 using namespace RaytracingRenderer;
 
-inline float3 refract(const float3& dir, const float3& normal,
+float3 refract(const float3& dir, const float3& normal,
 	float prev_ior, float next_ior)
 {
 	const float n = prev_ior / next_ior;
@@ -19,7 +19,7 @@ inline float3 refract(const float3& dir, const float3& normal,
 	return n * dir - (n + sqrt(1.0f - sin_t2)) * normal;
 }
 
-inline void fresnel(const float3& dir, const float3& normal, const float& prev_ior, const float& next_ior, float& reflection, float& transmission)
+void fresnel(const float3& dir, const float3& normal, const float& prev_ior, const float& next_ior, float& reflection, float& transmission)
 {
 	float cos_i = dot(dir, normal);
 	float etai = prev_ior, etat = next_ior;
@@ -54,7 +54,7 @@ inline void fresnel(const float3& dir, const float3& normal, const float& prev_i
 	//reflection *= 10;
 }
 
-inline void get_ior(Ray& ray, hit_record& rec, float& prev_ior, float& ior) {
+void get_ior(Ray& ray, hit_record& rec, float& prev_ior, float& ior) {
 	ior = rec.mat_ptr->ior();
 	prev_ior = 1.f;
 
@@ -64,7 +64,7 @@ inline void get_ior(Ray& ray, hit_record& rec, float& prev_ior, float& ior) {
 	}
 }
 
-inline float random_float() {
+float random_float() {
 	return rand() / (RAND_MAX + 1.f);
 }
 

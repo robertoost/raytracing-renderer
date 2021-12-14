@@ -9,15 +9,12 @@ namespace RaytracingRenderer {
 		float r2;
 		float radius;
 
-		Sphere(float3 position, float radius, shared_ptr<Material> material): Object3D(position, material) {
+		inline Sphere(float3 position, float radius, shared_ptr<Material> material): Object3D(position, material) {
 			this->radius = radius;
 			this->r2 = radius * radius;
 		}
 
-		Sphere() : Object3D() {
-			radius = 1.f;
-			r2 = 1.f;
-		}
+		inline Sphere() : Object3D(), radius(1.f), r2(1.f) {}
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			// If the ray is glass, check if this trace is happening inside the sphere.
@@ -52,8 +49,8 @@ namespace RaytracingRenderer {
 			rec.p = ray.at(t);
 			rec.mat_ptr = material;
 
+			// Check the ray direction against the normal to determine whether this is a backface we're hitting.
 			float3 outward_normal = (rec.p - position) / radius;
-			//rec.normal = outward_normal;
 			rec.set_face_normal(ray, outward_normal);
 			return true;
 		}
@@ -77,11 +74,6 @@ namespace RaytracingRenderer {
 				return -1.f;
 			}
 			else return ((-b + sqrt(t)) / (2.f * a));
-		}
-
-		void getSurfaceProperties(const float3& P, const float3& I, const uint32_t& index, const float3& uv, float3& N, float3& st) const
-		{
-			N = normalize(P - position);
 		}
 	};
 }
