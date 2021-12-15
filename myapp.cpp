@@ -236,7 +236,7 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 // -----------------------------------------------------------
 void MyApp::Init()
 {
-	scene = SceneManager::BeersLaw();
+	scene = SceneManager::ReflectionRoom();
 	camera = Camera();
 }
 
