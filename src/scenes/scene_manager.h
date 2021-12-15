@@ -12,6 +12,8 @@ public:
 	static Scene BeersLaw();
 
 	static Scene DirectionalLightTest();
+
+	static Scene Snowman();
 };
 }
 
