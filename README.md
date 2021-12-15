@@ -5,6 +5,10 @@ A reasonably simple whitted-style raytracer, created for assignment 1 of the Adv
 Code is fully public domain. Use as you please.
 Original template by dr. ing. J. Bikker (bikker.j@gmail.com).
 
+Created by Rayne Blair (raynebblair@gmail.com) & Robert Oost (mail@robertoo.st)
+
+![image](https://user-images.githubusercontent.com/33265853/146192846-d1962713-a60e-4188-bb84-c537b9403910.png)
+
 ## Features
 
 - Sphere and Plane primitives.
