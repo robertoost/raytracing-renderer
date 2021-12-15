@@ -1,6 +1,7 @@
 #pragma once
 
 namespace RaytracingRenderer {
+    // Forward instancing.
     class Material;
 
     struct hit_record {

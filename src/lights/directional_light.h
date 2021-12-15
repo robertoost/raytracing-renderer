@@ -4,14 +4,16 @@ namespace RaytracingRenderer {
 
     class DirectionalLight : public Light
     {
+    private:
+        float3 direction;
     public:
-        DirectionalLight(const float3 direction, const float intensity) : Light(intensity) {
+        inline DirectionalLight(const float3 direction, const float intensity) : Light(intensity) {
             this->direction = normalize(direction);
         }
 
-        DirectionalLight() : DirectionalLight(float3(-0.2f,-0.7f,-0.1f), 1.f) {}
+        inline DirectionalLight() : DirectionalLight(float3(-0.2f,-0.7f,-0.1f), 1.f) {}
 
-        float3 illuminate(float3& position, float3& normal, Scene& scene) {
+        inline float3 illuminate(float3& position, float3& normal, Scene& scene) {
             // Prepare shadow raycast
             Ray shadow_ray = Ray(position, -direction);
             hit_record rec = hit_record();
@@ -31,8 +33,6 @@ namespace RaytracingRenderer {
             }
             return float3(1, 1, 1) * cos_a * intensity;
         }
-    private:
-        float3 direction;
     };
 }
 

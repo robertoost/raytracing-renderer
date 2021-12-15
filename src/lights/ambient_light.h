@@ -5,12 +5,12 @@ namespace RaytracingRenderer {
     class AmbientLight : public Light
     {
     public:
-        AmbientLight(float intensity) : Light(float3(0,0,0), intensity) {}
+        inline AmbientLight(float intensity) : Light(float3(0,0,0), intensity) {}
 
-        AmbientLight() : Light() {}
+        inline AmbientLight() : Light() {}
 
         // Ambient light doesn't need to consider position and normal.
-        float3 illuminate(float3& position, float3& normal, Scene& scene) {
+        inline float3 illuminate(float3& position, float3& normal, Scene& scene) {
             return float3(1,1,1) * intensity;
         }
     };

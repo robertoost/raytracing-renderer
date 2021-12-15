@@ -5,11 +5,11 @@ namespace RaytracingRenderer {
     class PointLight : public Light
     {
     public:
-        PointLight(float3 position, float intensity) : Light(position, intensity) {}
+        inline PointLight(float3 position, float intensity) : Light(position, intensity) {}
 
-        PointLight() : Light() {}
+        inline PointLight() : Light() {}
 
-        float3 illuminate(float3& position, float3& normal, Scene& scene) {
+        inline float3 illuminate(float3& position, float3& normal, Scene& scene) {
 
             // Get difference between light and position.
             float3 diff = this->position - position;

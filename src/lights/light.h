@@ -10,18 +10,18 @@ namespace RaytracingRenderer {
 		float3 position;
 		float intensity;
 
-		Light(const float3 &position, const float intensity) {
+		inline Light(const float3 &position, const float intensity) {
 			this->position = position;
 			this->intensity = intensity;
 		}
 		
-		Light() : Light(float3(0, 0, 0), 1.f) {}
+		inline Light() : Light(float3(0, 0, 0), 1.f) {}
 
-		Light(const float intensity) {
+		inline Light(const float intensity) {
 			this->position = float3(0, 0, 0);
 			this->intensity = intensity;
 		}
 		
-		virtual float3 illuminate(float3& position, float3& normal, Scene& scene) = 0;
+		inline virtual float3 illuminate(float3& position, float3& normal, Scene& scene) = 0;
 	};
 }
