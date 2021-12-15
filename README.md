@@ -56,19 +56,43 @@ In order to change the settings, go to `template/common.h`. There you will find 
 - `MULTITHREADING` - Enables CPU multithreading to speed up the renderer.\
     default: `true`.
 
+- `POSTPROCESSING` - Enables post processing, depending on which settings are enabled.\
+    default: `true`
+
+- `GAMMA_CORRECTION` - Enables gamma correction.\
+    default: `true`
+
+- `GAMMA` - The gamma value used for gamma correction.\
+    default: `0.7`
+
+- `VIGNETTING` - Enables vignetting.\
+    default: `true`
+
+- `MAX_VIGNETTE` - Determines the amount of vignetting applied. Scales between 0.0 and 1.0\
+    default: `0.7`
+
+- `CHROMATIC_ABERRATION` - Enables chromatic aberration.\
+    default: `true`
+
+- `CHROM_ABB_R_OFFSET`, `CHROM_ABB_G_OFFSET`, `CHROM_ABB_B_OFFSET` - Determine the x,y offsets used for each color in chromatic aberration.\
+    default: `(1,1), (-1,1), (-1,-1)`
+
 ## References
 
-- Shirley, P. (2020). Raytracing in One Weekend.
+- Shirley, P. (2020). Raytracing in One Weekend.\
 https://raytracing.github.io/books/RayTracingInOneWeekend.html
 
-- Prunier, J.C. et al. (2016). Scratchapixel 2.0 Volume 1: Foundations of 3D Rendering.
+- Prunier, J.C. et al. (2016). Scratchapixel 2.0 Volume 1: Foundations of 3D Rendering.\
 https://www.scratchapixel.com
 
-- Adaixo, M. (2019). Paralellizing Ray Tracing.
+- Adaixo, M. (2019). Paralellizing Ray Tracing.\
 https://mikeadev.net/2019/11/parallelizing-ray-tracing/
 
-- Li, V. (2018). Raytracing - Ray Sphere Intersection.
+- Li, V. (2018). Raytracing - Ray Sphere Intersection.\
 https://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
 
-- Bikker, J. (2021). Tmpl8.
+- De Vries, J. (2014). Learn OpenGL.\
+  https://learnopengl.com/Getting-started/Camera
+
+- Bikker, J. (2021). Tmpl8.\
 https://github.com/jbikker/advgrtmpl8
