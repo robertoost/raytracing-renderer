@@ -18,7 +18,7 @@ namespace RaytracingRenderer {
 			}
 		}
 
-		inline CheckerboardMaterial(float3 &odd_color, float3 &even_color) : Material(SOLID) {
+		inline CheckerboardMaterial(float3 odd_color, float3 even_color) : Material(SOLID) {
 			this->odd_color = odd_color;
 			this->even_color = even_color;
 		}

@@ -4,11 +4,18 @@
     <ClCompile Include="template\template.cpp">
       <Filter>template</Filter>
     </ClCompile>
-    <ClCompile Include="myapp.cpp" />
-    <ClCompile Include="src\camera.cpp">
+    <ClCompile Include="src\raytracing\raytracer.cpp">
+      <Filter>src\raytracing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\scene_manager.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\camera.cpp">
+      <Filter>src\raytracing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rr_app.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\scene_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="template\common.h">
@@ -17,15 +24,8 @@
     <ClInclude Include="template\precomp.h">
       <Filter>template</Filter>
     </ClInclude>
-    <ClInclude Include="myapp.h" />
     <ClInclude Include="cl\tools.cl">
       <Filter>template\cl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\camera.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scene.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\3d-objects\primitives\sphere.h">
       <Filter>src\3d-objects\primitives</Filter>
@@ -33,17 +33,8 @@
     <ClInclude Include="src\3d-objects\object3d.h">
       <Filter>src\3d-objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\ray.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\color.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\3d-objects\primitives\plane.h">
       <Filter>src\3d-objects\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hittable.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lights\light.h">
       <Filter>src\lights</Filter>
@@ -75,7 +66,31 @@
     <ClInclude Include="src\lights\directional_light.h">
       <Filter>src\lights</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene_manager.h">
+    <ClInclude Include="src\utils\ray_util.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\color_util.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\hittable.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\ray.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\raytracer.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\scene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\scene_manager.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\camera.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rr_app.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -111,6 +126,15 @@
     </Filter>
     <Filter Include="src\lights">
       <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{47bcc2d7-521f-43ee-b2cc-eb97f6a97b6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\raytracing">
+      <UniqueIdentifier>{582e722e-8141-4faf-a9a3-20289164f53b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scenes">
+      <UniqueIdentifier>{effc06e8-e596-4773-bc0e-ec556c8cf309}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

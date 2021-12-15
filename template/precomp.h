@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <io.h>
+#include <mutex>
 
 #include "lib/stb_image.h"
 
@@ -1221,8 +1222,8 @@ public:
 };
 
 // General raytracing.
-#include "src/ray.h"
-#include "src/hittable.h"
+#include "src/raytracing/ray.h"
+#include "src/raytracing/hittable.h"
 
 // Materials
 #include "src/materials/material.h"
@@ -1238,10 +1239,10 @@ public:
 #include "src/3d-objects/primitives/plane.h"
 
 // Camera.
-#include "src/camera.h"
+#include "src/raytracing/camera.h"
 
 // Scene.
-#include "src/scene.h"
+#include "src/scenes/scene.h"
 
 // Lighting.
 #include "src/lights/light.h"
@@ -1250,8 +1251,12 @@ public:
 #include "src/lights/directional_light.h"
 
 // Color utility.
-#include "src/color.h"
+#include "src/utils/color_util.h"
+#include "src/utils/ray_util.h"
 
-#include "src/scene_manager.h"
+// App essentials
+#include "src/scenes/scene_manager.h"
+#include "src/raytracing/raytracer.h"
+
 
 // EOF
