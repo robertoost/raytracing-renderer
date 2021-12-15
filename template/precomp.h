@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <io.h>
+#include <mutex>
 
 #include "lib/stb_image.h"
 
@@ -1221,35 +1222,41 @@ public:
 };
 
 // General raytracing.
-#include "ray.h"
-#include "hittable.h"
+#include "src/raytracing/ray.h"
+#include "src/raytracing/hittable.h"
 
 // Materials
-#include "material.h"
-#include "diffuse_material.h"
-#include "normal_material.h"
-#include "checkerboard_material.h"
-#include "specular_material.h"
-#include "glass_material.h"
+#include "src/materials/material.h"
+#include "src/materials/diffuse_material.h"
+#include "src/materials/normal_material.h"
+#include "src/materials/checkerboard_material.h"
+#include "src/materials/specular_material.h"
+#include "src/materials/glass_material.h"
 
 // 3D Objects.
-#include "object3d.h"
-#include "sphere.h"
-#include "plane.h"
+#include "src/3d-objects/object3d.h"
+#include "src/3d-objects/primitives/sphere.h"
+#include "src/3d-objects/primitives/plane.h"
 
 // Camera.
-#include "camera.h"
+#include "src/raytracing/camera.h"
 
 // Scene.
-#include "scene.h"
+#include "src/scenes/scene.h"
 
 // Lighting.
-#include "light.h"
-#include "ambient_light.h"
-#include "point_light.h"
-#include "directional_light.h"
+#include "src/lights/light.h"
+#include "src/lights/ambient_light.h"
+#include "src/lights/point_light.h"
+#include "src/lights/directional_light.h"
 
 // Color utility.
-#include "color.h"
+#include "src/utils/color_util.h"
+#include "src/utils/ray_util.h"
+
+// App essentials
+#include "src/scenes/scene_manager.h"
+#include "src/raytracing/raytracer.h"
+
 
 // EOF

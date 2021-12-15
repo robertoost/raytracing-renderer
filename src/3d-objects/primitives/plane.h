@@ -7,16 +7,15 @@ namespace RaytracingRenderer {
 	public:
         float3 normal;
 
-        Plane() : Object3D(), normal(float3(0, 1, 0)) {}
-
-        Plane(float3 position, float3 normal, shared_ptr<Material> material) : Object3D(position, material), normal(normal) {}
+        inline Plane() : Object3D(), normal(float3(0, 1, 0)) {}
+        inline Plane(float3 position, float3 normal, shared_ptr<Material> material) : Object3D(position, material), normal(normal) {}
 
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 
             // Assuming vectors are all normalized
             float denom = dot(normal, ray.dir);
-            if (abs(denom) > 0.0001 == false) {
+            if (abs(denom) > 0.0001f == false) {
                 return false;
             }
 

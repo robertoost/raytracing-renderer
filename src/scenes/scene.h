@@ -24,7 +24,7 @@ namespace RaytracingRenderer {
 			return collision;
 		};
 
-		Scene() {
+		inline Scene() {
 			//camera = Camera(float3(0, 0, 0), 90., ASPECT_RATIO);
 			objects = list<shared_ptr<Hittable>>();
 			shared_ptr<DiffuseMaterial> sphere_mat = make_shared<DiffuseMaterial>();
@@ -33,7 +33,7 @@ namespace RaytracingRenderer {
 			objects.push_back(make_shared<Sphere>(Sphere(float3(0, 0, 4), 1.f, sphere_mat)));
 			objects.push_back(make_shared<Plane>(Plane(float3(0, -1, 0), float3(0, 1, 0), plane_mat)));
 		};
-		Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights) {
+		inline Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights) {
 			this->objects = objects;
 			this->lights = lights;
 		}

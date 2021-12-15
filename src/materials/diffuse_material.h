@@ -6,17 +6,17 @@ namespace RaytracingRenderer {
 	public:
 		float3 col;
 
-		void color(
+		inline void color(
 			const Ray& r_in, const hit_record& rec, float3& attenuation
 		) const override {
 			attenuation = col;
 		}
 
-		float specularity() const override { return 0.f; }
+		inline float specularity() const override { return 0.f; }
 
-		DiffuseMaterial() : DiffuseMaterial(float3(1, 1, 1)) {}
+		inline DiffuseMaterial() : DiffuseMaterial(float3(1, 1, 1)) {}
 
-		DiffuseMaterial(float3 col): Material(SOLID) {
+		inline DiffuseMaterial(float3 col): Material(SOLID) {
 			this->col = col;
 		}
 	};
