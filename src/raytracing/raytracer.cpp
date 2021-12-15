@@ -6,7 +6,7 @@ namespace RaytracingRenderer {
 
         // Trace a ray and record the hit.
         hit_record rec = hit_record();
-        const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+        const bool collision = scene->intersect(ray, 0.0001f, FLT_MAX, rec);
         
         float3 pixel_color = float3(0, 0, 0);
 
@@ -36,7 +36,7 @@ namespace RaytracingRenderer {
 
         // Trace the given reflection ray and find the nearest intersection.
         hit_record rec = hit_record();
-        const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+        const bool collision = scene->intersect(ray, 0.0001f, FLT_MAX, rec);
         float3 pixel_color = float3(0,0,0);
 
         // If there's no collision, return black.
@@ -67,7 +67,7 @@ namespace RaytracingRenderer {
 
         // negative bias to allow for self intersection?
         hit_record rec = hit_record();
-        const bool collision = scene.intersect(ray, 0.0001f, FLT_MAX, rec);
+        const bool collision = scene->intersect(ray, 0.0001f, FLT_MAX, rec);
         float3 pixel_color = float3(0,0,0);
 
         if (collision == false) {
@@ -157,8 +157,8 @@ namespace RaytracingRenderer {
     float3 Raytracer::DirectIllumination(float3 &position, float3 &normal) {
         float3 pixel_lighting = float3(0, 0, 0);
 
-        for (shared_ptr<Light> light : scene.lights) {
-            pixel_lighting += light->illuminate(position, normal, scene);
+        for (shared_ptr<Light> light : scene->lights) {
+            pixel_lighting += light->illuminate(position, normal, *scene);
         }
         return pixel_lighting;
     }
@@ -222,8 +222,8 @@ namespace RaytracingRenderer {
         }
         else //Without Multithreading
         {
-            float3 x_dir = camera.screen_p1 - camera.screen_p0;
-	        float3 y_dir = camera.screen_p2 - camera.screen_p0;
+            float3 x_dir = camera->screen_p1 - camera->screen_p0;
+	        float3 y_dir = camera->screen_p2 - camera->screen_p0;
 
             for (int y = SCRHEIGHT - 1; y >= 0; --y) {
                 for (int x = 0; x < SCRWIDTH; ++x) {
@@ -244,11 +244,11 @@ namespace RaytracingRenderer {
                         float u = (x + offset_x) / (((float)SCRWIDTH) - 1.f);
                         float v = (y + offset_y) / (((float)SCRHEIGHT) - 1.f);
 
-                        float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+                        float3 screen_point = camera->screen_p0 + u * x_dir + v * y_dir;
 
                         // Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-                        float3 ray_dir = normalize(screen_point - camera.cameraPos);
-                        Ray ray = Ray(camera.cameraPos, ray_dir);
+                        float3 ray_dir = normalize(screen_point - camera->cameraPos);
+                        Ray ray = Ray(camera->cameraPos, ray_dir);
 
                         pixel_color += Trace(ray);
                     }
@@ -270,8 +270,8 @@ namespace RaytracingRenderer {
 
     void Raytracer::CalculateColor(Blockjob job)
     {
-        float3 x_dir = camera.screen_p1 - camera.screen_p0;
-	    float3 y_dir = camera.screen_p2 - camera.screen_p0;
+        float3 x_dir = camera->screen_p1 - camera->screen_p0;
+	    float3 y_dir = camera->screen_p2 - camera->screen_p0;
 
         for (int j = job.rowStart; j < job.rowEnd; ++j) //height, row height
         {
@@ -284,10 +284,10 @@ namespace RaytracingRenderer {
                     float offset_y = antialiasing == true ? random_float() : 0.f;
                     float u = (i + offset_x) / float(job.colSize);
                     float v = (j + offset_y) / float(SCRHEIGHT);
-                    float3 screen_point = camera.screen_p0 + u * x_dir + v * y_dir;
+                    float3 screen_point = camera->screen_p0 + u * x_dir + v * y_dir;
                     // Ray direction: 𝑃(𝑢,𝑣) − 𝐸 (and then normalized)
-                    float3 ray_dir = normalize(screen_point - camera.cameraPos);
-                    Ray ray = Ray(camera.cameraPos, ray_dir);
+                    float3 ray_dir = normalize(screen_point - camera->cameraPos);
+                    Ray ray = Ray(camera->cameraPos, ray_dir);
                     pixel_color += Trace(ray);
                 }
 

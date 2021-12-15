@@ -15,8 +15,8 @@ namespace RaytracingRenderer {
             vector<float3> colors;
         };
 
-        Scene scene;
-        Camera camera;
+        Scene* scene;
+        Camera* camera;
 
         const int nThreads = thread::hardware_concurrency();
         int rowsPerThread = SCRHEIGHT / nThreads;
@@ -37,21 +37,20 @@ namespace RaytracingRenderer {
         bool multithreading = true;
         //EDIT THIS TO CHANGE ANTI-ALIASING STRENGTH. 100 is beautiful but slow. 0 is none. 
 
-        inline Raytracer(Scene scene, Camera camera) {
+        inline Raytracer(Scene& scene, Camera& camera) {
             // TODO: Move camera to scene.
-            this->scene = scene;
-            this->camera = camera;
+            this->scene = &scene;
+            this->camera = &camera;
         }
         inline Raytracer() {
-            this->scene = Scene();
-            this->camera = Camera();
+            this->scene = &Scene();
+            this->camera = &Camera();
         }
 
-        Raytracer(const Raytracer&) = default;
-        Raytracer& operator=(const Raytracer&) = default;
+        //Raytracer(const Raytracer&) = default;
+        //Raytracer& operator=(const Raytracer&) = default;
 
         void CalculateColor(Blockjob job);
-        float3 BackgroundColor(Ray& ray, float3& pixel_color);
         float3 Trace(Ray &ray);
         float3 TraceSolid(Ray& ray, hit_record& rec, uint bounce_count);
         float3 TraceGlass(Ray& ray, hit_record& rec, uint bounce_count);

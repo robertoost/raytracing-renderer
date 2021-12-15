@@ -15,7 +15,6 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 void RRApp::Init()
 {
 	scene = SceneManager::ReflectionRoom();
-	camera = Camera();
 	raytracer = new Raytracer(scene, camera);
 }
 
