@@ -1221,8 +1221,8 @@ public:
 };
 
 // General raytracing.
-#include "src/ray.h"
-#include "src/hittable.h"
+#include "src/raytracing/ray.h"
+#include "src/raytracing/hittable.h"
 
 // Materials
 #include "src/materials/material.h"
@@ -1252,6 +1252,9 @@ public:
 // Color utility.
 #include "src/color.h"
 
+// App essentials
 #include "src/scene_manager.h"
+#include "src/raytracing/raytracer.h"
+
 
 // EOF

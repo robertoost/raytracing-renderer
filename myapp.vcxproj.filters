@@ -4,11 +4,12 @@
     <ClCompile Include="template\template.cpp">
       <Filter>template</Filter>
     </ClCompile>
-    <ClCompile Include="myapp.cpp" />
+    <ClCompile Include="rr_app.cpp" />
     <ClCompile Include="src\camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\scene_manager.cpp" />
+    <ClCompile Include="src\raytracing\raytracer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="template\common.h">
@@ -17,7 +18,7 @@
     <ClInclude Include="template\precomp.h">
       <Filter>template</Filter>
     </ClInclude>
-    <ClInclude Include="myapp.h" />
+    <ClInclude Include="rr_app.h" />
     <ClInclude Include="cl\tools.cl">
       <Filter>template\cl</Filter>
     </ClInclude>
@@ -33,7 +34,7 @@
     <ClInclude Include="src\3d-objects\object3d.h">
       <Filter>src\3d-objects</Filter>
     </ClInclude>
-    <ClInclude Include="src\ray.h">
+    <ClInclude Include="src\raytracing\ray.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\color.h">
@@ -42,7 +43,7 @@
     <ClInclude Include="src\3d-objects\primitives\plane.h">
       <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="src\hittable.h">
+    <ClInclude Include="src\raytracing\hittable.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lights\light.h">
@@ -78,6 +79,7 @@
     <ClInclude Include="src\scene_manager.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\raytracing\raytracer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">

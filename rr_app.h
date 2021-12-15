@@ -6,7 +6,7 @@ using RaytracingRenderer::hit_record;
 namespace Tmpl8
 {
 
-class MyApp : public TheApp
+class RRApp : public TheApp
 {
 public:
 	struct Blockjob
@@ -32,7 +32,7 @@ public:
 	int max_bounces = 10;
 	int max_reflection_shadows = 4;
 	bool antialiasing = true;
-	bool multithreading = true;
+	bool multithreading = false;
 	//EDIT THIS TO CHANGE ANTI-ALIASING STRENGTH. 100 is beautiful but slow. 0 is none. 
 	int samples_per_pixel = 10;
 
@@ -63,7 +63,7 @@ public:
 	int held_key = 0;
 	RaytracingRenderer::Scene scene;
 	RaytracingRenderer::Camera camera;
-	MyApp() {};
+	RRApp() {};
 };
 
 } // namespace Tmpl8

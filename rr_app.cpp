@@ -1,9 +1,9 @@
 ﻿#include "precomp.h"
-#include "myapp.h"
-#include <future>
-#include <map>
+#include "rr_app.h"
 
-TheApp* CreateApp() { return new MyApp(); }
+
+// Raynetracing Renderobert App. (2021-12-15)
+TheApp* CreateApp() { return new RRApp(); }
 
 using namespace RaytracingRenderer;
 
@@ -70,7 +70,7 @@ float random_float() {
 	return rand() / (RAND_MAX + 1.f);
 }
 
-float3 MyApp::Trace(Ray &ray) {
+float3 RRApp::Trace(Ray &ray) {
 
 	// Trace a ray and record the hit.
 	hit_record rec = hit_record();
@@ -100,7 +100,7 @@ float3 MyApp::Trace(Ray &ray) {
 	return pixel_color;
 }
 
-float3 MyApp::TraceReflection(Ray& ray, uint bounce_count) {
+float3 RRApp::TraceReflection(Ray& ray, uint bounce_count) {
 
 	// Trace the given reflection ray and find the nearest intersection.
 	hit_record rec = hit_record();
@@ -131,7 +131,7 @@ float3 MyApp::TraceReflection(Ray& ray, uint bounce_count) {
 	return pixel_color;
 }
 
-float3 MyApp::TraceRefraction(Ray& ray, uint bounce_count) {
+float3 RRApp::TraceRefraction(Ray& ray, uint bounce_count) {
 
 	// negative bias to allow for self intersection?
 	hit_record rec = hit_record();
@@ -159,7 +159,7 @@ float3 MyApp::TraceRefraction(Ray& ray, uint bounce_count) {
 	return pixel_color;
 }
 
-float3 MyApp::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
+float3 RRApp::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
 
 	// Get the material's specularity and infer the diffuse value.
 	const float specular = rec.mat_ptr->specularity();
@@ -187,7 +187,7 @@ float3 MyApp::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
 	return spec_diff_color;
 }
 
-float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
+float3 RRApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 	float prev_ior, next_ior;
 	get_ior(ray, rec, prev_ior, next_ior);
 	float reflection, transmission;
@@ -221,7 +221,7 @@ float3 MyApp::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
 
 	return glass_pixel_color;
 }
-float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
+float3 RRApp::DirectIllumination(float3 &position, float3 &normal) {
 	float3 pixel_lighting = float3(0, 0, 0);
 
 	for (shared_ptr<Light> light : scene.lights) {
@@ -234,13 +234,13 @@ float3 MyApp::DirectIllumination(float3 &position, float3 &normal) {
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
-void MyApp::Init()
+void RRApp::Init()
 {
 	scene = SceneManager::ReflectionRoom();
 	camera = Camera();
 }
 
-void MyApp::CalculateColor(Blockjob job)
+void RRApp::CalculateColor(Blockjob job)
 {
 	for (int j = job.rowStart; j < job.rowEnd; ++j) //height, row height
 	{
@@ -281,7 +281,7 @@ void MyApp::CalculateColor(Blockjob job)
 // -----------------------------------------------------------
 // Main application tick function - Executed once per frame
 // -----------------------------------------------------------
-void MyApp::Tick( float deltaTime )
+void RRApp::Tick( float deltaTime )
 {
 	Timer myTimer;
 	myTimer.reset();
@@ -416,23 +416,23 @@ void MyApp::Tick( float deltaTime )
 	cout << myTimer.elapsed() * 1000 << " ";
 }
 
-void MyApp::KeyUp(int key)
+void RRApp::KeyUp(int key)
 {
 	key_held_down = false;
 }
-void MyApp::KeyDown(int key)
+void RRApp::KeyDown(int key)
 {
 	key_held_down = true;
 	held_key = key;
 }
-void MyApp::MouseMove(int x, int y) 
+void RRApp::MouseMove(int x, int y) 
 {
 	if (mouse_held_down)
 	{
 		camera.mouseHandler(x, y);
 	}
 }
-void MyApp::MouseUp(int button)
+void RRApp::MouseUp(int button)
 {
 	if (button == 0)
 	{
@@ -440,7 +440,7 @@ void MyApp::MouseUp(int button)
 		camera.firstMouse = true;
 	}
 }
-void MyApp::MouseDown(int button)
+void RRApp::MouseDown(int button)
 {
 	if (button == 0) 
 	{
