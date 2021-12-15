@@ -1,7 +1,7 @@
 #include "precomp.h"
 
 namespace RaytracingRenderer {
-    // Som
+
     float3 Raytracer::Trace(Ray &ray) {
 
         // Trace a ray and record the hit.

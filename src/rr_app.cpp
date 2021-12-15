@@ -14,7 +14,7 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 // -----------------------------------------------------------
 void RRApp::Init()
 {
-	scene = SceneManager::DirectionalLightTest();
+	scene = SceneManager::Snowman();
 	raytracer = new Raytracer(scene, camera);
 }
 

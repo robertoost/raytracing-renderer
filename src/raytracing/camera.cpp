@@ -22,7 +22,6 @@ namespace RaytracingRenderer {
         cameraLook = normalize(getDirection(yaw, pitch));
         cameraRight = normalize(cross(up, cameraLook));
         cameraUp = cross(cameraLook, cameraRight);
-        //cout << cameraPos << " " << cameraFront << " " << cameraDirection << " " << cameraRight << " ";
     }
 
 	// If the cameraPos point was moved, this function can update the viewport accordingly.
@@ -41,8 +40,6 @@ namespace RaytracingRenderer {
         //Recalculate horz/vert with new camera axis
         float3 horizontal = cameraRight * viewport_width / 2;
         float3 vertical = cameraUp * viewport_height / 2;
-
-        //cout << "Horizontal: " << horizontal << " Vertical: " << vertical << " ";
 
         // Screen corners : 𝑃0 = 𝐶 + (−1, −1, 0), 𝑃1 = 𝐶 + (1, −1, 0), 𝑃2 = 𝐶 + (−1, 1, 0)
         screen_p0 = screen_center - horizontal + vertical;
@@ -64,7 +61,6 @@ namespace RaytracingRenderer {
             cameraPos -= cameraLook * cameraSpeed;
             break;
         case 65: //A
-            //cout << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z;
             cameraPos -= cameraRight * cameraSpeed;
             break;
         case 68: //D
@@ -77,6 +73,7 @@ namespace RaytracingRenderer {
     //Update camera view angle on mouse movement + mouse button one pressed
     void Camera::mouseHandler(int x, int y)
     {
+        //Prevent look from stuttering when mouse leaves the window
         if (firstMouse)
         {
             lastX = float(x);
@@ -84,19 +81,22 @@ namespace RaytracingRenderer {
             firstMouse = false;
         }
 
+        //Update last known mouse coordinates, get the offset from new coordinates
         float xoffset = x - lastX;
         float yoffset = lastY - y;
         lastX = float(x);
         lastY = float(y);
 
+        //Adjust for mouse sensitivity
         float sensitivity = 0.3f;
         xoffset *= sensitivity;
         yoffset *= sensitivity;
 
+        //Adjust pitch + yaw
         yaw += xoffset;
         pitch -= yoffset;
 
-        //Lock camera's Y-axis to -45 - 45 degrees to prevent full rolling
+        //Lock camera's Y-axis between (-45, 45) degrees to prevent full rolling
         if (pitch > 45.0f)
             pitch = 45.0f;
         if (pitch < -45.0f)
