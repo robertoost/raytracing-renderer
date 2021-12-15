@@ -30,7 +30,7 @@ namespace RaytracingRenderer {
 		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ left_wall, right_wall, back_wall, fourth_wall, ceiling, sphere1, sphere2, floor });
 
 		shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
-		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(0.1f));
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(0.5f));
 
 		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ point_light, ambient_light });
 

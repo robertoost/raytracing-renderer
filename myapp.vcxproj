@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
+    <ClCompile Include="src\post-processing\post_processing.cpp" />
     <ClCompile Include="src\rr_app.cpp" />
     <ClCompile Include="src\raytracing\camera.cpp" />
     <ClCompile Include="src\raytracing\raytracer.cpp" />
@@ -133,6 +134,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\post-processing\post_processing.h" />
     <ClInclude Include="src\lights\ambient_light.h" />
     <ClInclude Include="src\raytracing\camera.h" />
     <ClInclude Include="src\materials\checkerboard_material.h" />

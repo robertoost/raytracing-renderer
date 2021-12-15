@@ -19,11 +19,11 @@ Created by Rayne Blair (raynebblair@gmail.com) & Robert Oost (mail@robertoo.st)
 - Free camera, with translation and rotation.
 - Antialiasing.
 - CPU Multi-threading.
+- Post-processing effects. (Vignette, Gamma correction, Chromatic Aberration).
 
 ## TO-DO
 
 - Texturing of primitives using bitmaps.
-- Post-processing effects.
 - Triangle mesh using obj files.
 - Fish-eye lens, barrel distortion.
 

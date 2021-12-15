@@ -1257,6 +1257,7 @@ public:
 // App essentials
 #include "src/scenes/scene_manager.h"
 #include "src/raytracing/raytracer.h"
+#include "src/post-processing/post_processing.h"
 
 
 // EOF
