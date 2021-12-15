@@ -80,14 +80,14 @@ namespace RaytracingRenderer {
         if (firstMouse)
         {
             lastX = float(x);
-            lastY = y;
+            lastY = float(y);
             firstMouse = false;
         }
 
         float xoffset = x - lastX;
         float yoffset = lastY - y;
-        lastX = x;
-        lastY = y;
+        lastX = float(x);
+        lastY = float(y);
 
         float sensitivity = 0.3f;
         xoffset *= sensitivity;

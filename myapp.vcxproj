@@ -121,10 +121,10 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
-    <ClCompile Include="rr_app.cpp" />
+    <ClCompile Include="src\rr_app.cpp" />
+    <ClCompile Include="src\raytracing\camera.cpp" />
     <ClCompile Include="src\raytracing\raytracer.cpp" />
-    <ClCompile Include="src\camera.cpp" />
-    <ClCompile Include="src\scene_manager.cpp" />
+    <ClCompile Include="src\scenes\scene_manager.cpp" />
     <ClCompile Include="template\template.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">precomp.h</PrecompiledHeaderFile>
@@ -133,15 +133,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\raytracing\raytracer.h" />
     <ClInclude Include="src\lights\ambient_light.h" />
-    <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\raytracing\camera.h" />
     <ClInclude Include="src\materials\checkerboard_material.h" />
     <ClInclude Include="cl\tools.cl" />
-    <ClInclude Include="src\color.h" />
+    <ClInclude Include="src\utils\color_util.h" />
     <ClInclude Include="src\lights\directional_light.h" />
     <ClInclude Include="src\materials\glass_material.h" />
-    <ClInclude Include="src\scene_manager.h" />
+    <ClInclude Include="src\raytracing\raytracer.h" />
+    <ClInclude Include="src\scenes\scene_manager.h" />
     <ClInclude Include="src\materials\specular_material.h" />
     <ClInclude Include="src\materials\normal_material.h" />
     <ClInclude Include="src\lights\point_light.h" />
@@ -149,14 +149,15 @@
     <ClInclude Include="src\raytracing\hittable.h" />
     <ClInclude Include="src\lights\light.h" />
     <ClInclude Include="src\materials\material.h" />
-    <ClInclude Include="rr_app.h" />
+    <ClInclude Include="src\rr_app.h" />
     <ClInclude Include="src\3d-objects\object3d.h" />
     <ClInclude Include="src\3d-objects\primitives\plane.h" />
     <ClInclude Include="src\raytracing\ray.h" />
-    <ClInclude Include="src\scene.h" />
+    <ClInclude Include="src\scenes\scene.h" />
     <ClInclude Include="src\3d-objects\primitives\sphere.h" />
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\precomp.h" />
+    <ClInclude Include="src\utils\ray_util.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cl\kernels.cl" />
