@@ -8,9 +8,7 @@
     <ClCompile Include="src\camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="scene_manager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="src\scene_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="template\common.h">
