@@ -16,6 +16,9 @@
     <ClCompile Include="src\rr_app.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\post-processing\post_processing.cpp">
+      <Filter>src\post-processing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="template\common.h">
@@ -93,6 +96,9 @@
     <ClInclude Include="src\rr_app.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\post-processing\post_processing.h">
+      <Filter>src\post-processing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">
@@ -135,6 +141,9 @@
     </Filter>
     <Filter Include="src\scenes">
       <UniqueIdentifier>{effc06e8-e596-4773-bc0e-ec556c8cf309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\post-processing">
+      <UniqueIdentifier>{dd7ed565-43aa-42a2-9f17-2ffd999ec2e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
