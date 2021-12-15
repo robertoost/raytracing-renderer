@@ -28,13 +28,12 @@ namespace RaytracingRenderer {
         atomic<int> completedThreads = { 0 };
         vector<thread> threads;
 
-        uint max_bounces = 10;
-        uint max_reflection_shadows = 4;
-        
-        bool antialiasing = false;
-        uint samples_per_pixel = 10;
-        
-        bool multithreading = true;
+        uint max_bounces = MAX_RECURSION_DEPTH;
+        uint max_reflection_shadows = MAX_SHADOW_DEPTH;
+        bool antialiasing = ANTIALIASING;
+        uint samples_per_pixel = AA_SAMPLES_PER_PIXEL;
+        bool multithreading = MULTITHREADING;
+
         //EDIT THIS TO CHANGE ANTI-ALIASING STRENGTH. 100 is beautiful but slow. 0 is none. 
 
         inline Raytracer(Scene& scene, Camera& camera) {

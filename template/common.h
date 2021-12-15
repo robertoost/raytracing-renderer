@@ -3,6 +3,12 @@
 #define SCRHEIGHT	1080
 #define ASPECT_RATIO SCRWIDTH / SCRHEIGHT
 
+#define MAX_RECURSION_DEPTH 10
+#define MAX_SHADOW_DEPTH 4
+#define ANTIALIASING true
+#define AA_SAMPLES_PER_PIXEL 10
+#define MULTITHREADING true
+
 // IMPORTANT NOTE ON OPENCL COMPATIBILITY ON OLDER LAPTOPS:
 // Without a GPU, a laptop needs at least a 'Broadwell' Intel CPU (5th gen, 2015):
 // Intel's OpenCL implementation 'NEO' is not available on older devices.

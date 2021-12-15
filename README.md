@@ -33,23 +33,23 @@ In order to run this app, open the solution in VS (tested in VS 2019) and build 
 
 In the scene view, press WASD to move around, and change your viewing direction by left clicking and dragging the mouse across the screen.
 
-In order to switch scenes, just go to the Init function in myApp.cpp and change the scene loaded by the SceneManager.
+In order to switch scenes, just go to the Init function in `src/rr_app.cpp` and change the scene loaded by the SceneManager.
 
-In order to change the settings, go to myapp.h. There you will find several settings:
+In order to change the settings, go to `template/common.h`. There you will find several settings:
 
-- `max_bounces` - The amount of times a ray can be reflected or refracted before recursion is terminated.\
+- `MAX_RECURSION_DEPTH` - The amount of times a ray can be reflected or refracted before recursion is terminated.\
     default: `10`.
 
-- `max_reflection_shadows` - The amount of recursions where reflected/refracted rays can still cast shadow rays. Values above `max_bounces` have no effect.\
+- `MAX_SHADOW_DEPTH` - The amount of recursions where reflected/refracted rays can still cast shadow rays. Values above `MAX_RECURSION_DEPTH` have no effect.\
     default: `4`.
 
-- `antialiasing` - Determines whether antialiasing is used to render the scene.\
+- `ANTIALIASING` - Enables antialiasing for rendering the scene with an amount of samples `AA_SAMPLES_PER_PIXEL`.\
     default: `false`.
 
-- `samples_per_pixel` - The amount of rays that are traced for each pixel if antialiasing is on.\
+- `AA_SAMPLES_PER_PIXEL` - The amount of rays that are traced for each pixel if antialiasing is on.\
     default: `10`.
   
-- `multithreading` - Determines whether to use CPU multithreading to speed up the renderer.\
+- `MULTITHREADING` - Enables CPU multithreading to speed up the renderer.\
     default: `true`.
 
 ## References
