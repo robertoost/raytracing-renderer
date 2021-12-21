@@ -22,7 +22,7 @@ namespace RaytracingRenderer {
 			return 1.f; // ior of Air.
 		}
 
-		inline MAT_TYPE type() { return _mat_type; }
+		inline MAT_TYPE type() { return this->_mat_type; }
 
 		inline Material(MAT_TYPE mat_type) { this->_mat_type = mat_type; }
 
