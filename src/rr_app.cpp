@@ -16,6 +16,7 @@ void RRApp::Init()
 {
 	scene = SceneManager::Snowman();
 	raytracer = new Raytracer(scene, camera);
+	//cout << '\n' << "After init " << raytracer.scene.objects.size() << '\n';
 }
 
 // -----------------------------------------------------------

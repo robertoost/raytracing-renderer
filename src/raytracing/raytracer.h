@@ -15,8 +15,8 @@ namespace RaytracingRenderer {
             vector<float3> colors;
         };
 
-        Scene* scene;
-        Camera* camera;
+        Scene * scene;
+        Camera * camera;
 
         const int nThreads = thread::hardware_concurrency();
         int rowsPerThread = SCRHEIGHT / nThreads;
@@ -24,8 +24,9 @@ namespace RaytracingRenderer {
 
         mutex mute;
         condition_variable cvResults;
-        vector<Blockjob> imageBlocks = vector<Blockjob>();
         atomic<int> completedThreads = { 0 };
+
+        vector<Blockjob> imageBlocks = vector<Blockjob>();
         vector<thread> threads;
 
         uint max_bounces = MAX_RECURSION_DEPTH;
@@ -45,9 +46,11 @@ namespace RaytracingRenderer {
             this->scene = &Scene();
             this->camera = &Camera();
         }
-
-        //Raytracer(const Raytracer&) = default;
-        //Raytracer& operator=(const Raytracer&) = default;
+        Raytracer& operator=(const Raytracer& rhs) {
+            this->scene = rhs.scene;
+            this->camera = rhs.camera;
+            return *this; 
+        }
 
         void CalculateColor(Blockjob job);
         float3 Trace(Ray &ray);

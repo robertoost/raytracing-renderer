@@ -26,7 +26,7 @@ public:
 	int held_key = 0;
 	Scene scene;
 	Camera camera;
-	Raytracer * raytracer;
+	Raytracer * raytracer = nullptr;
 	RRApp() {};
 };
 
