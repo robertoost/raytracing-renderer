@@ -5,10 +5,10 @@ namespace RaytracingRenderer {
     class Material;
 
     struct hit_record {
-        float3 p;
-        float3 normal;
-        double t;
-        bool front_face;
+        float3 p = float3(0.f,0.f,0.f);
+        float3 normal = float3(0.f,0.f,0.f);
+        float t = FLT_MAX;
+        bool front_face = true;
         shared_ptr<Material> mat_ptr;
 
         inline void set_face_normal(const Ray& ray, const float3& outward_normal) {

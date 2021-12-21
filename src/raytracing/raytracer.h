@@ -6,10 +6,10 @@ namespace RaytracingRenderer {
     public:
         struct Blockjob
         {
-            int rowStart;
-            int rowEnd;
-            int colSize;
-            int samples_per_pixel;
+            int rowStart = 0;
+            int rowEnd = 0;
+            int colSize = 0;
+            int samples_per_pixel = 0;
 
             vector<float2> indices;
             vector<float3> colors;

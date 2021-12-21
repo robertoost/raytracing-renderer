@@ -3,8 +3,8 @@
 namespace RaytracingRenderer {
 	void PostProcessing::gammaCorrection(float3 frame[SCRHEIGHT][SCRWIDTH], float gamma) {
 		float power = 1.f / gamma;
-		for (uint y = 0; y < SCRHEIGHT; y++) {
-			for (uint x = 0; x < SCRWIDTH; x++) {
+		for (int y = 0; y < SCRHEIGHT; y++) {
+			for (int x = 0; x < SCRWIDTH; x++) {
 
 				// Gamma correction.
 				float3 color = frame[y][x];
@@ -20,11 +20,11 @@ namespace RaytracingRenderer {
 		float min_vignette = 1 - MAX_VIGNETTE;
 		float max_distance = length(center);
 
-		for (uint y = 0; y < SCRHEIGHT; y++) {
-			for (uint x = 0; x < SCRWIDTH; x++) {
+		for (int y = 0; y < SCRHEIGHT; y++) {
+			for (int x = 0; x < SCRWIDTH; x++) {
 
 				// Make sure the vignette is darkest at the furthest distance from the center.
-				float distance = fabsf(length(center - float2(y, x)));
+				float distance = fabsf(length(center - float2(float(y), float(x))));
 				float vignette = 1 - clamp((distance / max_distance), 0.f, 1.f);
 				vignette = lerp(min_vignette, 1.f, vignette);
 				frame[y][x] *= vignette;
@@ -42,9 +42,9 @@ namespace RaytracingRenderer {
 		int x_min = min(min(r_offset.x, g_offset.x), b_offset.x);
 		int x_max = max(max(r_offset.x, g_offset.x), b_offset.x);
 
-		for (uint y = y_max; y < SCRHEIGHT - y_min; y++) {
-			for (uint x = x_max; x < SCRWIDTH - x_min; x++) {
-				float distance = fabsf(length(center - float2(y, x)));
+		for (int y = y_max; y < SCRHEIGHT - y_min; y++) {
+			for (int x = x_max; x < SCRWIDTH - x_min; x++) {
+				float distance = fabsf(length(center - float2(float(y), float(x))));
 
 				// Get rgb values with offset.
 				float r = frame[y + r_offset.y][x + r_offset.x].x;
