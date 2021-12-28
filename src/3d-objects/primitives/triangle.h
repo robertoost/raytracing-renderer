@@ -21,19 +21,46 @@ namespace RaytracingRenderer {
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			// Assuming vectors are all normalized
+            float d = dot(normal, v0);
+
+            float t = - (dot(normal, ray.orig) + d) / dot(N, ray.dir);
+            if (t < 0) return false; //triangle is behind ray
+
+            float3 p = ray.orig + t * ray.dir;
+
+            float area = normal.length() / 2;
+
+            //check if ray + triangle are parallel
             float denom = dot(normal, ray.dir);
             if (abs(denom) > 0.0001f == false) {
                 return false;
             }
 
             // Intersection found. Determine if object is occluded.
-            float3 diff = position - ray.orig;
+            float3 diff = v0 - ray.orig;
             float t = dot(diff, normal) / denom;
 
             if ((t > t_min && t < t_max) == false) {
                 // Object is occluded or too far away.
                 return false;
             }
+
+            float3 C; //vector perpendicular to the triangle's plane
+
+            float3 e0 = v1 - v0;
+            float3 vp0 = P - v0;
+            C = cross(e0, vp0);
+            if (cross(normal, C) < 0) return false; //P is on the right side
+
+            float3 e1 = v2 - v1;
+            float3 vp1 = P - v1;
+            C = cross(e1, vp1);
+            if (cross(normal, C) < 0) return false; //P is on the right side
+
+            float3 e2 = v0 - v2;
+            float3 vp2 = P - v2;
+            C = cross(e2, vp2);
+            if (cross(normal, C) < 0) return false; //P is on the right side
 
             // Record the hit.
             rec.t = t;
@@ -42,10 +69,6 @@ namespace RaytracingRenderer {
             rec.mat_ptr = material;
 
             return true;
-		}
-
-		float intersectInside(const Ray& ray, float t_min, float t_max, hit_record& rec) const {
-			
 		}
 	};
 }
