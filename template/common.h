@@ -1,6 +1,6 @@
 // default screen resolution
-#define SCRWIDTH	1920
-#define SCRHEIGHT	1080
+#define SCRWIDTH	400
+#define SCRHEIGHT	300
 #define ASPECT_RATIO SCRWIDTH / SCRHEIGHT
 
 #define MAX_RECURSION_DEPTH 10
