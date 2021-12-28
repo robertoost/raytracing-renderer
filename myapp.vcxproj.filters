@@ -99,6 +99,9 @@
     <ClInclude Include="src\post-processing\post_processing.h">
       <Filter>src\post-processing</Filter>
     </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\triangle.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">
