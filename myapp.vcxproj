@@ -134,6 +134,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
     <ClInclude Include="src\3d-objects\primitives\triangle.h" />
     <ClInclude Include="src\post-processing\post_processing.h" />
     <ClInclude Include="src\lights\ambient_light.h" />
