@@ -105,6 +105,9 @@
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h">
       <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\obj_loader.h">
+      <Filter>src\3d-objects\polygon-handling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">
@@ -150,6 +153,9 @@
     </Filter>
     <Filter Include="src\3d-objects\lights">
       <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects\polygon-handling">
+      <UniqueIdentifier>{e31e3121-0fd9-48b1-b408-872145aab66b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
