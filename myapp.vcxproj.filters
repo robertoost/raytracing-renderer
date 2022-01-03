@@ -158,4 +158,9 @@
       <UniqueIdentifier>{e31e3121-0fd9-48b1-b408-872145aab66b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\3d-objects\sphere.obj">
+      <Filter>src\3d-objects</Filter>
+    </Object>
+  </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@ namespace RaytracingRenderer {
             
             this->tris[0] = Triangle(position, v0, v1, v2, material);
             this->tris[1] = Triangle(position, v0, v3, v1, material);
-
         }
 
         bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
