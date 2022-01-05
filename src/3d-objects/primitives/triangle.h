@@ -6,13 +6,6 @@ namespace RaytracingRenderer {
         float2 texture;
         float3 normal;
     };
-    struct FaceDefinition {
-        int vertexIndexes[3];
-        int textureIndexes[3];
-        int normalIndexes[3];
-        float3 verts[3];
-        float3 normals[3];
-    };
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
 	class Triangle : public Object3D, public Hittable
 	{
@@ -29,7 +22,7 @@ namespace RaytracingRenderer {
             this->v0 = position + v0.position;
             this->v1 = position + v1.position;
             this->v2 = position + v2.position;
-            this->normal = (v1.normal + v0.normal + v2.normal) / length(v1.normal + v0.normal + v2.normal);
+            this->normal = cross(v1.position - v0.position, v2.position - v0.position);
             this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
         }
 
@@ -38,23 +31,6 @@ namespace RaytracingRenderer {
             this->v1 = position + v1;
             this->v2 = position + v2;
             this->normal = cross(v1 - v0, v2 - v0);
-            this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.f, 0.f, 0.f)));
-        }
-
-        inline Triangle(FaceDefinition face) : Object3D(), normal(normal) {
-            this->v0 = face.verts[0];
-            this->v1 = face.verts[1];
-            this->v2 = face.verts[2];
-            //this->position = this->v0;
-            this->normal = (face.normals[0] + face.normals[1] + face.normals[2]) / length(face.normals[0] + face.normals[1] + face.normals[2]);
-            this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
-        }
-
-        inline Triangle(float3 v0, float3 v1, float3 v2, float3 normal) : Object3D() {
-            this->v0 = position + v0;
-            this->v1 = position + v1;
-            this->v2 = position + v2;
-            this->normal = normal;
             this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
         }
 
@@ -68,8 +44,6 @@ namespace RaytracingRenderer {
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			// Assuming vectors are all normalized
             float d = dot(normal, v0);
-
-            bool singleSided = false; //back-face culling
 
             float t = - (dot(normal, ray.orig) + d) / dot(normal, ray.dir);
 
@@ -88,14 +62,10 @@ namespace RaytracingRenderer {
             }
 
             // Intersection found. Determine if object is occluded
-            if ((t > t_min && t < t_max) == false) {
+            if ((t2 > t_min && t2 < t_max) == false) {
                 // Object is occluded or too far away.
                 return false;
             }
-
-            // implementing the single/double sided feature
-            if (dot(ray.dir, normal) < 0 && singleSided)
-                return false; // back-facing surface 
 
             float3 e0 = v1 - v0;
             float3 vp0 = p - v0;
@@ -120,23 +90,5 @@ namespace RaytracingRenderer {
 
             return true;
 		}
-
-        void set_vertex(Triangle t, int vertex, float3 val) {
-            if (vertex == 0)
-                t.v0 = val;
-            if (vertex == 1)
-                t.v1 = val;
-            if (vertex == 2)
-                t.v2 = val;
-        }
-
-        float3 get_vertex(Triangle t, int vertex) {
-            if (vertex == 0)
-                return t.v0;
-            if (vertex == 1)
-                return t.v1;
-            if (vertex == 2)
-                return t.v2;
-        }
 	};
 }

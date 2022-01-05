@@ -182,21 +182,14 @@ namespace RaytracingRenderer {
 
 		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
 		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial(1.52f, float3(0.1f, 0.7f, 0.7f)));
-		Obj obj = obj.load_model("src/3d-objects/sphere.obj");
+		Obj obj = obj.load_model("C:/Users/Rayne/Desktop/aurora.obj");
 		vector<Triangle> triangles = obj.mesh_to_triangle();
-
-
-		//vector<Triangle> triangles = obj.loadOBJ("C:/Users/Rayne/Desktop/teapot.obj");
 		list<shared_ptr<Hittable>> objects;
 		for (Triangle tri : triangles) {
 			objects.push_back(make_shared<Triangle>(tri));
 		}
 
-		//objects.push_back(make_shared<Triangle>(Triangle(float3(-10, 10, 10), float3(10, 10, 10), float3(0, 20, 10))));
-
-		shared_ptr<Plane> floor2 = make_shared<Plane>(Plane(float3(0, -3, 0), float3(0, 1, 0), off_white_mat));
-
-		shared_ptr<BoundedPlane> floor = make_shared<BoundedPlane>(BoundedPlane(float3(0, 3, 0), float3(-2, 0, -2), float3(2, 0, 2), float3(-2, 0, 2), float3(2, 0, -2), off_white_mat));
+		shared_ptr<BoundedPlane> floor = make_shared<BoundedPlane>(BoundedPlane(float3(0, -1, 0), float3(-2, 0, -2), float3(2, 0, 2), float3(-2, 0, 2), float3(2, 0, -2), off_white_mat));
 
 		objects.push_back(floor);
 
