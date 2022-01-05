@@ -414,8 +414,6 @@ inline void operator+=( uint4& a, uint4 b ) { a.x += b.x;	a.y += b.y;	a.z += b.z
 inline uint4 operator+( uint4 a, uint b ) { return make_uint4( a.x + b, a.y + b, a.z + b, a.w + b ); }
 inline uint4 operator+( uint b, uint4 a ) { return make_uint4( a.x + b, a.y + b, a.z + b, a.w + b ); }
 inline void operator+=( uint4& a, uint b ) { a.x += b;	a.y += b;	a.z += b;	a.w += b; }
-inline bool operator==(const float3& a, float3 other) {	return (a.x == other.x && a.y == other.y && a.z == other.z); }
-inline bool operator!=(const float3& a, float3 other) { return !(a.x == other.x && a.y == other.y && a.z == other.z); }
 
 inline float2 operator-( float2 a, float2 b ) { return make_float2( a.x - b.x, a.y - b.y ); }
 inline float2 operator-( float2 a, int2 b ) { return make_float2( a.x - (float)b.x, a.y - (float)b.y ); }
@@ -1241,8 +1239,6 @@ public:
 #include "src/3d-objects/primitives/plane.h"
 #include "src/3d-objects/primitives/triangle.h"
 #include "src/3d-objects/primitives/boundedplane.h"
-#include "src/3d-objects/primitives/obj_loader.h"
-
 
 // Camera.
 #include "src/raytracing/camera.h"

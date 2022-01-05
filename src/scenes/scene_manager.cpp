@@ -175,30 +175,4 @@ namespace RaytracingRenderer {
 		Scene scene = Scene(objects, lights);
 		return scene;
 	}
-
-	Scene SceneManager::MeshTest() {
-		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
-		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
-
-		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
-		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial(1.52f, float3(0.1f, 0.7f, 0.7f)));
-		Obj obj = obj.load_model("C:/Users/Rayne/Desktop/aurora.obj");
-		vector<Triangle> triangles = obj.mesh_to_triangle();
-		list<shared_ptr<Hittable>> objects;
-		for (Triangle tri : triangles) {
-			objects.push_back(make_shared<Triangle>(tri));
-		}
-
-		shared_ptr<BoundedPlane> floor = make_shared<BoundedPlane>(BoundedPlane(float3(0, -1, 0), float3(-2, 0, -2), float3(2, 0, 2), float3(-2, 0, 2), float3(2, 0, -2), off_white_mat));
-
-		objects.push_back(floor);
-
-		//shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
-		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));
-
-		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ /*point_light,*/ ambient_light });
-
-		Scene scene = Scene(objects, lights);
-		return scene;
-	}
 }

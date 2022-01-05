@@ -1,11 +1,7 @@
 #pragma once
 
 namespace RaytracingRenderer {
-    struct Vertex {
-        float3 position;
-        float2 texture;
-        float3 normal;
-    };
+
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
 	class Triangle : public Object3D, public Hittable
 	{
@@ -15,23 +11,6 @@ namespace RaytracingRenderer {
 
         inline Triangle() : Object3D(), v0(float3(-2, 0, 5)), v1(float3(1, 0, 5)), v2(float3(0, 3, 5)) {
             this->normal = cross(v1 - v0, v2 - v0);
-            this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
-        }
-
-        inline Triangle(Vertex v0, Vertex v1, Vertex v2) : Object3D() {
-            this->v0 = position + v0.position;
-            this->v1 = position + v1.position;
-            this->v2 = position + v2.position;
-            this->normal = cross(v1.position - v0.position, v2.position - v0.position);
-            this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
-        }
-
-        inline Triangle(float3 v0, float3 v1, float3 v2) : Object3D(), normal(normal) {
-            this->v0 = position + v0;
-            this->v1 = position + v1;
-            this->v2 = position + v2;
-            this->normal = cross(v1 - v0, v2 - v0);
-            this->material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
         }
 
         inline Triangle(float3 position, float3 v0, float3 v1, float3 v2, shared_ptr<Material> material) : Object3D(position, material), normal(normal) {

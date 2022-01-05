@@ -15,7 +15,7 @@ namespace RaytracingRenderer {
         }
 
         bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
-            bool check = false;
+            bool check;
             for (Triangle tri : tris) {
                 check = tri.intersect(ray, t_min, t_max, rec);
                 if (check)
