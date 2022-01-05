@@ -16,6 +16,8 @@ public:
 	static Scene Snowman();
 
 	static Scene TriangleTest();
+
+	static Scene MeshTest();
 };
 }
 
