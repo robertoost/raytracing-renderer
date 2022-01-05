@@ -1227,6 +1227,9 @@ public:
 #include "src/raytracing/ray.h"
 #include "src/raytracing/hittable.h"
 
+//BVH
+#include "src/BVH.h"
+
 // Materials
 #include "src/materials/material.h"
 #include "src/materials/diffuse_material.h"

@@ -134,7 +134,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BVH.h" />
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
     <ClInclude Include="src\3d-objects\primitives\obj_loader.h" />
     <ClInclude Include="src\3d-objects\primitives\triangle.h" />
@@ -171,6 +170,9 @@
     <None Include="template\LICENSE" />
   </ItemGroup>
   <ItemGroup>
+    <Object Include="assets\teapot.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </Object>
     <Object Include="src\3d-objects\sphere.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </Object>

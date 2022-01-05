@@ -67,7 +67,7 @@ namespace RaytracingRenderer {
                 //float3 p1 = float3(vertices[vertexIndices[i].y].x, vertices[vertexIndices[i].y].y, vertices[vertexIndices[i].y].z);
                 //float3 p2 = float3(vertices[vertexIndices[i].z].x, vertices[vertexIndices[i].z].y, vertices[vertexIndices[i].z].z);
                 float3 avNormal = (normals[normalIndices[i].x] + normals[normalIndices[i].y] + normals[normalIndices[i].z]) / length(normals[normalIndices[i].x] + normals[normalIndices[i].y] + normals[normalIndices[i].z]);
-                Triangle tri = Triangle(vertices[vertexIndices[i].x], vertices[vertexIndices[i].y], vertices[vertexIndices[i].z]);
+                Triangle tri = Triangle(vertices[vertexIndices[i].x], vertices[vertexIndices[i].z], vertices[vertexIndices[i].y]);
                 tris.push_back(tri);
             }
             return tris;
@@ -76,27 +76,27 @@ namespace RaytracingRenderer {
         vector<Triangle> fix_winding(vector<Triangle> tris) {
             int i = 0;
             for (Triangle ttris : tris) {
-                float3 a0 = ttris.v0;
-                float3 a1 = ttris.v1;
-                float3 a2 = ttris.v2;
+                float3 a0 = ttris.v0.position;
+                float3 a1 = ttris.v1.position;
+                float3 a2 = ttris.v2.position;
                 for (int k = 0; k < tris.size(); k++) {
                     if (k != i) {
-                        float3 b0 = tris[k].v0;
-                        float3 b1 = tris[k].v1;
-                        float3 b2 = tris[k].v2;
+                        float3 b0 = tris[k].v0.position;
+                        float3 b1 = tris[k].v1.position;
+                        float3 b2 = tris[k].v2.position;
                         if (a0 == b0 && a1 == b1) {
-                            tris[k].v0 = b1;
-                            tris[k].v1 = b0;
+                            tris[k].v0.position = b1;
+                            tris[k].v1.position = b0;
                             cout << "Fixed winding " << k;
                         }
                         else if (a1 == b1 && a2 == b2) {
-                            tris[k].v1 = b2;
-                            tris[k].v2 = b1;
+                            tris[k].v1.position = b2;
+                            tris[k].v2.position = b1;
                             cout << "Fixed winding " << k;
                         }
                         else if (a0 == b0 && a2 == b2) {
-                            tris[k].v0 = b2;
-                            tris[k].v2 = b0;
+                            tris[k].v0.position = b2;
+                            tris[k].v2.position = b0;
                             cout << "Fixed winding " << k;
                         }
                     }
@@ -112,7 +112,7 @@ namespace RaytracingRenderer {
             for (int i = 0; i < faces.size(); i++) {
                 vec.push_back(Triangle(faces[i]));
             }
-            fix_winding(vec);
+            //fix_winding(vec);
             return vec;
         }
 
@@ -156,6 +156,7 @@ namespace RaytracingRenderer {
                 if (tokens[0] == "v")
                 {
                     vertexCount++;
+                    //cout << "TOKENS: " << tokens.size();
                     if (tokens.size() >= 4)
                     {
                         tempVector = float3(0, 0, 0);
@@ -260,17 +261,17 @@ namespace RaytracingRenderer {
             //=========================================================
 
             //now is the boring part, creating the vertex list...
-            cout << normalCount << " " << vertexNormals.size() << vertexCount;
+            //cout << normalCount << " " << vertexNormals.size() << vertexCount;
             indices.clear();
             for (int i = 0; i < polygonCount; i++)
             {
                 modelData.faces[i].verts[0] = float3(vertexPositions[modelData.faces[i].vertexIndexes[0]]);
-                modelData.faces[i].verts[1] = float3(vertexPositions[modelData.faces[i].vertexIndexes[1]]);
-                modelData.faces[i].verts[2] = float3(vertexPositions[modelData.faces[i].vertexIndexes[2]]);
+                modelData.faces[i].verts[2] = float3(vertexPositions[modelData.faces[i].vertexIndexes[1]]);
+                modelData.faces[i].verts[1] = float3(vertexPositions[modelData.faces[i].vertexIndexes[2]]);
 
-                modelData.faces[i].normals[0] = float3(vertexNormals[modelData.faces[i].normalIndexes[0]]);
-                modelData.faces[i].normals[1] = float3(vertexNormals[modelData.faces[i].normalIndexes[1]]);
-                modelData.faces[i].normals[2] = float3(vertexNormals[modelData.faces[i].normalIndexes[2]]);
+               /* modelData.faces[i].normals[0] = float3(vertexNormals[modelData.faces[i].normalIndexes[0]]);
+                modelData.faces[i].normals[2] = float3(vertexNormals[modelData.faces[i].normalIndexes[1]]);
+                modelData.faces[i].normals[1] = float3(vertexNormals[modelData.faces[i].normalIndexes[2]]);*/
             }
 
             return modelData;
