@@ -62,3 +62,4 @@ namespace RaytracingRenderer {
         void RenderScene(float3 frame[SCRHEIGHT][SCRWIDTH]);
     };
 }
+
