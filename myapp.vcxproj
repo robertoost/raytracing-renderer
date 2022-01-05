@@ -169,6 +169,11 @@
     <None Include="README.md" />
     <None Include="template\LICENSE" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\3d-objects\sphere.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </Object>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
