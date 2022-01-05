@@ -102,12 +102,15 @@
     <ClInclude Include="src\3d-objects\primitives\triangle.h">
       <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h">
       <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
     <ClInclude Include="src\3d-objects\primitives\obj_loader.h">
       <Filter>src\3d-objects\polygon-handling</Filter>
     </ClInclude>
+=======
+>>>>>>> parent of c06f293 (feat(triangleimp): added bounded planes made out of triangles)
   </ItemGroup>
   <ItemGroup>
     <None Include="template\LICENSE">

@@ -164,7 +164,7 @@ namespace RaytracingRenderer {
 
 		shared_ptr<Triangle> triangle = make_shared<Triangle>(Triangle(float3(0, 0, 0), float3(-1, 0, 5), float3(1, 0, 5), float3(0, -1, 5), purple_mat));
 
-		shared_ptr<BoundedPlane> floor = make_shared<BoundedPlane>(BoundedPlane(float3(0, -1, 0), float3(-2, 0, -2), float3(2, 0, 2), float3(-2, 0, 2), float3(2, 0, -2), off_white_mat));
+		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -3, 0), float3(0, 1, 0), off_white_mat));
 
 		//shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
 		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));

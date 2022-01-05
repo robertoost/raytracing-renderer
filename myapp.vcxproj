@@ -134,8 +134,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
     <ClInclude Include="src\3d-objects\primitives\obj_loader.h" />
+=======
+>>>>>>> parent of c06f293 (feat(triangleimp): added bounded planes made out of triangles)
     <ClInclude Include="src\3d-objects\primitives\triangle.h" />
     <ClInclude Include="src\post-processing\post_processing.h" />
     <ClInclude Include="src\lights\ambient_light.h" />
