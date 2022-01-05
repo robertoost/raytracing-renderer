@@ -14,6 +14,8 @@ public:
 	static Scene DirectionalLightTest();
 
 	static Scene Snowman();
+
+	static Scene TriangleTest();
 };
 }
 

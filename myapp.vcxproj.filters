@@ -40,7 +40,7 @@
       <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
     <ClInclude Include="src\lights\light.h">
-      <Filter>src\lights</Filter>
+      <Filter>src\3d-objects\lights</Filter>
     </ClInclude>
     <ClInclude Include="src\materials\material.h">
       <Filter>src\materials</Filter>
@@ -49,7 +49,7 @@
       <Filter>src\materials</Filter>
     </ClInclude>
     <ClInclude Include="src\lights\ambient_light.h">
-      <Filter>src\lights</Filter>
+      <Filter>src\3d-objects\lights</Filter>
     </ClInclude>
     <ClInclude Include="src\materials\normal_material.h">
       <Filter>src\materials</Filter>
@@ -61,13 +61,13 @@
       <Filter>src\materials</Filter>
     </ClInclude>
     <ClInclude Include="src\lights\point_light.h">
-      <Filter>src\lights</Filter>
+      <Filter>src\3d-objects\lights</Filter>
     </ClInclude>
     <ClInclude Include="src\materials\glass_material.h">
       <Filter>src\materials</Filter>
     </ClInclude>
     <ClInclude Include="src\lights\directional_light.h">
-      <Filter>src\lights</Filter>
+      <Filter>src\3d-objects\lights</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\ray_util.h">
       <Filter>src\utils</Filter>
@@ -98,6 +98,12 @@
     </ClInclude>
     <ClInclude Include="src\post-processing\post_processing.h">
       <Filter>src\post-processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\triangle.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\boundedplane.h">
+      <Filter>src\3d-objects\primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +136,6 @@
     <Filter Include="src\materials">
       <UniqueIdentifier>{4f15d112-c6fb-463f-b21e-4167d2a70cbc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\lights">
-      <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\utils">
       <UniqueIdentifier>{47bcc2d7-521f-43ee-b2cc-eb97f6a97b6c}</UniqueIdentifier>
     </Filter>
@@ -144,6 +147,9 @@
     </Filter>
     <Filter Include="src\post-processing">
       <UniqueIdentifier>{dd7ed565-43aa-42a2-9f17-2ffd999ec2e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects\lights">
+      <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

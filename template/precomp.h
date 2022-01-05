@@ -1237,6 +1237,8 @@ public:
 #include "src/3d-objects/object3d.h"
 #include "src/3d-objects/primitives/sphere.h"
 #include "src/3d-objects/primitives/plane.h"
+#include "src/3d-objects/primitives/triangle.h"
+#include "src/3d-objects/primitives/boundedplane.h"
 
 // Camera.
 #include "src/raytracing/camera.h"
