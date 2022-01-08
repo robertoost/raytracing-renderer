@@ -175,4 +175,25 @@ namespace RaytracingRenderer {
 		Scene scene = Scene(objects, lights);
 		return scene;
 	}
+
+	Scene SceneManager::AreaLightTest() {
+		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
+
+		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(0.f, 1.f, 0.f), float3(1.f, 0.f, 0.f)));
+		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(1.f, float3(1.f, 0.5f, 0.f)));
+
+		shared_ptr<Sphere> sphere = make_shared<Sphere>(Sphere(float3(0, 0, 5), 2.f, emissive_mat));
+		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -2.5, 0), float3(0, 1, 0), plane_mat));
+
+		//shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));
+
+		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ /*point_light,*/ ambient_light });
+		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere, floor });
+
+		Scene scene = Scene(objects, lights);
+		return scene;
+	}
+
 }
