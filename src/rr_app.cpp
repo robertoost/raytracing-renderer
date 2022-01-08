@@ -14,8 +14,8 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 // -----------------------------------------------------------
 void RRApp::Init()
 {
-	scene = SceneManager::TriangleTest();
-	raytracer = new Raytracer(scene, camera);
+	scene = SceneManager::AreaLightTest();
+	renderer = new HemisphereSampler(scene, camera);
 	//cout << '\n' << "After init " << raytracer.scene.objects.size() << '\n';
 }
 
@@ -39,9 +39,10 @@ void RRApp::Tick( float deltaTime )
 	if (key_held_down)
 	{
 		camera.keyHandler(held_key);
+		renderer->OnCameraUpdate();
 	}
 
-	raytracer->RenderScene(frame);
+	renderer->RenderScene(frame);
 
 	if (POSTPROCESSING) {
 		if (CHROMATIC_ABERRATION) {
@@ -81,6 +82,7 @@ void RRApp::MouseMove(int x, int y)
 	if (mouse_held_down)
 	{
 		camera.mouseHandler(x, y);
+		renderer->OnCameraUpdate();
 	}
 }
 void RRApp::MouseUp(int button)
