@@ -2,7 +2,7 @@
 
 namespace RaytracingRenderer {
 	struct hit_record;
-	enum MAT_TYPE { SOLID, GLASS };
+	enum MAT_TYPE { SOLID, GLASS, LIGHT };
 	class Material
 	{
 	public:
@@ -20,6 +20,14 @@ namespace RaytracingRenderer {
 
 		inline virtual float ior() const {
 			return 1.f; // ior of Air.
+		}
+
+		inline virtual float3 emission_color() const {
+			return float3(0.f, 0.f, 0.f);
+		}
+
+		inline virtual float emission() const {
+			return 0;
 		}
 
 		inline MAT_TYPE type() { return this->_mat_type; }
