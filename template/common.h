@@ -9,7 +9,7 @@
 #define AA_SAMPLES_PER_PIXEL 10
 #define MULTITHREADING true
 
-#define POSTPROCESSING true
+#define POSTPROCESSING false
 #define GAMMA_CORRECTION true
 #define GAMMA 0.7f
 #define VIGNETTING true
