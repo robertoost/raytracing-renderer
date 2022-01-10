@@ -14,7 +14,7 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 // -----------------------------------------------------------
 void RRApp::Init()
 {
-	scene = SceneManager::ReflectionRoom();
+	scene = SceneManager::CornellBox();
 	renderer = new PathTracer(scene, camera);
 	//cout << '\n' << "After init " << raytracer.scene.objects.size() << '\n';
 }
