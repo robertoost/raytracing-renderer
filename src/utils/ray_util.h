@@ -66,7 +66,8 @@ namespace RaytracingRenderer {
     }
 
     inline float random_float() {
-        return rand() / (RAND_MAX + 1.f);
+        return RandomFloat();
+        //return rand() / (RAND_MAX + 1.f);
     }
 
     //inline float random_float(float min, float max) {
