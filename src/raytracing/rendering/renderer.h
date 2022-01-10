@@ -6,7 +6,6 @@ namespace RaytracingRenderer {
         Scene* scene;
         Camera* camera;
 
-
         inline Renderer(Scene& scene, Camera& camera) {
             // TODO: Move camera to scene.
             this->scene = &scene;
