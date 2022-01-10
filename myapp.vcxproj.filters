@@ -4,9 +4,6 @@
     <ClCompile Include="template\template.cpp">
       <Filter>template</Filter>
     </ClCompile>
-    <ClCompile Include="src\raytracing\raytracer.cpp">
-      <Filter>src\raytracing</Filter>
-    </ClCompile>
     <ClCompile Include="src\scenes\scene_manager.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
@@ -18,6 +15,15 @@
     </ClCompile>
     <ClCompile Include="src\post-processing\post_processing.cpp">
       <Filter>src\post-processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\whitted_raytracer.cpp">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\hemisphere_sampler.cpp">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\path_tracer.cpp">
+      <Filter>src\raytracing\renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +87,6 @@
     <ClInclude Include="src\raytracing\ray.h">
       <Filter>src\raytracing</Filter>
     </ClInclude>
-    <ClInclude Include="src\raytracing\raytracer.h">
-      <Filter>src\raytracing</Filter>
-    </ClInclude>
     <ClInclude Include="src\scenes\scene.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
@@ -104,6 +107,27 @@
     </ClInclude>
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h">
       <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\accumulator.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\renderer.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\whitted_raytracer.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\hemisphere_sampler.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\emissive_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\path_tracer.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\diffuse_util.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +174,9 @@
     </Filter>
     <Filter Include="src\3d-objects\lights">
       <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\raytracing\renderers">
+      <UniqueIdentifier>{fdeab9af-4dad-46fe-a84f-3c3f6043ff11}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

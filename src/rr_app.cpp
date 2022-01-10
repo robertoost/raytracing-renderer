@@ -14,8 +14,8 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 // -----------------------------------------------------------
 void RRApp::Init()
 {
-	scene = SceneManager::TriangleTest();
-	raytracer = new Raytracer(scene, camera);
+	scene = SceneManager::CornellBox();
+	renderer = new PathTracer(scene, camera);
 	//cout << '\n' << "After init " << raytracer.scene.objects.size() << '\n';
 }
 
@@ -39,9 +39,11 @@ void RRApp::Tick( float deltaTime )
 	if (key_held_down)
 	{
 		camera.keyHandler(held_key);
+		renderer->OnCameraUpdate();
 	}
 
-	raytracer->RenderScene(frame);
+	renderer->RenderScene(frame);
+	float energy = total_energy(frame);
 
 	if (POSTPROCESSING) {
 		if (CHROMATIC_ABERRATION) {
@@ -64,7 +66,8 @@ void RRApp::Tick( float deltaTime )
 	}
 	
 	//cout << "done";
-	cout << myTimer.elapsed() * 1000 << " ";
+	cout << "\nTime elapsed:\t" << myTimer.elapsed() * 1000 << " ms\n";
+	cout << "Total energy:\t" << energy << "\n";
 }
 
 void RRApp::KeyUp(int key)
@@ -81,6 +84,7 @@ void RRApp::MouseMove(int x, int y)
 	if (mouse_held_down)
 	{
 		camera.mouseHandler(x, y);
+		renderer->OnCameraUpdate();
 	}
 }
 void RRApp::MouseUp(int button)

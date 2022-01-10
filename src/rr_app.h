@@ -1,7 +1,7 @@
 ﻿#pragma once
 using RaytracingRenderer::Scene;
 using RaytracingRenderer::Camera;
-using RaytracingRenderer::Raytracer;
+using RaytracingRenderer::Renderer;
 
 namespace Tmpl8
 {
@@ -12,7 +12,7 @@ public:
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );	
-	void Shutdown() { delete(this->raytracer); }
+	void Shutdown() { delete(this->renderer); }
 	// input handling
 	void MouseUp(int button);
 	void MouseDown(int button);
@@ -26,7 +26,7 @@ public:
 	int held_key = 0;
 	Scene scene;
 	Camera camera;
-	Raytracer * raytracer = nullptr;
+	Renderer * renderer = nullptr;
 	RRApp() {};
 };
 

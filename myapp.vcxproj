@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -121,10 +121,12 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
+    <ClCompile Include="src\raytracing\rendering\path_tracer.cpp" />
     <ClCompile Include="src\post-processing\post_processing.cpp" />
+    <ClCompile Include="src\raytracing\rendering\hemisphere_sampler.cpp" />
     <ClCompile Include="src\rr_app.cpp" />
     <ClCompile Include="src\raytracing\camera.cpp" />
-    <ClCompile Include="src\raytracing\raytracer.cpp" />
+    <ClCompile Include="src\raytracing\rendering\whitted_raytracer.cpp" />
     <ClCompile Include="src\scenes\scene_manager.cpp" />
     <ClCompile Include="template\template.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -134,6 +136,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\raytracing\rendering\path_tracer.h" />
+    <ClInclude Include="src\materials\emissive_material.h" />
+    <ClInclude Include="src\raytracing\rendering\hemisphere_sampler.h" />
+    <ClInclude Include="src\raytracing\rendering\renderer.h" />
+    <ClInclude Include="src\raytracing\accumulator.h" />
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
     <ClInclude Include="src\3d-objects\primitives\triangle.h" />
     <ClInclude Include="src\post-processing\post_processing.h" />
@@ -144,7 +151,7 @@
     <ClInclude Include="src\utils\color_util.h" />
     <ClInclude Include="src\lights\directional_light.h" />
     <ClInclude Include="src\materials\glass_material.h" />
-    <ClInclude Include="src\raytracing\raytracer.h" />
+    <ClInclude Include="src\raytracing\rendering\whitted_raytracer.h" />
     <ClInclude Include="src\scenes\scene_manager.h" />
     <ClInclude Include="src\materials\specular_material.h" />
     <ClInclude Include="src\materials\normal_material.h" />
@@ -159,6 +166,7 @@
     <ClInclude Include="src\raytracing\ray.h" />
     <ClInclude Include="src\scenes\scene.h" />
     <ClInclude Include="src\3d-objects\primitives\sphere.h" />
+    <ClInclude Include="src\utils\diffuse_util.h" />
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\precomp.h" />
     <ClInclude Include="src\utils\ray_util.h" />

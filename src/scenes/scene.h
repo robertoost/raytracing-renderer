@@ -9,6 +9,7 @@ namespace RaytracingRenderer {
 		//Camera camera;
 		list<shared_ptr<Light>> lights;
 		list<shared_ptr<Hittable>> objects;
+		float3 background_color = float3(0,0,0);
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			bool collision = false;
@@ -36,6 +37,12 @@ namespace RaytracingRenderer {
 		inline Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights) {
 			this->objects = objects;
 			this->lights = lights;
+		}
+
+		inline Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights, float3 background_color) {
+			this->objects = objects;
+			this->lights = lights;
+			this->background_color = background_color;
 		}
 	};
 }
