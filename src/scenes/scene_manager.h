@@ -5,7 +5,7 @@ namespace RaytracingRenderer {
 class SceneManager
 {
 public:
-	static Scene ReflectionRoom();
+	static Scene CornellBox();
 
 	static Scene GlassTest();
 
@@ -17,11 +17,15 @@ public:
 
 	static Scene TriangleTest();
 
-	static Scene MeshTest();
+	//static Scene MeshTest();
 
 	static Scene SingleObject();
 
 	static Scene TooManySpheres();
+	
+	static Scene AreaLightTest();
+
+	static Scene IndirectLightTest();
 };
 }
 

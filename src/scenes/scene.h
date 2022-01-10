@@ -10,19 +10,25 @@ namespace RaytracingRenderer {
 		list<shared_ptr<Light>> lights;
 		list<shared_ptr<Hittable>> objects;
 		BVH ac;
+		float3 background_color = float3(0,0,0);
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
-			
-			return ac.intersect(ray, t_min, t_max, rec, objects);
-			//bool collision = false;
-			//for (shared_ptr<Hittable> obj : objects) {
-			//	const bool hit = obj->intersect(ray, t_min, t_max, rec);
-			//	if (hit) {
-			//		collision = true;
-			//		t_max = rec.t;
-			//	}
-			//}
-			//return collision;
+			bool collision = false;
+			if (USE_BVH) {
+				//AccelerationStructure ac = AccelerationStructure(objects);
+				collision = ac.intersect(ray, t_min, t_max, rec, objects);
+			} else {
+				// Loop over all objects in the scene and try to find intersections.
+				for (shared_ptr<Hittable> obj : objects) {
+					const bool hit = obj->intersect(ray, t_min, t_max, rec);
+					if (hit) {
+						collision = true;
+						t_max = rec.t;
+					}
+				}
+			}
+            
+            return collision;
 		};
 
 		inline Scene() {
@@ -44,8 +50,13 @@ namespace RaytracingRenderer {
 			box = AABB((float3(-INFINITY, -INFINITY, -INFINITY)), float3(INFINITY, INFINITY, INFINITY));
 		}
 
-		void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
-			//do something?
+		void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {}
+
+		inline Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights, float3 background_color) {
+			this->objects = objects;
+			this->lights = lights;
+			this->background_color = background_color;
+			this->ac = BVH(objects);
 		}
 	};
 }

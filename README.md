@@ -12,16 +12,23 @@ Created by Rayne Blair (raynebblair@gmail.com) & Robert Oost (mail@robertoo.st)
 ## Features
 
 - Sphere and Plane primitives.
-- Ambient, Point, and Directional lights.
+- Ambient, Point, and Directional lights (Whitted only).
 - Various materials, including diffuse, specular, and dielectric.
-- Raytracing with shadow, reflection, and refraction rays.
+- Whitted-style Raytracing with shadow, reflection, and refraction rays.
 - Transmission with Absorption using Beer's law.
 - Free camera, with translation and rotation.
-- Antialiasing.
-- CPU Multi-threading.
+- Antialiasing (Whitted only).
+- CPU Multi-threading (Whitted only).
 - Post-processing effects. (Vignette, Gamma correction, Chromatic Aberration).
+- Supports partially diffuse/specular materials.
 
-## TO-DO
+### New (!)
+
+- Total energy measurement for the frame.
+- Path Tracing using random hemisphere sampling and an accumulator.
+- Path Tracing with specular/diffuse reflection and refraction rays.
+
+### TO-DO
 
 - Texturing of primitives using bitmaps.
 - Triangle mesh using obj files.
@@ -39,21 +46,25 @@ In the scene view, press WASD to move around, and change your viewing direction 
 
 In order to switch scenes, just go to the Init function in `src/rr_app.cpp` and change the scene loaded by the SceneManager.
 
-In order to change the settings, go to `template/common.h`. There you will find several settings:
+To switch renderers, go to the same Init function in `src/rr_app.cpp`. Then change the `Renderer` class that's initialized there. Options include `WhittedRaytracer`, `HemisphereSampler` (Direct light only), and `PathTracer`. Note that Whitted raytracing requires ambient/point/directional lights to be present in the scene, while the direct light sampler and path tracer only use area lights.
+
+### Rendering Parameters
+
+In order to change the rendering parameters, go to `template/common.h`. There you will find several settings:
 
 - `MAX_RECURSION_DEPTH` - The amount of times a ray can be reflected or refracted before recursion is terminated.\
     default: `10`.
 
-- `MAX_SHADOW_DEPTH` - The amount of recursions where reflected/refracted rays can still cast shadow rays. Values above `MAX_RECURSION_DEPTH` have no effect.\
+- `MAX_SHADOW_DEPTH` - Whitted only. The amount of recursions where reflected/refracted rays can still cast shadow rays. Values above `MAX_RECURSION_DEPTH` have no effect.\
     default: `4`.
 
-- `ANTIALIASING` - Enables antialiasing for rendering the scene with an amount of samples `AA_SAMPLES_PER_PIXEL`.\
+- `ANTIALIASING` - Whitted only. Enables antialiasing for rendering the scene with an amount of samples `AA_SAMPLES_PER_PIXEL`.\
     default: `false`.
 
-- `AA_SAMPLES_PER_PIXEL` - The amount of rays that are traced for each pixel if antialiasing is on.\
+- `AA_SAMPLES_PER_PIXEL` - Whitted only. The amount of rays that are traced for each pixel if antialiasing is on.\
     default: `10`.
   
-- `MULTITHREADING` - Enables CPU multithreading to speed up the renderer.\
+- `MULTITHREADING` - Whitted only. Enables CPU multithreading to speed up the renderer.\
     default: `true`.
 
 - `POSTPROCESSING` - Enables post processing, depending on which settings are enabled.\

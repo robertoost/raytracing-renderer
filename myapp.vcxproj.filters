@@ -1,16 +1,134 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Object Include="src\3d-objects\sphere.obj" />
-    <Object Include="assets\teapot.obj" />
+    <ClCompile Include="template\template.cpp">
+      <Filter>template</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\scene_manager.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\camera.cpp">
+      <Filter>src\raytracing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rr_app.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\post-processing\post_processing.cpp">
+      <Filter>src\post-processing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\whitted_raytracer.cpp">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\hemisphere_sampler.cpp">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\path_tracer.cpp">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\post-processing\post_processing.cpp" />
-    <ClCompile Include="src\rr_app.cpp" />
-    <ClCompile Include="src\raytracing\camera.cpp" />
-    <ClCompile Include="src\raytracing\raytracer.cpp" />
-    <ClCompile Include="src\scenes\scene_manager.cpp" />
-    <ClCompile Include="template\template.cpp" />
+    <ClInclude Include="template\common.h">
+      <Filter>template</Filter>
+    </ClInclude>
+    <ClInclude Include="template\precomp.h">
+      <Filter>template</Filter>
+    </ClInclude>
+    <ClInclude Include="cl\tools.cl">
+      <Filter>template\cl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\sphere.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\object3d.h">
+      <Filter>src\3d-objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\plane.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lights\light.h">
+      <Filter>src\3d-objects\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\diffuse_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lights\ambient_light.h">
+      <Filter>src\3d-objects\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\normal_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\checkerboard_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\specular_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lights\point_light.h">
+      <Filter>src\3d-objects\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\glass_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lights\directional_light.h">
+      <Filter>src\3d-objects\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\ray_util.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\color_util.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\hittable.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\ray.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\scene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\scene_manager.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\camera.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rr_app.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\post-processing\post_processing.h">
+      <Filter>src\post-processing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\triangle.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3d-objects\primitives\boundedplane.h">
+      <Filter>src\3d-objects\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\accumulator.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\renderer.h">
+      <Filter>src\raytracing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\whitted_raytracer.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\hemisphere_sampler.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\materials\emissive_material.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\path_tracer.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\diffuse_util.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
@@ -24,7 +142,6 @@
     <ClInclude Include="src\utils\color_util.h" />
     <ClInclude Include="src\lights\directional_light.h" />
     <ClInclude Include="src\materials\glass_material.h" />
-    <ClInclude Include="src\raytracing\raytracer.h" />
     <ClInclude Include="src\scenes\scene_manager.h" />
     <ClInclude Include="src\materials\specular_material.h" />
     <ClInclude Include="src\materials\normal_material.h" />
@@ -50,5 +167,41 @@
     <None Include="cl\kernels.cl" />
     <None Include="README.md" />
     <None Include="template\LICENSE" />
+    <Filter Include="template">
+      <UniqueIdentifier>{a7d6e3cb-bfcd-438d-979f-17df241a55b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="template\cl">
+      <UniqueIdentifier>{dc41819e-b6c1-4070-b4c1-0849e444ca7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{f334f95b-c34f-4587-8bc3-b92a4f6a6627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects">
+      <UniqueIdentifier>{8b1ee50b-cb86-4fcf-ac93-d7690d232be3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects\primitives">
+      <UniqueIdentifier>{95d0b961-1267-45c7-b176-2a21c90a9731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\materials">
+      <UniqueIdentifier>{4f15d112-c6fb-463f-b21e-4167d2a70cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{47bcc2d7-521f-43ee-b2cc-eb97f6a97b6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\raytracing">
+      <UniqueIdentifier>{582e722e-8141-4faf-a9a3-20289164f53b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scenes">
+      <UniqueIdentifier>{effc06e8-e596-4773-bc0e-ec556c8cf309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\post-processing">
+      <UniqueIdentifier>{dd7ed565-43aa-42a2-9f17-2ffd999ec2e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3d-objects\lights">
+      <UniqueIdentifier>{e67bc880-1157-42aa-82ea-2bacd299d0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\raytracing\renderers">
+      <UniqueIdentifier>{fdeab9af-4dad-46fe-a84f-3c3f6043ff11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

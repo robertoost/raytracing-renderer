@@ -84,7 +84,7 @@ void main()
 	glfwWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
 	glfwWindowHint( GLFW_STENCIL_BITS, GL_FALSE );
 	glfwWindowHint( GLFW_RESIZABLE, GL_FALSE /* easier :) */ );
-	if (!(window = glfwCreateWindow( SCRWIDTH, SCRHEIGHT, "ADVGR Tmpl8", 0, 0 ))) FatalError( "glfwCreateWindow failed." );
+	if (!(window = glfwCreateWindow( SCRWIDTH, SCRHEIGHT, "Raynetracing Renderobert", 0, 0 ))) FatalError( "glfwCreateWindow failed." );
 	glfwMakeContextCurrent( window );
 	// register callbacks
 	glfwSetWindowSizeCallback( window, ReshapeWindowCallback );

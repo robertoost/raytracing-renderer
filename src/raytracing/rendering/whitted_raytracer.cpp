@@ -2,7 +2,7 @@
 
 namespace RaytracingRenderer {
 
-    float3 Raytracer::Trace(Ray &ray) {
+    float3 WhittedRaytracer::Trace(Ray &ray) {
 
         // Trace a ray and record the hit.
         hit_record rec = hit_record();
@@ -32,7 +32,7 @@ namespace RaytracingRenderer {
         return pixel_color;
     }
 
-    float3 Raytracer::TraceReflection(Ray& ray, uint bounce_count) {
+    float3 WhittedRaytracer::TraceReflection(Ray& ray, uint bounce_count) {
 
         // Trace the given reflection ray and find the nearest intersection.
         hit_record rec = hit_record();
@@ -63,7 +63,7 @@ namespace RaytracingRenderer {
         return pixel_color;
     }
 
-    float3 Raytracer::TraceRefraction(Ray& ray, uint bounce_count) {
+    float3 WhittedRaytracer::TraceRefraction(Ray& ray, uint bounce_count) {
 
         // negative bias to allow for self intersection?
         hit_record rec = hit_record();
@@ -91,7 +91,7 @@ namespace RaytracingRenderer {
         return pixel_color;
     }
 
-    float3 Raytracer::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
+    float3 WhittedRaytracer::TraceSolid(Ray& ray, hit_record& rec, uint bounce_count) {
 
         // Get the material's specularity and infer the diffuse value.
         const float specular = rec.mat_ptr->specularity();
@@ -119,7 +119,7 @@ namespace RaytracingRenderer {
         return spec_diff_color;
     }
 
-    float3 Raytracer::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
+    float3 WhittedRaytracer::TraceGlass(Ray& ray, hit_record& rec, uint bounce_count) {
         float prev_ior, next_ior;
         get_ior(ray, rec, prev_ior, next_ior);
         float reflection, transmission;
@@ -154,7 +154,7 @@ namespace RaytracingRenderer {
         return glass_pixel_color;
     }
 
-    float3 Raytracer::DirectIllumination(float3 &position, float3 &normal) {
+    float3 WhittedRaytracer::DirectIllumination(float3 &position, float3 &normal) {
         float3 pixel_lighting = float3(0, 0, 0);
 
         for (shared_ptr<Light> light : scene->lights) {
@@ -163,7 +163,7 @@ namespace RaytracingRenderer {
         return pixel_lighting;
     }
 
-    void Raytracer::RenderScene(float3 frame[SCRHEIGHT][SCRWIDTH]) {
+    void WhittedRaytracer::RenderScene(float3 frame[SCRHEIGHT][SCRWIDTH]) {
         if (multithreading) //MULTI THREADING
         {
             imageBlocks.clear();
@@ -267,12 +267,11 @@ namespace RaytracingRenderer {
         //cout << "Done with rendering ";
     }
 
-
     // -----------------------------------------------------------
     // Initialize the application
     // -----------------------------------------------------------
 
-    void Raytracer::CalculateColor(Blockjob job)
+    void WhittedRaytracer::CalculateColor(Blockjob job)
     {
         float3 x_dir = camera->screen_p1 - camera->screen_p0;
 	    float3 y_dir = camera->screen_p2 - camera->screen_p0;

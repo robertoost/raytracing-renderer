@@ -18,10 +18,10 @@ namespace RaytracingRenderer {
 
         inline BoundedPlane(float3 position, float width, shared_ptr<Material> material) : Object3D(position, material) {
             this->width = width;
-            float3 v0 = float3(-width / 2., 0, -width / 2.);
-            float3 v1 = float3(width / 2., 0, width / 2.);
-            float3 v2 = float3(-width / 2., 0, width / 2.);
-            float3 v3 = float3(width / 2., 0, -width / 2.);
+            float3 v0 = float3(-width / 2.f, 0, -width / 2.f);
+            float3 v1 = float3(width / 2.f, 0, width / 2.f);
+            float3 v2 = float3(-width / 2.f, 0, width / 2.f);
+            float3 v3 = float3(width / 2.f, 0, -width / 2.f);
             this->tris[0] = Triangle(position, v0, v2, v1, material);
             this->tris[1] = Triangle(position, v0, v3, v1, material);
             updateAABB(this->bounding_box);
@@ -44,6 +44,7 @@ namespace RaytracingRenderer {
         }
 
         bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
+            bool check = false;
             for (Triangle tri : tris) {
                 if (tri.intersect(ray, t_min, t_max, rec))
                     return true;

@@ -3,7 +3,7 @@
 #define SCRHEIGHT	300
 #define ASPECT_RATIO SCRWIDTH / SCRHEIGHT
 
-#define MAX_RECURSION_DEPTH 10
+#define MAX_RECURSION_DEPTH 20
 #define MAX_SHADOW_DEPTH 4
 #define ANTIALIASING false
 #define AA_SAMPLES_PER_PIXEL 10
@@ -12,15 +12,16 @@
 #define POSTPROCESSING false
 #define GAMMA_CORRECTION true
 #define GAMMA 0.7f
-#define VIGNETTING true
+#define VIGNETTING false
 // Scaled between 0 and 1.
 #define MAX_VIGNETTE 0.7f
 
-// TODO:
-#define CHROMATIC_ABERRATION true
+#define CHROMATIC_ABERRATION false
 #define CHROM_ABB_R_OFFSET int2(1,1)
 #define CHROM_ABB_G_OFFSET int2(-1,1)
 #define CHROM_ABB_B_OFFSET int2(-1,-1)
+
+#define USE_BVH true
 
 // IMPORTANT NOTE ON OPENCL COMPATIBILITY ON OLDER LAPTOPS:
 // Without a GPU, a laptop needs at least a 'Broadwell' Intel CPU (5th gen, 2015):

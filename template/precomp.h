@@ -1233,6 +1233,7 @@ public:
 #include "src/acceleration-structures/AABB.h"
 
 #include "src/raytracing/hittable.h"
+#include "src/raytracing/accumulator.h"
 
 // Materials
 #include "src/materials/material.h"
@@ -1241,6 +1242,7 @@ public:
 #include "src/materials/checkerboard_material.h"
 #include "src/materials/specular_material.h"
 #include "src/materials/glass_material.h"
+#include "src/materials/emissive_material.h"
 
 // 3D Objects.
 #include "src/3d-objects/object3d.h"
@@ -1270,10 +1272,14 @@ public:
 // Color utility.
 #include "src/utils/color_util.h"
 #include "src/utils/ray_util.h"
+#include "src/utils/diffuse_util.h"
 
 // App essentials
 #include "src/scenes/scene_manager.h"
-#include "src/raytracing/raytracer.h"
+#include "src/raytracing/rendering/renderer.h"
+#include "src/raytracing/rendering/whitted_raytracer.h"
+#include "src/raytracing/rendering/hemisphere_sampler.h"
+#include "src/raytracing/rendering/path_tracer.h"
 #include "src/post-processing/post_processing.h"
 
 
