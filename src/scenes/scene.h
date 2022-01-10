@@ -50,7 +50,9 @@ namespace RaytracingRenderer {
 			box = AABB((float3(-INFINITY, -INFINITY, -INFINITY)), float3(INFINITY, INFINITY, INFINITY));
 		}
 
-		void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {}
+		void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+			//do something?
+		}
 
 		inline Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights, float3 background_color) {
 			this->objects = objects;

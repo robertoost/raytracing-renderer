@@ -21,7 +21,7 @@
 #define CHROM_ABB_G_OFFSET int2(-1,1)
 #define CHROM_ABB_B_OFFSET int2(-1,-1)
 
-#define USE_BVH true
+#define USE_BVH false
 
 // IMPORTANT NOTE ON OPENCL COMPATIBILITY ON OLDER LAPTOPS:
 // Without a GPU, a laptop needs at least a 'Broadwell' Intel CPU (5th gen, 2015):

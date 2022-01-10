@@ -14,7 +14,7 @@ namespace RaytracingRenderer {
 		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(0.4f, 0.2f, 1.f), float3(0.4f, 1.f, 0.7f)));
 		shared_ptr<SpecularMaterial> mirror_mat = make_shared<SpecularMaterial>(SpecularMaterial());
 		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial(1.52f, float3(0,0,0)));
-		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(5.f, float3(1.f, 1.f, 1.f)));
+		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(3.5f, float3(1.f, 1.f, 1.f)));
 
 		// Instantiate object pointers.
 		shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(3, -1, 5), 1.5f, glass_mat));
@@ -111,7 +111,6 @@ namespace RaytracingRenderer {
 
 		Scene scene = Scene(objects, lights);
 		return scene;
-
 	}
 
 	// Everything our path tracer can handle while also using a BVH.
@@ -263,7 +262,7 @@ namespace RaytracingRenderer {
 	// 	Scene scene = Scene(objects, lights);
 	// 	return scene;
 	// }
- 
+
 	Scene SceneManager::AreaLightTest() {
 		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
 		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
