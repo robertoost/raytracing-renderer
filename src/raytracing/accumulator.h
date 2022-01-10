@@ -6,7 +6,7 @@ namespace RaytracingRenderer {
 	private:
 		uint sample_amount = 0;
 		// Accumulates energy.
-		float3 accumulated_energy[SCRHEIGHT][SCRWIDTH] = { {float3(0.f,0.f,0.f)} };
+		float3 accumulated_energy[SCRHEIGHT][SCRWIDTH];
 	public:
 		inline float3 accumulateEnergy(float3& energy, int x, int y) {
 			float3 total_energy = accumulated_energy[y][x];
