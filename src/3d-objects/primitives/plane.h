@@ -7,9 +7,29 @@ namespace RaytracingRenderer {
 	public:
         float3 normal;
 
-        inline Plane() : Object3D(), normal(float3(0, 1, 0)) {}
-        inline Plane(float3 position, float3 normal, shared_ptr<Material> material) : Object3D(position, material), normal(normal) {}
+        inline Plane() : Object3D(), normal(float3(0, 1, 0)) {
+            this->bounding_box = AABB((float3(-INFINITY, 0, -INFINITY)), float3(INFINITY, 0, INFINITY));
+        }
+        inline Plane(float3 position, float3 normal, shared_ptr<Material> material) : Object3D(position, material), normal(normal) {
+            this->bounding_box = AABB((float3(-INFINITY, 0, -INFINITY)), float3(INFINITY, 0, INFINITY));
+        }
 
+        void updateAABB(AABB box) const override {
+            box = AABB((float3(-INFINITY, 0, -INFINITY)), float3(INFINITY, 0, INFINITY));
+        }
+
+        void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+            // plane normal
+            float Dnear = INFINITY;
+            float Dfar = -INFINITY;
+            float d;
+            vector<float3> p = { float3(INFINITY, 0, INFINITY), float3(-INFINITY, 0, -INFINITY), float3(-INFINITY, 0, INFINITY), float3(INFINITY, 0, -INFINITY)};
+            for (uint32_t i = 0; i < p.size(); ++i) {
+                d = dot(planeNormal, p[i]);
+                if (d < dnear) dnear = d;
+                if (d > dfar) dfar = d;
+            }
+        }
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 

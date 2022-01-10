@@ -14,7 +14,7 @@ namespace RaytracingRenderer {
 		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(0.4f, 0.2f, 1.f), float3(0.4f, 1.f, 0.7f)));
 		shared_ptr<SpecularMaterial> mirror_mat = make_shared<SpecularMaterial>(SpecularMaterial());
 		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial(1.52f, float3(0,0,0)));
-		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(5.f, float3(1.f, 1.f, 1.f)));
+		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(3.5f, float3(1.f, 1.f, 1.f)));
 
 		// Instantiate object pointers.
 		shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(3, -1, 5), 1.5f, glass_mat));
@@ -100,8 +100,60 @@ namespace RaytracingRenderer {
 
 		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.95f, 0.9f, 0.f)));
 		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -3, 0), float3(0, 1, 0), off_white_mat));
+		shared_ptr<BoundedPlane> floor2 = make_shared<BoundedPlane>(BoundedPlane(float3(0, -2, 5), 10.f, off_white_mat));
 
-		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere1, sphere2, sphere3, sphere4, floor });
+		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere1, sphere2, sphere3, sphere4});
+
+		// Lighting with directional light.
+		shared_ptr<DirectionalLight> directional_light = make_shared<DirectionalLight>(DirectionalLight(float3(0.2f, -0.7f, -0.1f), 0.8f));
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(0.2f));
+		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ directional_light, ambient_light });
+
+		Scene scene = Scene(objects, lights);
+		return scene;
+	}
+
+	// Everything our path tracer can handle while also using a BVH.
+	Scene SceneManager::TooManySpheres() {
+		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+		shared_ptr<DiffuseMaterial> red_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(1, 0.1, 0.2)));
+		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(1.f, float3(1.f, 1.f, 1.f)));
+		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
+		shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial(1.52f, float3(0.1f, 0.7f, 0.7f)));
+		shared_ptr<SpecularMaterial> mirror_mat = make_shared<SpecularMaterial>(SpecularMaterial(0.5f, float3(0.f, 1.f, 0.f)));
+		vector<shared_ptr<Material>> mats = vector<shared_ptr<Material>>({ off_white_mat, off_white_mat, off_white_mat, 
+			purple_mat, purple_mat, red_mat, red_mat, emissive_mat, glass_mat, mirror_mat, });
+
+		list<shared_ptr<Hittable>> objects;
+
+		for (int y = 0; y < 10; y++) {
+			for (int x = 0; x < 100; x++) {
+				for (int z = 0; z < 100; z++) {
+					int rand_idx = rand() % mats.size();
+					objects.push_back(make_shared<Sphere>(Sphere(float3(x, y, z), 0.25f, mats[rand_idx])));
+				}
+			}
+		}
+
+		// Lighting with directional light.
+		shared_ptr<DirectionalLight> directional_light = make_shared<DirectionalLight>(DirectionalLight(float3(0.2f, -0.7f, -0.1f), 0.8f));
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(0.2f));
+		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ directional_light, ambient_light });
+
+		Scene scene = Scene(objects, lights, float3(0.7f, 0.8f, 0.9f));
+		return scene;
+	}
+
+	Scene SceneManager::SingleObject() {
+		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
+
+		shared_ptr<Sphere> sphere1 = make_shared<Sphere>(Sphere(float3(0, 0, 7), 2.f, purple_mat));
+		
+		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.95f, 0.9f, 0.f)));
+		//shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -3, 0), float3(0, 1, 0), off_white_mat));
+
+		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere1 });
 
 		// Lighting with directional light.
 		shared_ptr<DirectionalLight> directional_light = make_shared<DirectionalLight>(DirectionalLight(float3(0.2f, -0.7f, -0.1f), 0.8f));
@@ -182,6 +234,35 @@ namespace RaytracingRenderer {
 		return scene;
 	}
 
+	// Scene SceneManager::MeshTest() {
+	// 	shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+	// 	shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
+
+	// 	shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
+	// 	shared_ptr<GlassMaterial> glass_mat = make_shared<GlassMaterial>(GlassMaterial(1.52f, float3(0.1f, 0.7f, 0.7f)));
+	// 	Mesh mesh = mesh.load_model("assets/teapot.obj");
+
+
+	// 	//vector<Triangle> triangles = obj.loadOBJ("C:/Users/Rayne/Desktop/teapot.obj");
+	// 	list<shared_ptr<Hittable>> objects;
+	// 	objects.push_back(make_shared<Mesh>(mesh));
+
+	// 	//shared_ptr<Sphere> sphere = make_shared<Sphere>(Sphere(float3(0, 0, 5), 2.f, glass_mat));
+
+	// 	//objects.push_back(sphere);
+
+
+	// 	shared_ptr<BoundedPlane> floor = make_shared<BoundedPlane>(BoundedPlane(float3(0, 3, 0), float3(-2, 0, -2), float3(2, 0, 2), float3(-2, 0, 2), float3(2, 0, -2), off_white_mat));
+
+	// 	shared_ptr<PointLight> point_light = make_shared<PointLight>(PointLight(float3(0, 5.5f, 3), 20.f));
+	// 	shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));
+	// 	shared_ptr<DirectionalLight> directional_light = make_shared<DirectionalLight>(DirectionalLight(float3(0.2f, -0.7f, -0.1f), 0.8f));
+
+	// 	list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ point_light, directional_light, ambient_light });
+	// 	Scene scene = Scene(objects, lights);
+	// 	return scene;
+	// }
+
 	Scene SceneManager::AreaLightTest() {
 		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
 		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.85f, 0.85f, 0.9f)));
@@ -225,5 +306,4 @@ namespace RaytracingRenderer {
 		Scene scene = Scene(objects, lights, float3(0.7f, 0.8f, 1.f));
 		return scene;
 	}
-
 }
