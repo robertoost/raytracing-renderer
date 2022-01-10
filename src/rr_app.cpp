@@ -14,7 +14,7 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 // -----------------------------------------------------------
 void RRApp::Init()
 {
-	scene = SceneManager::DirectionalLightTest();
+	scene = SceneManager::TooManySpheres();
 	raytracer = new Raytracer(scene, camera);
 	//cout << '\n' << "After init " << raytracer.scene.objects.size() << '\n';
 }

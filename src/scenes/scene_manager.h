@@ -20,6 +20,8 @@ public:
 	static Scene MeshTest();
 
 	static Scene SingleObject();
+
+	static Scene TooManySpheres();
 };
 }
 

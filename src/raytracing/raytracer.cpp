@@ -258,9 +258,13 @@ namespace RaytracingRenderer {
                         pixel_color /= samples_per_pixel;
                     }
                     frame[y][x] = pixel_color;
+
+                    //cout << "COL: " << x << " ";
                 }
+                //cout << "ROW " << y << " ";
             }
         }
+        //cout << "Done with rendering ";
     }
 
 

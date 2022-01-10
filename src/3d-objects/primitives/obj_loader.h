@@ -28,7 +28,7 @@ namespace RaytracingRenderer {
             for (Triangle tri : faces) {
                 tri.updateAABB(box);
             }
-            cout << box.p_min << " " << box.p_max;
+            //cout << box.p_min << " " << box.p_max;
         }
 
         bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {

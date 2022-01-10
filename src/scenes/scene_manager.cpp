@@ -107,6 +107,33 @@ namespace RaytracingRenderer {
 
 	}
 
+	Scene SceneManager::TooManySpheres() {
+		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));
+
+		list<shared_ptr<Hittable>> objects;
+
+		for (int y = 0; y < 10; y++) {
+			for (int x = 0; x < 100; x++) {
+				for (int z = 0; z < 100; z++) {
+					objects.push_back(make_shared<Sphere>(Sphere(float3(x, y, z), 0.1f, purple_mat)));
+				}
+			}
+		}
+
+		shared_ptr<DiffuseMaterial> off_white_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.95f, 0.9f, 0.f)));
+		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -3, 0), float3(0, 1, 0), off_white_mat));
+		shared_ptr<BoundedPlane> floor2 = make_shared<BoundedPlane>(BoundedPlane(float3(0, -2, 5), 10.f, off_white_mat));
+
+		// Lighting with directional light.
+		shared_ptr<DirectionalLight> directional_light = make_shared<DirectionalLight>(DirectionalLight(float3(0.2f, -0.7f, -0.1f), 0.8f));
+		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(0.2f));
+		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ directional_light, ambient_light });
+
+		Scene scene = Scene(objects, lights);
+		return scene;
+	}
+
 	Scene SceneManager::SingleObject() {
 		shared_ptr<DiffuseMaterial> purple_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
 		shared_ptr<CheckerboardMaterial> plane_mat = make_shared<CheckerboardMaterial>(CheckerboardMaterial(float3(1.f, 1.f, 0.f), float3(1.f, 0.8f, 0.f)));

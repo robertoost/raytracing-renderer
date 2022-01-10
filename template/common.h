@@ -7,7 +7,7 @@
 #define MAX_SHADOW_DEPTH 4
 #define ANTIALIASING false
 #define AA_SAMPLES_PER_PIXEL 10
-#define MULTITHREADING false
+#define MULTITHREADING true
 
 #define POSTPROCESSING false
 #define GAMMA_CORRECTION true

@@ -75,12 +75,13 @@ namespace RaytracingRenderer {
 
 			struct QueueElement
 			{
-				const shared_ptr<OctreeNode> node; // octree node held by this node in the tree 
+				shared_ptr<OctreeNode> node; // octree node held by this node in the tree 
 				float t; // used as key 
 				QueueElement(const shared_ptr<OctreeNode> &n, float thit) : node(n), t(thit) {}
+				QueueElement(const QueueElement& qe) { node = qe.node; t = qe.t; }
 				// comparator is > instead of < so priority_queue behaves like a min-heap
 				friend bool operator < (const QueueElement& a, const QueueElement& b) { return a.t > b.t; }
-				QueueElement& operator=(const QueueElement& qe) {  return QueueElement(qe.node, qe.t); }
+				//QueueElement& operator=(const QueueElement& qe) {  return QueueElement(qe.node, qe.t); }
 			};
 			float3 bounds[2];
 			shared_ptr<OctreeNode> root = nullptr;
@@ -99,8 +100,8 @@ namespace RaytracingRenderer {
 			}
 
 			void insert(
-				shared_ptr<OctreeNode> node, shared_ptr<Extents> extents,
-				float3 boundMin, float3 boundMax, int depth)
+				const shared_ptr<OctreeNode> node, const shared_ptr<Extents> extents,
+				const float3 boundMin, float3 boundMax, int depth)
 			{
 				if (node->isLeaf) {
 					if (node->data.size() == 0 || depth == 16) {
@@ -150,8 +151,8 @@ namespace RaytracingRenderer {
 			{
 				if (node->isLeaf) {
 					// compute leaf node bounding volume
-					for (uint32_t i = 0; i < node->data.size(); ++i) {
-						node->extents.extendBy(*node->data[i]);
+					for (shared_ptr<Extents> e : (node->data)) {
+						node->extents.extendBy(*e);
 					}
 				}
 				else {
@@ -229,9 +230,8 @@ namespace RaytracingRenderer {
 			//	precomputeDenominator[i] = dot(planeSetNormals[i], ray.dir);;
 			//}
 			float tHit = INFINITY;
-			//const Mesh* intersectedMesh = nullptr;
-			float precomputedNumerator[BVH::kNumPlaneSetNormals];
-			float precomputedDenominator[BVH::kNumPlaneSetNormals];
+			float precomputedNumerator[kNumPlaneSetNormals];
+			float precomputedDenominator[kNumPlaneSetNormals];
 			for (int i = 0; i < kNumPlaneSetNormals; ++i) {
 				precomputedNumerator[i] = dot(planeSetNormals[i], ray.orig);
 				precomputedDenominator[i] = dot(planeSetNormals[i], ray.dir);
@@ -256,14 +256,8 @@ namespace RaytracingRenderer {
 							t = rec.t;
 							tHit = t;
 							collision = true;
-							//cout << "True ";
-							//intersectedMesh = e->object;
 						}
-						//else
-							//cout << "False ";
 					}
-					//cout << "Node IS Leaf ";
-					
 				}
 				else {
 					for (int i = 0; i < 8; ++i) {
@@ -275,10 +269,8 @@ namespace RaytracingRenderer {
 							}
 						}
 					}
-					//cout << tFar << " ";
 				}
 			}
-			//cout << collision << " ";
 			return collision;
 
 		}
