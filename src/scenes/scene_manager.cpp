@@ -50,8 +50,6 @@ namespace RaytracingRenderer {
 		shared_ptr<EmissiveMaterial> emissive_mat = make_shared<EmissiveMaterial>(EmissiveMaterial(5.f, float3(1.f, 1.f, 1.f)));
 		
 		shared_ptr<Sphere> sphere = make_shared<Sphere>(Sphere(float3(0, 0, 5), 2.f, glass_mat));
-		shared_ptr<Sphere> sphere_stand = make_shared<Sphere>(Sphere(float3(0, -8, 5), 6.f, off_white_mat));
-		//shared_ptr<Sphere> sphere_stand_2 = make_shared<Sphere>(Sphere(float3(-4, -8, 5), 6.f, off_white_mat));
 
 		shared_ptr<Plane> floor = make_shared<Plane>(Plane(float3(0, -2, 0), float3(0, 1, 0), plane_mat));
 		shared_ptr<Sphere> area_light = make_shared<Sphere>(Sphere(float3(10, 10, 10), 6.f, emissive_mat));
@@ -60,7 +58,7 @@ namespace RaytracingRenderer {
 		shared_ptr<AmbientLight> ambient_light = make_shared<AmbientLight>(AmbientLight(1.f));
 
 		list<shared_ptr<Light>> lights = list<shared_ptr<Light>>({ /*point_light,*/ ambient_light });
-		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere, sphere_stand, floor, area_light });
+		list<shared_ptr<Hittable>> objects = list<shared_ptr<Hittable>>({ sphere, floor, area_light });
 
 		Scene scene = Scene(objects, lights, float3(0.2f, 0.3f, 0.9f));
 		return scene;
