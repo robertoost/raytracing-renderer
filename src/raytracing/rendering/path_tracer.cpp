@@ -61,13 +61,13 @@ namespace RaytracingRenderer {
 				// Reflection
 				float3 reflect_dir = reflect(ray.dir, rec.normal);
 				Ray reflect_ray = Ray(rec.p, reflect_dir);
-				energy = reflection * Sample(reflect_ray, bounces + 1);
+				energy = Sample(reflect_ray, bounces + 1);
 			}
 			else {
 				// Refraction.
 				float3 refract_dir = refract(ray.dir, rec.normal, prev_ior, next_ior);
 				Ray refract_ray = Ray(rec.p, refract_dir);
-				energy = transmission * Sample(refract_ray, bounces + 1);
+				energy = Sample(refract_ray, bounces + 1);
 			}
 
 			// Absorption (Beer's law)
@@ -96,8 +96,9 @@ namespace RaytracingRenderer {
 
 			if (diffuse_reflect) {
 				float diffuse = 1 - specular;
+
 				float3 R = diffuseReflection(rec.normal);
-				float3 BRDF = diffuse * (albedo / PI);
+				float3 BRDF = (albedo / PI);
 				Ray r(rec.p, R);
 				// update throughput
 				float3 Ei = Sample(r, bounces + 1) * dot(rec.normal, R);
@@ -107,7 +108,7 @@ namespace RaytracingRenderer {
 
 			if (specular_reflect) {
 				Ray r(rec.p, reflect(ray.dir, rec.normal));
-				return specular * albedo * Sample(r, bounces + 1);
+				return albedo * Sample(r, bounces + 1);
 			}
 		}
 
