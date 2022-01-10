@@ -22,6 +22,9 @@
     <ClCompile Include="src\raytracing\rendering\hemisphere_sampler.cpp">
       <Filter>src\raytracing\renderers</Filter>
     </ClCompile>
+    <ClCompile Include="src\raytracing\rendering\path_tracer.cpp">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="template\common.h">
@@ -119,6 +122,12 @@
     </ClInclude>
     <ClInclude Include="src\materials\emissive_material.h">
       <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raytracing\rendering\path_tracer.h">
+      <Filter>src\raytracing\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\diffuse_util.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
