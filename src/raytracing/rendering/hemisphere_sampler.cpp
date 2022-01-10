@@ -55,10 +55,8 @@ namespace RaytracingRenderer {
 
 		if (diffuse_rec.mat_ptr->emission() > 0)
 		{
-			float3 pixel_color(0, 0, 0);
-			rec.mat_ptr->color(ray, rec, pixel_color);
+			float3 pixel_color = rec.mat_ptr->color(ray, rec);
 			float3 BRDF = pixel_color * INVPI;
-
 			float cos_i = dot(diffuseDir, rec.normal);
 			float3 reflected_color = (diffuse_rec.mat_ptr->emission() * diffuse_rec.mat_ptr->emission_color());
 			energy += 2.f * PI * BRDF * (diffuse_rec.mat_ptr->emission() * diffuse_rec.mat_ptr->emission_color()) * cos_i;
