@@ -2,77 +2,51 @@
 
 namespace RaytracingRenderer {
 
-    class Obj
+    struct Obj
     {
-    public:
         int faceCount;
         int normalCount;
         int vertexCount;
         int indexCount;
-        vector<Vertex> vertices; 
+        vector<Vertex> vertices;
         vector<float3> verts;
         vector<FaceDefinition> faces;
+    };
+    class Mesh : public Hittable
+    {
+    public:
 
+        vector<Triangle> faces;
 
-        //Converts the list of vertexes into triangles, using the list of indices (840 indices, 439 verts, 840 faces. vertices[index_of_verts])
+        Mesh(vector<Triangle> faces) {
+            this->faces = faces;
+            updateAABB(this->bounding_box);
+        }
+        Mesh() {}
 
-        vector<Triangle> loadOBJ(const char* path) {
-            FILE* file = fopen(path, "r");
-            vector<float3> vertices;
-            vector<float3> normals;
-            vector<float3> vertexIndices;
-            vector<float3> normalIndices;
-            int faceCount = 0;
-            while (1) {
-                char lineHeader[128];
-                // read the first word of the line
-                int res = fscanf(file, "%s", lineHeader);
-                if (res == EOF)
-                    break; // EOF = End Of File. Quit the loop.
-
-            // else : parse lineHeader
-
-                if (strcmp(lineHeader, "v") == 0) {
-                    float3 vertex;
-                    fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-                    vertices.push_back(vertex);
-                }
-                else if (strcmp(lineHeader, "vn") == 0) {
-                    float3 normal;
-                    fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-                    normals.push_back(normal);
-                }
-                else if (strcmp(lineHeader, "f") == 0) {
-                    float3 vertexIndex;
-                    float3 normalIndex;
-                    float3 textureIndex;
-                    string buffer;
-                    fscanf(file, "%f/%f/%f %f/%f/%f %f/%f/%f\n", &vertexIndex.x, &textureIndex.x, &normalIndex.x, &vertexIndex.y, &textureIndex.y, &normalIndex.y, &vertexIndex.z, &textureIndex.z, &normalIndex.z);
-                    faceCount++;
-                    vertexIndex -= 1;
-                    vertexIndices.push_back(vertexIndex);
-                    normalIndex -= 1;
-                    normalIndices.push_back(normalIndex);
-                }
-                else {
-                    // Probably a comment, eat up the rest of the line
-                    char stupidBuffer[1000];
-                    fgets(stupidBuffer, 1000, file);
-                }
+        void updateAABB(AABB box) const override {
+            for (Triangle tri : faces) {
+                tri.updateAABB(box);
             }
-            vector<Triangle> tris;
-            for (unsigned int i = 0; i < faceCount; i++)
-            {
-                //float3 p0 = float3(vertices[vertexIndices[i].x].x, vertices[vertexIndices[i].y].y, vertices[vertexIndices[i].z].z);
-                //float3 p1 = float3(vertices[vertexIndices[i].y].x, vertices[vertexIndices[i].y].y, vertices[vertexIndices[i].y].z);
-                //float3 p2 = float3(vertices[vertexIndices[i].z].x, vertices[vertexIndices[i].z].y, vertices[vertexIndices[i].z].z);
-                float3 avNormal = (normals[normalIndices[i].x] + normals[normalIndices[i].y] + normals[normalIndices[i].z]) / length(normals[normalIndices[i].x] + normals[normalIndices[i].y] + normals[normalIndices[i].z]);
-                Triangle tri = Triangle(vertices[vertexIndices[i].x], vertices[vertexIndices[i].z], vertices[vertexIndices[i].y]);
-                tris.push_back(tri);
-            }
-            return tris;
+            cout << box.p_min << " " << box.p_max;
         }
 
+        bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
+            for (Triangle tri : faces) {
+                if (tri.bounding_box.intersectBounds(ray, t_min, t_max)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+            float d;
+            vector<float3> p;
+            for (Triangle tri : faces) {
+                tri.computeBounds(planeNormal, dnear, dfar);
+            }
+        }
         vector<Triangle> fix_winding(vector<Triangle> tris) {
             int i = 0;
             for (Triangle ttris : tris) {
@@ -116,7 +90,7 @@ namespace RaytracingRenderer {
             return vec;
         }
 
-        Obj load_model(string file) {
+        Mesh load_model(string file) {
             ifstream loaderStream(file);
 
             Obj modelData = Obj();
@@ -250,10 +224,6 @@ namespace RaytracingRenderer {
             }
 
             indices = vector<int>(vertexCount);
-            modelData.faceCount = polygonCount;
-            modelData.normalCount = normalCount;
-            modelData.vertexCount = vertexCount;
-            modelData.vertices = vector<Vertex>(vertexCount);
 
             //< ^^everything up here works^^ >
             //=========================================================
@@ -263,18 +233,14 @@ namespace RaytracingRenderer {
             //now is the boring part, creating the vertex list...
             //cout << normalCount << " " << vertexNormals.size() << vertexCount;
             indices.clear();
+            vector<Triangle> triangles;
             for (int i = 0; i < polygonCount; i++)
             {
-                modelData.faces[i].verts[0] = float3(vertexPositions[modelData.faces[i].vertexIndexes[0]]);
-                modelData.faces[i].verts[2] = float3(vertexPositions[modelData.faces[i].vertexIndexes[1]]);
-                modelData.faces[i].verts[1] = float3(vertexPositions[modelData.faces[i].vertexIndexes[2]]);
-
-               /* modelData.faces[i].normals[0] = float3(vertexNormals[modelData.faces[i].normalIndexes[0]]);
-                modelData.faces[i].normals[2] = float3(vertexNormals[modelData.faces[i].normalIndexes[1]]);
-                modelData.faces[i].normals[1] = float3(vertexNormals[modelData.faces[i].normalIndexes[2]]);*/
+                Triangle tri = Triangle(float3(vertexPositions[modelData.faces[i].vertexIndexes[0]]), float3(vertexPositions[modelData.faces[i].vertexIndexes[2]]), float3(vertexPositions[modelData.faces[i].vertexIndexes[1]]));
+                triangles.push_back(tri);
             }
-
-            return modelData;
+            Mesh mesh = Mesh(triangles);
+            return mesh;
         }
     };    
 }

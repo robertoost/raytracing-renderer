@@ -25,8 +25,6 @@ namespace RaytracingRenderer {
         Vertex v0, v1, v2;
         float3 normal;
 
-        Triangle() {}
-
         inline Triangle(FaceDefinition face) {
             this->v0.position = face.verts[0];
             this->v1.position = face.verts[1];
@@ -34,6 +32,16 @@ namespace RaytracingRenderer {
             //this->position = this->v0;
             this->normal = cross(this->v1.position - this->v0.position, this->v2.position - this->v0.position);
             this->v0.material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+            updateAABB(this->bounding_box);
+            
+        }
+
+        Triangle(){}
+
+        void updateAABB(AABB box) const override {
+            box.addPoint(this->v0.position);
+            box.addPoint(this->v1.position);
+            box.addPoint(this->v2.position);
         }
 
         inline Triangle(float3 position, float3 v0, float3 v1, float3 v2, shared_ptr<Material> material) {
@@ -41,7 +49,10 @@ namespace RaytracingRenderer {
             this->v1.position = position + v1;
             this->v2.position = position + v2;
             this->v0.material = material;
+            this->v1.material = material;
+            this->v2.material = material;
             this->normal = cross(v1 - v0, v2 - v0);
+            updateAABB(this->bounding_box);
         }
 
         inline Triangle(float3 v0, float3 v1, float3 v2) {
@@ -49,6 +60,18 @@ namespace RaytracingRenderer {
             this->v1.position = v1;
             this->v2.position = v2;
             this->normal = cross(v1 - v0, v2 - v0);
+            this->v0.material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+            updateAABB(this->bounding_box);
+        }
+
+        void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+            float d;
+            vector<float3> p = { v0.position, v1.position, v2.position };
+            for (uint32_t i = 0; i < p.size(); ++i) {
+                d = dot(planeNormal, p[i]);
+                if (d < dnear) dnear = d;
+                if (d > dfar) dfar = d;
+            }
         }
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
@@ -101,5 +124,7 @@ namespace RaytracingRenderer {
             if (vertex == 2)
                 return t.v2.position;
         }
+
+       
 	};
 }

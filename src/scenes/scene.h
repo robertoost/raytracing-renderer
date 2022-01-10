@@ -9,24 +9,21 @@ namespace RaytracingRenderer {
 		//Camera camera;
 		list<shared_ptr<Light>> lights;
 		list<shared_ptr<Hittable>> objects;
+		BVH ac;
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
-			bool collision = false;
 			
-			// Loop over all objects in the scene and try to find intersections.
-			for (shared_ptr<Hittable> obj : objects) {
-				const bool hit = obj->intersect(ray, t_min, t_max, rec);
-				if (hit) {
-					collision = true;
-					t_max = rec.t;
-				}
-			}
+			 //AccelerationStructure ac = AccelerationStructure(objects);
+			bool collision = ac.intersect(ray, t_min, t_max, rec, objects);
+			//cout << "Done ";
 			return collision;
+			
 		};
 
 		inline Scene() {
 			//camera = Camera(float3(0, 0, 0), 90., ASPECT_RATIO);
-			objects = list<shared_ptr<Hittable>>();
+			this->objects = list<shared_ptr<Hittable>>();
+			this->ac = BVH(objects);
 			shared_ptr<DiffuseMaterial> sphere_mat = make_shared<DiffuseMaterial>();
 			shared_ptr<DiffuseMaterial> plane_mat = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0, 0, 1)));
 
@@ -36,6 +33,15 @@ namespace RaytracingRenderer {
 		inline Scene(list<shared_ptr<Hittable>> objects, list<shared_ptr<Light>> lights) {
 			this->objects = objects;
 			this->lights = lights;
+			this->ac = BVH(objects);
+		}
+
+		void updateAABB(AABB box) const override {
+			box = AABB((float3(-INFINITY, -INFINITY, -INFINITY)), float3(INFINITY, INFINITY, INFINITY));
+		}
+
+		void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+			//do something?
 		}
 	};
 }

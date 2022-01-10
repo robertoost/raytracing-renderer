@@ -137,6 +137,9 @@
     <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
     <ClInclude Include="src\3d-objects\primitives\obj_loader.h" />
     <ClInclude Include="src\3d-objects\primitives\triangle.h" />
+    <ClInclude Include="src\acceleration-structures\AABB.h" />
+    <ClInclude Include="src\acceleration-structures\acceleration-structure.h" />
+    <ClInclude Include="src\acceleration-structures\BVH.h" />
     <ClInclude Include="src\post-processing\post_processing.h" />
     <ClInclude Include="src\lights\ambient_light.h" />
     <ClInclude Include="src\raytracing\camera.h" />

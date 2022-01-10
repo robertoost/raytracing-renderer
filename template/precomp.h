@@ -1223,12 +1223,16 @@ public:
 	Surface* screen = 0;
 };
 
+
+
+
 // General raytracing.
 #include "src/raytracing/ray.h"
-#include "src/raytracing/hittable.h"
 
-//BVH
-#include "src/BVH.h"
+//Acceleration Structures
+#include "src/acceleration-structures/AABB.h"
+
+#include "src/raytracing/hittable.h"
 
 // Materials
 #include "src/materials/material.h"
@@ -1245,6 +1249,10 @@ public:
 #include "src/3d-objects/primitives/triangle.h"
 #include "src/3d-objects/primitives/boundedplane.h"
 #include "src/3d-objects/primitives/obj_loader.h"
+
+
+#include "src/acceleration-structures/acceleration-structure.h"
+#include "src/acceleration-structures/BVH.h"
 
 
 // Camera.

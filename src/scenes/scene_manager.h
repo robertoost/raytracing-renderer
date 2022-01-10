@@ -18,6 +18,8 @@ public:
 	static Scene TriangleTest();
 
 	static Scene MeshTest();
+
+	static Scene SingleObject();
 };
 }
 

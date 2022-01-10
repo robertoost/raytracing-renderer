@@ -42,6 +42,9 @@
     <ClInclude Include="template\common.h" />
     <ClInclude Include="template\precomp.h" />
     <ClInclude Include="src\utils\ray_util.h" />
+    <ClInclude Include="src\acceleration-structures\AABB.h" />
+    <ClInclude Include="src\acceleration-structures\BVH.h" />
+    <ClInclude Include="src\acceleration-structures\acceleration-structure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cl\kernels.cl" />
