@@ -14,8 +14,8 @@ float3 frame[SCRHEIGHT][SCRWIDTH];
 // -----------------------------------------------------------
 void RRApp::Init()
 {
-	scene = SceneManager::AreaLightTest();
-	renderer = new HemisphereSampler(scene, camera);
+	scene = SceneManager::ReflectionRoom();
+	renderer = new PathTracer(scene, camera);
 	//cout << '\n' << "After init " << raytracer.scene.objects.size() << '\n';
 }
 
@@ -43,6 +43,7 @@ void RRApp::Tick( float deltaTime )
 	}
 
 	renderer->RenderScene(frame);
+	float energy = total_energy(frame);
 
 	if (POSTPROCESSING) {
 		if (CHROMATIC_ABERRATION) {
@@ -65,7 +66,8 @@ void RRApp::Tick( float deltaTime )
 	}
 	
 	//cout << "done";
-	cout << myTimer.elapsed() * 1000 << " ";
+	cout << "\nTime elapsed:\t" << myTimer.elapsed() * 1000 << " ms\n";
+	cout << "Total energy:\t" << energy << "\n";
 }
 
 void RRApp::KeyUp(int key)
