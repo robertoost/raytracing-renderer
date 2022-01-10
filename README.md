@@ -52,6 +52,9 @@ To switch renderers, go to the same Init function in `src/rr_app.cpp`. Then chan
 
 In order to change the rendering parameters, go to `template/common.h`. There you will find several settings:
 
+- `USE_BVH` - Determines whether the BVH will be used for scene intersections. Should be `FALSE` in every scene except `TooManySpheres` because of infinite planes.
+    default: `false`.
+
 - `MAX_RECURSION_DEPTH` - The amount of times a ray can be reflected or refracted before recursion is terminated.\
     default: `10`.
 
@@ -103,7 +106,10 @@ https://mikeadev.net/2019/11/parallelizing-ray-tracing/
 https://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
 
 - De Vries, J. (2014). Learn OpenGL.\
-  https://learnopengl.com/Getting-started/Camera
+https://learnopengl.com/Getting-started/Camera
 
 - Bikker, J. (2021). Tmpl8.\
 https://github.com/jbikker/advgrtmpl8
+
+- Zacharmarz (2017). AABB vs Ray Collision\
+  https://gamedev.stackexchange.com/a/18459

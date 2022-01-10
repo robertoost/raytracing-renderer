@@ -131,17 +131,42 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="template\LICENSE">
-      <Filter>template</Filter>
-    </None>
-    <None Include="README.md">
-      <Filter>template</Filter>
-    </None>
-    <None Include="cl\kernels.cl">
-      <Filter>template\cl</Filter>
-    </None>
+    <ClInclude Include="src\3d-objects\primitives\boundedplane.h" />
+    <ClInclude Include="src\3d-objects\primitives\obj_loader.h" />
+    <ClInclude Include="src\3d-objects\primitives\triangle.h" />
+    <ClInclude Include="src\post-processing\post_processing.h" />
+    <ClInclude Include="src\lights\ambient_light.h" />
+    <ClInclude Include="src\raytracing\camera.h" />
+    <ClInclude Include="src\materials\checkerboard_material.h" />
+    <ClInclude Include="cl\tools.cl" />
+    <ClInclude Include="src\utils\color_util.h" />
+    <ClInclude Include="src\lights\directional_light.h" />
+    <ClInclude Include="src\materials\glass_material.h" />
+    <ClInclude Include="src\scenes\scene_manager.h" />
+    <ClInclude Include="src\materials\specular_material.h" />
+    <ClInclude Include="src\materials\normal_material.h" />
+    <ClInclude Include="src\lights\point_light.h" />
+    <ClInclude Include="src\materials\diffuse_material.h" />
+    <ClInclude Include="src\raytracing\hittable.h" />
+    <ClInclude Include="src\lights\light.h" />
+    <ClInclude Include="src\materials\material.h" />
+    <ClInclude Include="src\rr_app.h" />
+    <ClInclude Include="src\3d-objects\object3d.h" />
+    <ClInclude Include="src\3d-objects\primitives\plane.h" />
+    <ClInclude Include="src\raytracing\ray.h" />
+    <ClInclude Include="src\scenes\scene.h" />
+    <ClInclude Include="src\3d-objects\primitives\sphere.h" />
+    <ClInclude Include="template\common.h" />
+    <ClInclude Include="template\precomp.h" />
+    <ClInclude Include="src\utils\ray_util.h" />
+    <ClInclude Include="src\acceleration-structures\AABB.h" />
+    <ClInclude Include="src\acceleration-structures\BVH.h" />
+    <ClInclude Include="src\acceleration-structures\acceleration-structure.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cl\kernels.cl" />
+    <None Include="README.md" />
+    <None Include="template\LICENSE" />
     <Filter Include="template">
       <UniqueIdentifier>{a7d6e3cb-bfcd-438d-979f-17df241a55b4}</UniqueIdentifier>
     </Filter>

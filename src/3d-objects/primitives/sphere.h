@@ -12,9 +12,28 @@ namespace RaytracingRenderer {
 		inline Sphere(float3 position, float radius, shared_ptr<Material> material): Object3D(position, material) {
 			this->radius = radius;
 			this->r2 = radius * radius;
+			this->bounding_box = AABB(position - radius, position + radius);
+			//cout << this->bounding_box.p_min << " 1 " << this->bounding_box.p_max << " 2 ";
+		}
+
+		void updateAABB(AABB box) const override {
+			box = AABB(position - radius, position + radius);
 		}
 
 		inline Sphere() : Object3D(), radius(1.f), r2(1.f) {}
+
+		void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+			float d;
+			vector<float3> p = { this->bounding_box.p_min, this->bounding_box.p_max, float3(position.x + radius, position.y - radius, position.z - radius),
+				float3(position.x + radius, position.y + radius, position.z - radius), float3(position.x - radius, position.y + radius, position.z - radius),
+				float3(position.x - radius, position.y - radius, position.z + radius), float3(position.x + radius, position.y - radius, position.z + radius),
+				float3(position.x - radius, position.y + radius, position.z + radius) };
+			for (uint32_t i = 0; i < p.size(); ++i) {
+				d = dot(planeNormal, p[i]);
+				if (d < dnear) dnear = d;
+				if (d > dfar) dfar = d;
+			}
+		}
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
 			// If the ray is glass, check if this trace is happening inside the sphere.

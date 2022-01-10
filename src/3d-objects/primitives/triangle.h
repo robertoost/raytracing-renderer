@@ -1,73 +1,130 @@
 #pragma once
 
 namespace RaytracingRenderer {
+    class Vertex : public Object3D 
+    {
+    public:
+        Vertex() {}
 
+        Vertex(float3 position, shared_ptr<Material> material) : Object3D(position, material) {}
+
+        Vertex(float3 position) : Object3D(position, make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)))) {}
+    };
+    struct FaceDefinition {
+        int vertexIndexes[3];
+        int textureIndexes[3];
+        int normalIndexes[3];
+        float3 verts[3];
+        float3 normals[3];
+    };
 	// TODO: Introduce a default transform class that handles position, rotation, movement, etc.
-	class Triangle : public Object3D, public Hittable
+	class Triangle : public Hittable
 	{
 	public:
         //v1, v2, v3 must be initialized in counter-clockwise order (v0 is bottom left, v1 is bottom right, v2 is top; this can be rotated but not flipped)
-		float3 v0, v1, v2, normal;
+        Vertex v0, v1, v2;
+        float3 normal;
 
-        inline Triangle() : Object3D(), v0(float3(-2, 0, 5)), v1(float3(1, 0, 5)), v2(float3(0, 3, 5)) {
-            this->normal = cross(v1 - v0, v2 - v0);
+        inline Triangle(FaceDefinition face) {
+            this->v0.position = face.verts[0];
+            this->v1.position = face.verts[1];
+            this->v2.position = face.verts[2];
+            //this->position = this->v0;
+            this->normal = cross(this->v1.position - this->v0.position, this->v2.position - this->v0.position);
+            this->v0.material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+            updateAABB(this->bounding_box);
+            
         }
 
-        inline Triangle(float3 position, float3 v0, float3 v1, float3 v2, shared_ptr<Material> material) : Object3D(position, material), normal(normal) {
-            this->v0 = position + v0;
-            this->v1 = position + v1;
-            this->v2 = position + v2;
+        Triangle(){}
+
+        void updateAABB(AABB box) const override {
+            box.addPoint(this->v0.position);
+            box.addPoint(this->v1.position);
+            box.addPoint(this->v2.position);
+        }
+
+        inline Triangle(float3 position, float3 v0, float3 v1, float3 v2, shared_ptr<Material> material) {
+            this->v0.position = position + v0;
+            this->v1.position = position + v1;
+            this->v2.position = position + v2;
+            this->v0.material = material;
+            this->v1.material = material;
+            this->v2.material = material;
             this->normal = cross(v1 - v0, v2 - v0);
+            updateAABB(this->bounding_box);
+        }
+
+        inline Triangle(float3 v0, float3 v1, float3 v2) {
+            this->v0.position = v0;
+            this->v1.position = v1;
+            this->v2.position = v2;
+            this->normal = cross(v1 - v0, v2 - v0);
+            this->v0.material = make_shared<DiffuseMaterial>(DiffuseMaterial(float3(0.2, 0.1, 1)));
+            updateAABB(this->bounding_box);
+        }
+
+        void computeBounds(const float3& planeNormal, float& dnear, float& dfar) const override {
+            float d;
+            vector<float3> p = { v0.position, v1.position, v2.position };
+            for (uint32_t i = 0; i < p.size(); ++i) {
+                d = dot(planeNormal, p[i]);
+                if (d < dnear) dnear = d;
+                if (d > dfar) dfar = d;
+            }
         }
 
 		bool intersect(const Ray& ray, float t_min, float t_max, hit_record& rec) const override {
-			// Assuming vectors are all normalized
-            float d = dot(normal, v0);
-
-            float t = - (dot(normal, ray.orig) + d) / dot(normal, ray.dir);
-
-            float denom = dot(normal, ray.dir);
-            float3 diff = v0 - ray.orig;
-            float t2 = dot(diff, normal) / denom;
-
-            float3 p = ray.orig + t * ray.dir;
-
-            float area = length(normal);
-
-            //check if ray + triangle are parallel
-
-            if (abs(denom) > 0.0001f == false) {
+            
+            float3 edge1, edge2, h, s, q;
+            float a, f, u, v;
+            edge1 = v1.position - v0.position;
+            edge2 = v2.position - v0.position;
+            h = cross(ray.dir, edge2);
+            a = dot(edge1, h);
+            if (a > -t_min && a < t_max)
+                return false;    // This ray is parallel to this triangle.
+            f = 1.0 / a;
+            s = ray.orig - v0.position;
+            u = f * dot(s, h);
+            if (u < 0.0 || u > 1.0)
                 return false;
-            }
-
-            // Intersection found. Determine if object is occluded
-            if ((t2 > t_min && t2 < t_max) == false) {
-                // Object is occluded or too far away.
+            q = cross(s, edge1);
+            v = f * dot(ray.dir, q);
+            if (v < 0.0 || u + v > 1.0)
                 return false;
+            // At this stage we can compute t to find out where the intersection point is on the line.
+            float t = f * dot(edge2, q);
+            if (t > t_min) // ray intersection
+            {
+                rec.p = ray.at(t);
+                rec.t = t;
+                rec.normal = normal;
+                rec.mat_ptr = v0.material;
+                return true;
             }
-
-            float3 e0 = v1 - v0;
-            float3 vp0 = p - v0;
-            float3 C = cross(e0, vp0);
-            if (dot(normal, C) < 0) return false; //P is on the right side
-
-            float3 e1 = v2 - v1;
-            float3 vp1 = p - v1;
-            C = cross(e1, vp1);
-            if (dot(normal, C) < 0) return false; //P is on the right side
-
-            float3 e2 = v0 - v2;
-            float3 vp2 = p - v2;
-            C = cross(e2, vp2);
-            if (dot(normal, C) < 0) return false; //P is on the right side
-
-            // Record the hit.
-            rec.t = t2;
-            rec.p = ray.at(t2);
-            rec.normal = normal;
-            rec.mat_ptr = material;
-
-            return true;
+            else // This means that there is a line intersection but not a ray intersection.
+                return false;
 		}
+
+        void set_vertex(Triangle t, int vertex, float3 val) {
+            if (vertex == 0)
+                t.v0.position = val;
+            if (vertex == 1)
+                t.v1.position = val;
+            if (vertex == 2)
+                t.v2.position = val;
+        }
+
+        float3 get_vertex(Triangle t, int vertex) {
+            if (vertex == 0)
+                return t.v0.position;
+            if (vertex == 1)
+                return t.v1.position;
+            if (vertex == 2)
+                return t.v2.position;
+        }
+
+       
 	};
 }

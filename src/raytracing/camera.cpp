@@ -11,7 +11,7 @@ namespace RaytracingRenderer {
     }
 
     Camera::Camera() {
-        this->cameraPos = float3(0.f, 0.f, 0.f);
+        this->cameraPos = float3(0.f, 0.f, -1.f);
         updateViewport();
 	}
 

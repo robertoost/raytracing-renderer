@@ -17,6 +17,12 @@ public:
 
 	static Scene TriangleTest();
 
+	//static Scene MeshTest();
+
+	static Scene SingleObject();
+
+	static Scene TooManySpheres();
+	
 	static Scene AreaLightTest();
 
 	static Scene IndirectLightTest();
