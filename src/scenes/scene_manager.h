@@ -18,6 +18,8 @@ public:
 	static Scene TriangleTest();
 
 	static Scene AreaLightTest();
+
+	static Scene IndirectLightTest();
 };
 }
 
