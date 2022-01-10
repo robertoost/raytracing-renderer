@@ -10,6 +10,13 @@ namespace RaytracingRenderer {
 			const Ray& r_in, const hit_record& rec, float3& attenuation
 		) const = 0;
 
+		// Ease of use.
+		inline float3 color(const Ray& r_in, const hit_record& rec) {
+			float3 col(0.f, 0.f, 0.f);
+			color(r_in, rec, col);
+			return col;
+		}
+
 		inline virtual float specularity() const {
 			return 0.f;
 		}
