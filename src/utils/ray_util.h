@@ -13,7 +13,10 @@ namespace RaytracingRenderer {
             // Refraction doesn't happen. For now, just pass the direction.
             return dir;
         }
-        return n * dir - (n + sqrt(1.0f - sin_t2)) * normal;
+
+        float3 refract_dir = normalize(n * dir - (n + sqrt(1.0f - sin_t2)) * normal);
+
+        return refract_dir;
     }
 
     inline void fresnel(const float3& dir, const float3& normal, const float& prev_ior, const float& next_ior, float& reflection, float& transmission)
@@ -58,10 +61,11 @@ namespace RaytracingRenderer {
         // We're inside the material, going out.
         if (rec.front_face == false) {
             prev_ior = rec.mat_ptr->ior();
+            ior = 1.f;
         }
     }
 
     inline float random_float() {
-        return rand() / (RAND_MAX + 1.f);
+        return RandomFloat();
     }
 }
